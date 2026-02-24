@@ -20,6 +20,6 @@ app.use(express.static("public"));
 import userRouter from "./routes/user.routes";
 
 // routes declaration
-app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/user", userRouter);
 
 export { app };
