@@ -2,6 +2,7 @@ import { User } from "../models/user.models";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
+import { uploadOnCloudinary } from "../utils/cloudinary";
 
 const generateAccessAndRefreshToken = async (userId: string) => {
   try {
@@ -155,4 +156,61 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { signupUser, signinUser, logoutUser };
+const getCurrentUser = asyncHandler(async (req, res) => {
+  // return res
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        (req as any).user,
+        "Current user fetched successfully",
+      ),
+    );
+});
+
+const createProfilePicture = asyncHandler(async (req, res) => {
+  // extract userId from params
+  // get local file path
+  // validation: profilePicture is required
+  // upload the image file to cloudinary
+  // validation: uploadProfilePicture is required
+  // update the user's document with the new cloudinary image URL
+  // return res
+
+  const { userId } = req.params;
+  const profilePicturePath = req.file?.path;
+
+  if (!profilePicturePath) {
+    throw new ApiError(400, "Profile picture path is required");
+  }
+
+  const uploadProfilePicture = await uploadOnCloudinary(profilePicturePath);
+
+  if (!uploadProfilePicture) {
+    throw new ApiError(400, "Upload profile picture is required");
+  }
+
+  const newProfilePicture = await User.findByIdAndUpdate(userId, {
+    profilePicture: uploadProfilePicture.url,
+  });
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        newProfilePicture,
+        "Profile picture create successfully",
+      ),
+    );
+});
+
+export {
+  signupUser,
+  signinUser,
+  logoutUser,
+  getCurrentUser,
+  createProfilePicture,
+};

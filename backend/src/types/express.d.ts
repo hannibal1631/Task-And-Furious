@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { Multer } from "multer";
 
 declare global {
   namespace Express {
@@ -8,6 +9,8 @@ declare global {
         fullName?: string;
         email?: string;
       };
+      file?: Multer.File;
+      files?: Multer.File[];
     }
   }
 }
