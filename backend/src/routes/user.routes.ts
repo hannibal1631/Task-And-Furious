@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
+  changeCurrentPassword,
   createProfilePicture,
+  forgotPassword,
   getCurrentUser,
   logoutUser,
   signinUser,
@@ -13,6 +15,9 @@ const router = Router();
 
 router.route("/sign-up").post(signupUser);
 router.route("/sign-in").post(signinUser);
+
+router.route("/forgot-password").post(forgotPassword);
+router.route("/reset-password/:token").post(changeCurrentPassword);
 
 // secured routes
 router.route("/logout").post(verifyJWT, logoutUser);

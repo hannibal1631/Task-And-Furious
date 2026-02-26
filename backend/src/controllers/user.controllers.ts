@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { uploadOnCloudinary } from "../utils/cloudinary";
+import { sendEmail } from "../utils/mailer";
 
 const generateAccessAndRefreshToken = async (userId: string) => {
   try {
@@ -207,10 +208,72 @@ const createProfilePicture = asyncHandler(async (req, res) => {
     );
 });
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  // get user email from frontend
+  // check email
+  // send link to email
+  // return res
+
+  const { email } = req.body;
+
+  const validEmail = await User.findOne({ email });
+
+  if (!validEmail) {
+    throw new ApiError(401, "Invalid credential");
+  }
+
+  await sendEmail({ email, emailType: "RESET", userId: validEmail._id });
+
+  return res.status(200).json(new ApiResponse(200, "Send to you email id"));
+});
+
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  // get token
+  // get newPassword and reEnterNewPassword from frontend
+  // validation - not empty
+  // check newPassword and reEnterNewPassword is same
+  // find user by token
+  // check user invalid or expire
+  // return res
+
+  const { token } = req.params;
+  const { newPassword, reEnterNewPassword } = req.body;
+
+  if (!newPassword || !reEnterNewPassword) {
+    throw new ApiError(400, "Please enter the both fields");
+  }
+
+  if (newPassword !== reEnterNewPassword) {
+    throw new ApiError(404, "Password do not match");
+  }
+
+  const user = await User.findOne({
+    forgotPasswordToken: token,
+    forgotPasswordTokenExpiry: {
+      $gt: Date.now(),
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(409, "Invalid or expired token");
+  }
+
+  user.password = newPassword;
+
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordTokenExpiry = undefined;
+
+  await user.save();
+
+  res.status(200).json(new ApiResponse(200, "Password reset successfully"));
+});
+
 export {
   signupUser,
   signinUser,
   logoutUser,
   getCurrentUser,
   createProfilePicture,
+  forgotPassword,
+  changeCurrentPassword,
 };
