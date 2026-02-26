@@ -33,20 +33,25 @@ const generateAccessAndRefreshToken = async (userId: string) => {
 const signupUser = asyncHandler(async (req, res) => {
   // get user details from frontend
   // validation - not empty
-  // check if user already exists: fullName, email
+  // check if user already exists: username, email
   // create user object - create entry in db
+  // check both password is match or not
   // remove password and refresh token field from response
   // check for user creation
   // return res
 
-  const { fullName, email, password } = req.body;
+  const { name, username, email, password, reEnterPassword } = req.body;
 
-  if ([fullName, email, password].some((field) => field?.trim() === "")) {
+  if (
+    [name, username, email, password, reEnterPassword].some(
+      (field) => field?.trim() === "",
+    )
+  ) {
     throw new ApiError(400, "All fields are required");
   }
 
   const existingUser = await User.findOne({
-    $or: [{ fullName }, { email }],
+    $or: [{ username }, { email }],
   });
 
   if (existingUser) {
@@ -54,9 +59,11 @@ const signupUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    fullName,
+    name,
+    username,
     email,
     password,
+    reEnterPassword,
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -259,6 +266,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   }
 
   user.password = newPassword;
+  user.reEnterPassword = reEnterNewPassword;
 
   user.forgotPasswordToken = undefined;
   user.forgotPasswordTokenExpiry = undefined;

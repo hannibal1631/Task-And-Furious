@@ -3,9 +3,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 interface IUser extends Document {
-  fullName: string;
+  name: string;
+  username: string;
   email: string;
   password: string;
+  reEnterPassword?: string;
   profilePicture?: string;
   refreshToken?: string;
   forgotPasswordToken?: string;
@@ -23,9 +25,14 @@ interface TokenPayload {
 
 const userSchema = new Schema<IUser>(
   {
-    fullName: {
+    name: {
       type: String,
-      required: [true, "Full name is required"],
+      required: [true, "Name is required"],
+      index: true,
+    },
+    username: {
+      type: String,
+      required: [true, "Username is required"],
       index: true,
     },
     email: {
@@ -37,7 +44,12 @@ const userSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: [true, "Password is Required"],
+      required: [true, "Password is required"],
+      minlength: 8,
+    },
+    reEnterPassword: {
+      type: String,
+      select: false,
     },
     profilePicture: {
       type: String,
@@ -55,13 +67,19 @@ const userSchema = new Schema<IUser>(
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
 
+  if (this.password !== this.reEnterPassword) {
+    throw new Error("Password do not match");
+  }
+
   this.password = await bcrypt.hash(this.password, 10);
+
+  this.reEnterPassword = undefined;
 });
 
 userSchema.methods.isPasswordCorrect = async function (
-  password: string,
+  userPassword: string,
 ): Promise<boolean> {
-  return await bcrypt.compare(password, this.password);
+  return await bcrypt.compare(userPassword, this.password);
 };
 
 userSchema.methods.generateAccessToken = function (): string {
