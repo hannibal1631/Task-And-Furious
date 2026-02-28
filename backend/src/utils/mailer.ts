@@ -42,29 +42,46 @@ export const sendEmail = async ({
       subject: emailType === "RESET" ? "Reset your password" : "",
       html: `<!doctype html>
 <html lang="en">
-  <body>
-    <img src="" alt="logo" />
-    <p>Hi, ABC</p>
-    <p>
-      We've received a request to reset your password. <br /><br />If you didn't
-      make the request, just ignore this message. Otherwise, you can reset your
-      password.
-    </p>
-    <a
-      href="/"
-      style="
-        outline: none;
-        text-decoration: none;
-        background-color: black;
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: none;
-        color: white;
-      "
-      >Reset your password</a
+  <body
+    style="
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div
+      style="font-family: Arial; padding: 10px; color: #212121; width: 500px"
     >
-    <p>Thanks, <br />The Logo team</p>
-    <p>${hashedToken}</p>
+      <h4>Logo</h4>
+      <p>Hi ABC,</p>
+      <p style="font-size: 15px; margin-bottom: 40px">
+        We've received a request to reset your password. <br /><br />If you
+        didn't make the request, just ignore this message. Otherwise, you can
+        reset your password.
+      </p>
+      <a
+        href="/"
+        style="
+          width: fit-content;
+          text-decoration: none;
+          background-color: #212121;
+          color: #fff;
+          padding: 10px 20px;
+          border-radius: 5px;
+          outline: none;
+          border: none;
+        "
+        >Reset your password</a
+      >
+      <p style="margin-top: 30px; font-size: 20px">
+        Thanks,
+        <span style="display: block; font-size: 15px; margin-top: 10px"
+          >The Logo team</span
+        >
+      </p>
+      <p>${hashedToken}</p>
+    </div>
   </body>
 </html>
 `,

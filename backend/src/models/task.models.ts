@@ -4,9 +4,10 @@ interface ITask extends Document {
   userId: Types.ObjectId;
   categoryId: Types.ObjectId;
   title: string;
-  subtitle?: string;
   description?: string;
   priority?: "low" | "medium" | "high" | "urgent";
+  date?: Date;
+  time?: string;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -22,15 +23,19 @@ const taskSchema = new Schema<ITask>(
     title: {
       type: String,
     },
-    subtitle: {
-      type: String,
-    },
     description: {
       type: String,
     },
     priority: {
       type: String,
       enum: ["low", "medium", "high", "urgent"],
+    },
+    date: {
+      type: Date,
+    },
+    time: {
+      type: String,
+      match: /^([01]\d|2[0-3]):([0-5]\d)$/,
     },
   },
   { timestamps: true },
