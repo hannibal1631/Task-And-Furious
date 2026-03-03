@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.route("/:userId").post(createTask);
+router.route("/:userId/:categoryId").post(createTask);
 router.route("/:taskId").put(updateTask);
 router.route("/:taskId").delete(deleteTask);
 router.route("/user/:userId").get(getAllTaskByUserId);
