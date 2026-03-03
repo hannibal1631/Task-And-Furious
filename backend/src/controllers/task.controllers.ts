@@ -4,21 +4,21 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 
 const createTask = asyncHandler(async (req, res) => {
-  // get user id from params and title, description, categoryId, priority, date, time from body
+  // get user id from params and title, description, priority, date, time from body
   // create task
   // return res
 
-  const { title, description, categoryId, priority, date, time } = req.body;
-  const { userId } = req.params;
+  const { title, description, priority, date, time } = req.body;
+  const { userId, categoryId } = req.params;
 
   const task = await Task.create({
     title,
     description,
-    categoryId,
     priority,
     date,
     time,
     userId,
+    categoryId,
   });
 
   res.status(200).json(new ApiResponse(200, task, "Task create successfully"));

@@ -5,12 +5,14 @@ import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 
 interface SendEmailParams {
+  name: string;
   email: string;
   emailType: "RESET" | "VERIFY";
   userId: Types.ObjectId;
 }
 
 export const sendEmail = async ({
+  name,
   email,
   emailType,
   userId,
@@ -40,9 +42,7 @@ export const sendEmail = async ({
       from: "abc@example.com",
       to: email,
       subject: emailType === "RESET" ? "Reset your password" : "",
-      html: `<!doctype html>
-<html lang="en">
-  <body
+      html: `<div
     style="
       height: 100vh;
       display: flex;
@@ -54,7 +54,7 @@ export const sendEmail = async ({
       style="font-family: Arial; padding: 10px; color: #212121; width: 500px"
     >
       <h4>Logo</h4>
-      <p>Hi ABC,</p>
+      <p>Hi ${name},</p>
       <p style="font-size: 15px; margin-bottom: 40px">
         We've received a request to reset your password. <br /><br />If you
         didn't make the request, just ignore this message. Otherwise, you can
@@ -82,8 +82,7 @@ export const sendEmail = async ({
       </p>
       <p>${hashedToken}</p>
     </div>
-  </body>
-</html>
+  </div>
 `,
     };
 
