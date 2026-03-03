@@ -223,13 +223,18 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   const { email } = req.body;
 
-  const validEmail = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-  if (!validEmail) {
+  if (!user) {
     throw new ApiError(401, "Invalid credential");
   }
 
-  await sendEmail({ email, emailType: "RESET", userId: validEmail._id });
+  await sendEmail({
+    name: user.name.split(" ")[0],
+    email,
+    emailType: "RESET",
+    userId: user._id,
+  });
 
   return res.status(200).json(new ApiResponse(200, "Send to you email id"));
 });
