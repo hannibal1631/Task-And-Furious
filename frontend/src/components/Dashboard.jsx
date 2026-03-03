@@ -4,14 +4,21 @@ import {
   faPalette,
   faBell,
   faMagnifyingGlass,
+  faMap,
+  faList,
+  faAlarmClock,
+  faCalendarCheck,
+  faTriangleExclamation,
+  faChartLine,
+  faGears,
 } from '@fortawesome/free-solid-svg-icons';
 
 function Dashboard() {
   return (
     <main>
-      <div className='bg-blue-900 h-screen max-w-full'>
+      <div className='bg-blue-900 h-screen max-w-full flex flex-col'>
         {/* upper section with logo, searchbar and notification/theme/profile buttons */}
-        <div className='flex items-center bg-yellow-300 m-auto py-4 px-7'>
+        <div className='flex items-center bg-yellow-300 py-4 px-7'>
           <div className='shrink-0'>
             <img
               src='./hero-logo.png'
@@ -33,16 +40,54 @@ function Dashboard() {
             </div>
           </div>
           <div className='flex shrink-0 items-center gap-4'>
-            <FontAwesomeIcon icon={faBell} className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white' />
-            <FontAwesomeIcon icon={faPalette} className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white' />
-            <FontAwesomeIcon icon={faCircleUser} className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white' />
+            <FontAwesomeIcon
+              icon={faBell}
+              className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
+            />
+            <FontAwesomeIcon
+              icon={faPalette}
+              className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
+            />
+            <FontAwesomeIcon
+              icon={faCircleUser}
+              className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
+            />
           </div>
         </div>
         {/* lower section of the body with all navs/tasks/progress */}
-        <div>
-          <div>sidebar</div>
-          <div>body</div>
-          <div>progress</div>
+        <div className='flex flex-1 items-stretch gap-6 bg-red-500 py-4 px-7'>
+          {/* sidebar div */}
+          <div className='flex flex-col w-[5%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
+            <div className='flex flex-col gap-6'>
+              <FontAwesomeIcon icon={faMap} className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white' />
+              <FontAwesomeIcon icon={faList} className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white' />
+              <FontAwesomeIcon
+                icon={faChartLine}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
+              <FontAwesomeIcon
+                icon={faAlarmClock}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
+              <FontAwesomeIcon
+                icon={faCalendarCheck}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
+              <FontAwesomeIcon
+                icon={faTriangleExclamation}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
+            </div>
+            <div className=''>
+              <FontAwesomeIcon icon={faGears} className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white' />
+            </div>
+          </div>
+          {/* tasks div */}
+          <div className='flex flex-col w-[80%] bg-blue-600 rounded-xl'>body</div>
+          {/* progress status div */}
+          <div className='flex flex-col w-[15%] justify-between bg-blue-600 px-8 py-6 rounded-xl'>
+            <div></div>
+          </div>
         </div>
       </div>
     </main>
