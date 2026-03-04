@@ -12,12 +12,13 @@ import {
   faChartLine,
   faGears,
 } from '@fortawesome/free-solid-svg-icons';
+import TaskCardMin from './TaskCardMin.jsx';
 
 function Dashboard() {
   return (
     <main>
-      <div className='bg-blue-900 h-screen max-w-full flex flex-col'>
-        {/* upper section with logo, searchbar and notification/theme/profile buttons */}
+      <div className='bg-blue-900 h-screen max-w-full flex flex-col overflow-hidden'>
+{/* upper section with logo, searchbar and notification/theme/profile buttons */}
         <div className='flex items-center bg-yellow-300 py-4 px-7'>
           <div className='shrink-0'>
             <img
@@ -54,13 +55,19 @@ function Dashboard() {
             />
           </div>
         </div>
-        {/* lower section of the body with all navs/tasks/progress */}
-        <div className='flex flex-1 items-stretch gap-6 bg-red-500 py-4 px-7'>
-          {/* sidebar div */}
+{/* lower section of the body with all navs/tasks/progress */}
+        <div className='flex flex-1 items-stretch gap-6 bg-red-500 py-4 px-7 overflow-hidden'>
+          {/* -------sidebar div------- */}
           <div className='flex flex-col w-[5%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
             <div className='flex flex-col gap-6'>
-              <FontAwesomeIcon icon={faMap} className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white' />
-              <FontAwesomeIcon icon={faList} className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white' />
+              <FontAwesomeIcon
+                icon={faMap}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
+              <FontAwesomeIcon
+                icon={faList}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
               <FontAwesomeIcon
                 icon={faChartLine}
                 className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
@@ -79,11 +86,38 @@ function Dashboard() {
               />
             </div>
             <div className=''>
-              <FontAwesomeIcon icon={faGears} className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white' />
+              <FontAwesomeIcon
+                icon={faGears}
+                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+              />
             </div>
           </div>
-          {/* tasks div */}
-          <div className='flex flex-col w-[80%] bg-blue-600 rounded-xl'>body</div>
+          {/* -------tasks div------- */}
+          <div className='flex flex-col w-[80%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
+            <div className='flex flex-col gap-6'>
+              <h1 className='text-4xl font-bold underline'>Dashboard</h1>
+              {/* ongoing tasks div */}
+              <div className='max-w-full py-3 px-4 bg-yellow-400'>
+                <h2 className='text-4xl font-semibold mb-5'>Ongoing Tasks</h2>
+                <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
+                  <TaskCardMin />
+                  <TaskCardMin />
+                  <TaskCardMin />
+                </div>
+              </div>
+              {/* upcoming tasks div */}
+              <div className='max-w-full py-3 px-4 bg-yellow-400'>
+                <h2 className='text-4xl font-semibold mb-5'>Upcoming Tasks</h2>
+                <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
+                  <TaskCardMin />
+                  <TaskCardMin />
+                  <TaskCardMin />
+                  <TaskCardMin />
+                  <TaskCardMin />
+                </div>
+              </div>
+            </div>
+          </div>
           {/* progress status div */}
           <div className='flex flex-col w-[15%] gap-5 bg-blue-600 px-8 py-6 rounded-xl'>
             <h1 className='text-3xl font-bold underline'>Progress Tracker</h1>
