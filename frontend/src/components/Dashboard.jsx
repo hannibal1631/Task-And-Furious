@@ -27,11 +27,11 @@ function Dashboard() {
             />
           </div>
           <div className='flex-1 flex justify-center'>
-            <div className='flex items-center justify-between w-100 gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'>
+            <div className='flex items-center justify-between bg-white w-100 gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'>
               <input
                 type='text'
                 placeholder='Search tasks...'
-                className='outline-none bg-transparent w-[90%]'
+                className='outline-none bg-transparent text-xl w-[90%]'
               />
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
@@ -85,8 +85,20 @@ function Dashboard() {
           {/* tasks div */}
           <div className='flex flex-col w-[80%] bg-blue-600 rounded-xl'>body</div>
           {/* progress status div */}
-          <div className='flex flex-col w-[15%] justify-between bg-blue-600 px-8 py-6 rounded-xl'>
-            <div></div>
+          <div className='flex flex-col w-[15%] gap-5 bg-blue-600 px-8 py-6 rounded-xl'>
+            <h1 className='text-3xl font-bold underline'>Progress Tracker</h1>
+            <div className='py-4 px-2 bg-sky-500 rounded-xl'>
+              <h2 className='text-2xl mb-3 font-semibold'>Upcoming Task</h2>
+              <p className='text-xl'>10</p>
+            </div>
+            <div className='py-4 px-2 bg-sky-500 rounded-xl'>
+              <h2 className='text-2xl mb-3 font-semibold'>Ongoing Task</h2>
+              <p className='text-xl'>10</p>
+            </div>
+            <div className='py-4 px-2 bg-sky-500 rounded-xl'>
+              <h2 className='text-2xl mb-3 font-semibold'>Completed Task</h2>
+              <p className='text-xl'>10</p>
+            </div>
           </div>
         </div>
       </div>
