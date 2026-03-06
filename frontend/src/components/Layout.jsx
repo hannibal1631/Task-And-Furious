@@ -65,48 +65,48 @@ function Layout() {
               <NavLink to='/'>
                 <FontAwesomeIcon
                   icon={faMap}
-                  className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
                 />
               </NavLink>
               <NavLink to='/categories'>
                 <FontAwesomeIcon
                   icon={faList}
-                  className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
                 />
               </NavLink>
 
               <NavLink to='/active'>
                 <FontAwesomeIcon
                   icon={faChartLine}
-                  className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
                 />
               </NavLink>
 
               <NavLink to='/upcoming'>
                 <FontAwesomeIcon
                   icon={faAlarmClock}
-                  className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
                 />
               </NavLink>
 
               <NavLink to='/completed'>
                 <FontAwesomeIcon
                   icon={faCalendarCheck}
-                  className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
                 />
               </NavLink>
 
               <NavLink to='/failed-task'>
                 <FontAwesomeIcon
                   icon={faTriangleExclamation}
-                  className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
                 />
               </NavLink>
             </div>
             <div className=''>
               <FontAwesomeIcon
                 icon={faGears}
-                className='lg:text-3xl text-xl hover:cursor-pointer hover:text-white'
+                className='lg:text-3xl text-xl cursor-pointer hover:text-white'
               />
             </div>
           </div>
