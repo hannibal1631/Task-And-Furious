@@ -5,7 +5,7 @@ interface ITask extends Document {
   categoryId: Types.ObjectId;
   title: string;
   description?: string;
-  priority?: "low" | "medium" | "high" | "urgent";
+  priority?: "low" | "medium" | "high";
   date?: Date;
   time?: string;
 }
@@ -28,7 +28,7 @@ const taskSchema = new Schema<ITask>(
     },
     priority: {
       type: String,
-      enum: ["low", "medium", "high", "urgent"],
+      enum: ["low", "medium", "high"],
     },
     date: {
       type: Date,
