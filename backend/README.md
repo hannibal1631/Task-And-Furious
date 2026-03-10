@@ -32,10 +32,6 @@
 
 **POST** `api/v1/users/:userId/profile-picture`
 
-### Sign Up User
-
-**POST** `api/v1/users/sign-up`
-
 ## Category Routes
 
 ### Add Category
