@@ -1,14 +1,16 @@
 import { Types } from "mongoose";
 import { User } from "../models/user.models";
 import { ApiError } from "./ApiError";
-import nodemailer from "nodemailer";
+import nodemailer, { SendMailOptions } from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
+import { resetPasswordTemplate } from "./emailTemplate";
 
 interface SendEmailParams {
   name: string;
   email: string;
-  emailType: "RESET" | "VERIFY";
+  emailType: "RESET" | "WELCOME";
   userId: Types.ObjectId;
+  html?: string;
 }
 
 export const sendEmail = async ({
@@ -38,52 +40,12 @@ export const sendEmail = async ({
       },
     });
 
-    const mailOptions = {
+    const mailOptions: SendMailOptions = {
       from: "abc@example.com",
       to: email,
       subject: emailType === "RESET" ? "Reset your password" : "",
-      html: `<div
-    style="
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    "
-  >
-    <div
-      style="font-family: Arial; padding: 10px; color: #212121; width: 500px"
-    >
-      <h4>Logo</h4>
-      <p>Hi ${name},</p>
-      <p style="font-size: 15px; margin-bottom: 40px">
-        We've received a request to reset your password. <br /><br />If you
-        didn't make the request, just ignore this message. Otherwise, you can
-        reset your password.
-      </p>
-      <a
-        href="/"
-        style="
-          width: fit-content;
-          text-decoration: none;
-          background-color: #212121;
-          color: #fff;
-          padding: 10px 20px;
-          border-radius: 5px;
-          outline: none;
-          border: none;
-        "
-        >Reset your password</a
-      >
-      <p style="margin-top: 30px; font-size: 20px">
-        Thanks,
-        <span style="display: block; font-size: 15px; margin-top: 10px"
-          >The Logo team</span
-        >
-      </p>
-      <p>${hashedToken}</p>
-    </div>
-  </div>
-`,
+      html:
+        emailType === "RESET" ? resetPasswordTemplate(name, hashedToken) : "",
     };
 
     const mailResponse = await transporter.sendMail(mailOptions);
