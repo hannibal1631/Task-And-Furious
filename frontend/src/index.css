@@ -8,3 +8,30 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+.input {
+  @apply w-full px-4 py-2 mb-3 rounded-lg bg-blue-800 border border-blue-600 focus:outline-none focus:border-white;
+}
+
+.btn-primary {
+  @apply bg-yellow-400 text-black py-2 rounded-lg font-semibold hover:bg-yellow-300 transition cursor-pointer;
+}
+
+.social-btn {
+  @apply w-20 p-3 bg-blue-700 rounded-full hover:bg-blue-600 transition cursor-pointer;
+}
+
+@keyframes fadeSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade {
+  animation: fadeSlide 0.5s ease-in-out;
+}
