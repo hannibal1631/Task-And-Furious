@@ -59,25 +59,35 @@ function AuthModal({ isOpen, onClose, mode }) {
         <div
           className={`absolute top-0 w-1/2 h-full flex flex-col items-center justify-center 
   bg-linear-to-br from-blue-800 to-blue-600 text-white z-20
-  transition-all duration-700
+  transition-all duration-700 text-center px-6
   ${isSignup ? 'left-0' : 'left-1/2'}`}
         >
           {isSignup ? (
             <>
-              <h2 className='text-2xl mb-4'>Already have an account?</h2>
+              <h2 className='text-3xl font-bold mb-2'>Welcome Back</h2>
+              <p className='text-sm text-gray-200 mb-6 text-center px-6'>
+                Already managing your tasks like a pro? Jump back in and stay on
+                track.
+              </p>
+
               <button
                 onClick={() => setIsSignup(false)}
-                className='border px-6 py-2 rounded-full'
+                className='border px-6 py-2 rounded-full hover:bg-white hover:text-blue-900 transition'
               >
                 Sign In
               </button>
             </>
           ) : (
             <>
-              <h2 className='text-2xl mb-4'>New here?</h2>
+              <h2 className='text-3xl font-bold mb-2'>Hello, New Here?</h2>
+              <p className='text-sm text-gray-200 mb-6 text-center px-6'>
+                Start organizing your chaos. Create tasks, track progress, and
+                stay unstoppable.
+              </p>
+
               <button
                 onClick={() => setIsSignup(true)}
-                className='border px-6 py-2 rounded-full'
+                className='border px-6 py-2 rounded-full hover:bg-white hover:text-blue-900 transition'
               >
                 Sign Up
               </button>
@@ -88,7 +98,7 @@ function AuthModal({ isOpen, onClose, mode }) {
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className='absolute top-4 right-4 text-white text-xl'
+          className='absolute top-4 right-4 text-white text-xl z-30 bg-black/30 hover:bg-black/50 rounded-full px-3 py-1 transition'
         >
           ✕
         </button>
