@@ -14,8 +14,14 @@ import {
   faChartLine,
   faGears,
 } from '@fortawesome/free-solid-svg-icons';
+import AuthModal from './AuthModal.jsx';
+import { useState } from 'react';
 
 function Layout() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup'
+
   return (
     <main>
       <div className='bg-blue-900 h-screen max-w-full flex flex-col overflow-hidden'>
@@ -50,10 +56,49 @@ function Layout() {
               icon={faPalette}
               className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
             />
-            <FontAwesomeIcon
-              icon={faCircleUser}
-              className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
-            />
+            <div className='relative'>
+              <FontAwesomeIcon
+                icon={faCircleUser}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className='lg:text-4xl text-2xl cursor-pointer hover:text-white'
+              />
+
+              {isDropdownOpen && (
+                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                  <ul className='flex flex-col text-sm'>
+                    <li
+                      onClick={() => {
+                        setAuthMode('login');
+                        setIsAuthOpen(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
+                    >
+                      Login
+                    </li>
+
+                    <li
+                      onClick={() => {
+                        setAuthMode('signup');
+                        setIsAuthOpen(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
+                    >
+                      Signup
+                    </li>
+
+                    <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
+                      User Settings
+                    </li>
+
+                    <li className='px-4 py-2 hover:bg-red-500 cursor-pointer'>
+                      Sign Out
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -134,6 +179,11 @@ function Layout() {
           </div>
         </div>
       </div>
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        mode={authMode}
+      />
     </main>
   );
 }
