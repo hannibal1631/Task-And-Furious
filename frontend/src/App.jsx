@@ -6,6 +6,7 @@ import ActiveTask from './pages/ActiveTask.jsx';
 import UpcomingTask from './pages/UpcomingTask.jsx';
 import CompletedTask from './pages/CompletedTask.jsx';
 import FailedTask from './pages/FailedTask.jsx';
+import Settings from './pages/Settings.jsx';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path='/upcoming' element={<UpcomingTask />} />
           <Route path='/completed' element={<CompletedTask />} />
           <Route path='/failed-task' element={<FailedTask />} />
+          <Route path='/settings' element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>
