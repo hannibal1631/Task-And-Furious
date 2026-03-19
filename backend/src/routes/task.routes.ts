@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  completeTask,
   createTask,
   deleteTask,
   getAllTaskByUserId,
@@ -11,6 +12,7 @@ const router = Router();
 router.route("/:userId/:categoryId").post(createTask);
 router.route("/:taskId").put(updateTask);
 router.route("/:taskId").delete(deleteTask);
+router.route("/:taskId").patch(completeTask);
 router.route("/user/:userId").get(getAllTaskByUserId);
 
 export default router;
