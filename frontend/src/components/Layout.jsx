@@ -21,33 +21,39 @@ function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup'
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
     <main>
       <div className='bg-blue-900 h-screen max-w-full flex flex-col overflow-hidden'>
         {/* HEADER */}
-        <div className='flex items-center bg-yellow-300 py-4 px-7'>
+        <div className='flex items-center justify-between bg-yellow-300 py-4 px-4 md:px-7 relative'>
+          {/* LOGO */}
           <div className='shrink-0'>
             <img
               src='./hero-logo.png'
               alt='task-and-furious'
-              className='w-40 h-25'
+              className='w-28 md:w-40'
             />
           </div>
-          <div className='flex-1 flex justify-center'>
-            <div className='flex items-center justify-between bg-white w-100 gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'>
+
+          {/* DESKTOP SEARCH */}
+          <div className='hidden md:flex flex-1 justify-center'>
+            <div className='flex items-center justify-between bg-white w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'>
               <input
                 type='text'
                 placeholder='Search tasks...'
-                className='outline-none bg-transparent text-xl w-[90%]'
+                className='outline-none bg-transparent text-base md:text-xl w-[90%]'
               />
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
-                className='text-gray-500 text-lg cursor-pointer'
+                className='text-gray-500 cursor-pointer'
               />
             </div>
           </div>
-          <div className='flex shrink-0 items-center gap-4'>
+
+          {/* DESKTOP ACTIONS */}
+          <div className='hidden md:flex items-center gap-4'>
             <FontAwesomeIcon
               icon={faBell}
               className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
@@ -56,6 +62,8 @@ function Layout() {
               icon={faPalette}
               className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
             />
+
+            {/* PROFILE */}
             <div className='relative'>
               <FontAwesomeIcon
                 icon={faCircleUser}
@@ -100,6 +108,83 @@ function Layout() {
               )}
             </div>
           </div>
+
+          {/* MOBILE DROPDOWN BUTTON */}
+          <div className='md:hidden'>
+            <FontAwesomeIcon
+              icon={faList}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className='text-2xl cursor-pointer'
+            />
+          </div>
+
+          {/* MOBILE DROPDOWN PANEL */}
+          {isMobileMenuOpen && (
+            <div className='absolute top-full left-0 w-full bg-yellow-200 p-4 flex flex-col gap-4 md:hidden z-50'>
+              {/* SEARCH */}
+              <div className='flex items-center bg-white gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl'>
+                <input
+                  type='text'
+                  placeholder='Search tasks...'
+                  className='outline-none bg-transparent w-full'
+                />
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </div>
+
+              {/* ICONS */}
+              <div className='flex justify-around items-center'>
+                <FontAwesomeIcon icon={faBell} className='text-xl' />
+                <FontAwesomeIcon icon={faPalette} className='text-xl' />
+
+                {/* PROFILE */}
+                <div className='relative'>
+                  <FontAwesomeIcon
+                    icon={faCircleUser}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className='text-xl cursor-pointer'
+                  />
+
+                  {isDropdownOpen && (
+                    <div className='absolute right-0 mt-2 w-40 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                      <ul className='flex flex-col text-sm'>
+                        <li
+                          onClick={() => {
+                            setAuthMode('login');
+                            setIsAuthOpen(true);
+                            setIsDropdownOpen(false);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
+                        >
+                          Login
+                        </li>
+
+                        <li
+                          onClick={() => {
+                            setAuthMode('signup');
+                            setIsAuthOpen(true);
+                            setIsDropdownOpen(false);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
+                        >
+                          Signup
+                        </li>
+
+                        <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
+                          User Settings
+                        </li>
+
+                        <li className='px-4 py-2 hover:bg-red-500 cursor-pointer'>
+                          Sign Out
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* BODY */}
