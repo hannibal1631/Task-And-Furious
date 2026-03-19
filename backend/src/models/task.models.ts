@@ -5,6 +5,7 @@ interface ITask extends Document {
   categoryId: Types.ObjectId;
   title: string;
   description?: string;
+  status?: "pending" | "completed";
   priority?: "low" | "medium" | "high";
   date?: Date;
   time?: string;
@@ -26,6 +27,11 @@ const taskSchema = new Schema<ITask>(
     description: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["pending", "completed"],
+      default: "pending",
+    },
     priority: {
       type: String,
       enum: ["low", "medium", "high"],
@@ -38,7 +44,7 @@ const taskSchema = new Schema<ITask>(
       match: /^([01]\d|2[0-3]):([0-5]\d)$/,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export const Task = mongoose.model<ITask>("Task", taskSchema);

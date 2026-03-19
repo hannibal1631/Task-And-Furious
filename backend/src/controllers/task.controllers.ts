@@ -71,6 +71,33 @@ const deleteTask = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "Task delete successfully"));
 });
 
+const completeTask = asyncHandler(async (req, res) => {
+  // get task id from params
+  // find task by id
+  // if task not found throw error
+  // if task status is completed then change to pending else change to completed
+  // task saved
+  // return res
+
+  const { taskId } = req.params;
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new ApiError(404, "Task not found");
+  }
+
+  if (task.status === "completed") {
+    task.status = "pending";
+  } else {
+    task.status = "completed";
+  }
+
+  await task.save();
+
+  res.status(200).json(new ApiResponse(200, task, "Task marked as completed"));
+});
+
 const getAllTaskByUserId = asyncHandler(async (req, res) => {
   // get user id from params
   // find all task by user id
@@ -87,4 +114,4 @@ const getAllTaskByUserId = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, tasks, "Get task successfully"));
 });
 
-export { createTask, updateTask, deleteTask, getAllTaskByUserId };
+export { createTask, updateTask, deleteTask, completeTask, getAllTaskByUserId };
