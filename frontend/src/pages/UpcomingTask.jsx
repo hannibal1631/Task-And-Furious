@@ -90,7 +90,8 @@ function UpcomingTask() {
             value={upcomingDate}
             min={minDate}
             onChange={handleDateChange}
-            className='bg-white border-2 border-gray-500 cursor-pointer px-2'
+            className='bg-white border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
+                     focus:outline-none focus:ring-2 focus:ring-black transition'
           />
 
           {upcomingDate && (
