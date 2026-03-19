@@ -21,7 +21,7 @@ function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup'
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <main>
@@ -234,10 +234,12 @@ function Layout() {
               </NavLink>
             </div>
             <div className=''>
-              <FontAwesomeIcon
-                icon={faGears}
-                className='lg:text-3xl text-xl cursor-pointer hover:text-white'
-              />
+              <NavLink to={'/settings'}>
+                <FontAwesomeIcon
+                  icon={faGears}
+                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                />
+              </NavLink>
             </div>
           </div>
 
