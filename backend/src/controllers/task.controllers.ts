@@ -75,7 +75,7 @@ const completeTask = asyncHandler(async (req, res) => {
   // get task id from params
   // find task by id
   // if task not found throw error
-  // mark task as completed
+  // if task status is completed then change to pending else change to completed
   // task saved
   // return res
 
@@ -87,7 +87,11 @@ const completeTask = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Task not found");
   }
 
-  task.isCompleted = true;
+  if (task.status === "completed") {
+    task.status = "pending";
+  } else {
+    task.status = "completed";
+  }
 
   await task.save();
 

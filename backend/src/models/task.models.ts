@@ -5,7 +5,7 @@ interface ITask extends Document {
   categoryId: Types.ObjectId;
   title: string;
   description?: string;
-  isCompleted?: boolean;
+  status?: "pending" | "completed";
   priority?: "low" | "medium" | "high";
   date?: Date;
   time?: string;
@@ -27,9 +27,10 @@ const taskSchema = new Schema<ITask>(
     description: {
       type: String,
     },
-    isCompleted: {
+    status: {
       type: String,
-      default: false,
+      enum: ["pending", "completed"],
+      default: "pending",
     },
     priority: {
       type: String,
