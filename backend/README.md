@@ -60,6 +60,10 @@
 
 **DELETE** `api/v1/tasks/:taskId`
 
+### Complete Task
+
+**PATCH** `api/v1/tasks/:taskId`
+
 ### Get All Task
 
 **GET** `api/v1/tasks/user/:userId`
