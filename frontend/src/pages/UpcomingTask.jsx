@@ -57,6 +57,9 @@ function UpcomingTask() {
 
   const groupedTasks = groupTasks(tasks);
 
+  const hasAnyUpcoming =
+    groupedTasks.tomorrow.length > 0 || groupedTasks.thisWeek.length > 0;
+
   const selectedTasks = tasks.filter((task) => task.dueDate === upcomingDate);
 
   // handle date change and prevent user from changing it from browser dev tools
@@ -120,7 +123,7 @@ function UpcomingTask() {
             )}
           </div>
         </div>
-      ) : (
+      ) : hasAnyUpcoming ? (
         <>
           {/* Tomorrow */}
           {groupedTasks.tomorrow.length > 0 && (
@@ -158,6 +161,12 @@ function UpcomingTask() {
             </div>
           )}
         </>
+      ) : (
+        <div className='py-10 bg-yellow-400'>
+          <p className='text-center text-gray-800 font-medium'>
+            No upcoming tasks
+          </p>
+        </div>
       )}
     </div>
   );
