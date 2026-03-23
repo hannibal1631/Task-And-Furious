@@ -13,14 +13,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index element={<Navigate to='/dashboard' />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/categories' element={<Categories />} />
-          <Route path='/active' element={<ActiveTask />} />
-          <Route path='/upcoming' element={<UpcomingTask />} />
-          <Route path='/completed' element={<CompletedTask />} />
-          <Route path='/failed-task' element={<FailedTask />} />
-          <Route path='/settings' element={<Settings />} />
+          <Route index element={<Navigate to='dashboard' />} />
+          <Route path='dashboard' element={<Dashboard />} />
+          <Route path='categories' element={<Categories />} />
+          <Route path='active' element={<ActiveTask />} />
+          <Route path='upcoming' element={<UpcomingTask />} />
+          <Route path='completed' element={<CompletedTask />} />
+          <Route path='failed-task' element={<FailedTask />} />
+          <Route path='settings' element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>
