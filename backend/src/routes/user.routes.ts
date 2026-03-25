@@ -4,9 +4,9 @@ import {
   createProfilePicture,
   forgotPassword,
   getCurrentUser,
-  logoutUser,
-  signinUser,
   signupUser,
+  loginUser,
+  logoutUser,
 } from "../controllers/user.controllers";
 import { verifyJWT } from "../middlewares/auth.middlewares";
 import { upload } from "../middlewares/multer.middlewares";
@@ -14,7 +14,7 @@ import { upload } from "../middlewares/multer.middlewares";
 const router = Router();
 
 router.route("/sign-up").post(signupUser);
-router.route("/sign-in").post(signinUser);
+router.route("/login").post(loginUser);
 
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:token").post(changeCurrentPassword);

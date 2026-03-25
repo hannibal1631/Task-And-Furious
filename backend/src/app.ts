@@ -2,18 +2,23 @@ import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app: Express = express();
+
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || [];
 
 // CORS configuration
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: allowedOrigins,
     credentials: true,
-  }),
+  })
 );
 
-// middlewares
+// Middleware
 app.use(helmet());
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));

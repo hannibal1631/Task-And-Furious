@@ -8,9 +8,9 @@
 
 **POST** `api/v1/users/sign-up`
 
-### Sign In User
+### Login User
 
-**POST** `api/v1/users/sign-in`
+**POST** `api/v1/users/login`
 
 ### Logout User
 
@@ -59,6 +59,10 @@
 ### Delete Task
 
 **DELETE** `api/v1/tasks/:taskId`
+
+### Complete Task
+
+**PATCH** `api/v1/tasks/:taskId`
 
 ### Get All Task
 
