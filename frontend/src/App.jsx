@@ -61,8 +61,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to='dashboard' />} />
-          <Route path='dashboard' element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
           <Route path='categories' element={<Categories />} />
           <Route path='active' element={<ActiveTask />} />
           <Route path='upcoming' element={<UpcomingTask />} />
