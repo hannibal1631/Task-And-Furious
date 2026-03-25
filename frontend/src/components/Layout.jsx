@@ -1,5 +1,4 @@
-import { NavLink } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleUser,
@@ -14,14 +13,20 @@ import {
   faChartLine,
   faGears,
 } from '@fortawesome/free-solid-svg-icons';
-import AuthModal from './AuthModal.jsx';
 import { useState } from 'react';
 
 function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup'
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth');
+    setIsDropdownOpen(false);
+    setIsMobileMenuOpen(false);
+    navigate('/');
+  };
 
   return (
     <main>
@@ -74,33 +79,14 @@ function Layout() {
               {isDropdownOpen && (
                 <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
                   <ul className='flex flex-col text-sm'>
-                    <li
-                      onClick={() => {
-                        setAuthMode('login');
-                        setIsAuthOpen(true);
-                        setIsDropdownOpen(false);
-                      }}
-                      className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
-                    >
-                      Login
-                    </li>
-
-                    <li
-                      onClick={() => {
-                        setAuthMode('signup');
-                        setIsAuthOpen(true);
-                        setIsDropdownOpen(false);
-                      }}
-                      className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
-                    >
-                      Signup
-                    </li>
-
                     <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
                       User Settings
                     </li>
 
-                    <li className='px-4 py-2 hover:bg-red-500 cursor-pointer'>
+                    <li
+                      onClick={handleLogout}
+                      className='px-4 py-2 hover:bg-red-500 cursor-pointer'
+                    >
                       Sign Out
                     </li>
                   </ul>
@@ -109,7 +95,7 @@ function Layout() {
             </div>
           </div>
 
-          {/* MOBILE DROPDOWN BUTTON */}
+          {/* MOBILE MENU BUTTON */}
           <div className='md:hidden'>
             <FontAwesomeIcon
               icon={faList}
@@ -118,7 +104,7 @@ function Layout() {
             />
           </div>
 
-          {/* MOBILE DROPDOWN PANEL */}
+          {/* MOBILE PANEL */}
           {isMobileMenuOpen && (
             <div className='absolute top-full left-0 w-full bg-yellow-200 p-4 flex flex-col gap-4 md:hidden z-50'>
               {/* SEARCH */}
@@ -147,35 +133,14 @@ function Layout() {
                   {isDropdownOpen && (
                     <div className='absolute right-0 mt-2 w-40 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
                       <ul className='flex flex-col text-sm'>
-                        <li
-                          onClick={() => {
-                            setAuthMode('login');
-                            setIsAuthOpen(true);
-                            setIsDropdownOpen(false);
-                            setIsMobileMenuOpen(false);
-                          }}
-                          className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
-                        >
-                          Login
-                        </li>
-
-                        <li
-                          onClick={() => {
-                            setAuthMode('signup');
-                            setIsAuthOpen(true);
-                            setIsDropdownOpen(false);
-                            setIsMobileMenuOpen(false);
-                          }}
-                          className='px-4 py-2 hover:bg-blue-700 cursor-pointer'
-                        >
-                          Signup
-                        </li>
-
                         <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
                           User Settings
                         </li>
 
-                        <li className='px-4 py-2 hover:bg-red-500 cursor-pointer'>
+                        <li
+                          onClick={handleLogout}
+                          className='px-4 py-2 hover:bg-red-500 cursor-pointer'
+                        >
                           Sign Out
                         </li>
                       </ul>
@@ -189,76 +154,79 @@ function Layout() {
 
         {/* BODY */}
         <div className='flex flex-1 items-stretch gap-6 bg-red-500 py-4 px-7 overflow-hidden'>
-          {/* Sidebar */}
+          {/* SIDEBAR */}
           <div className='flex flex-col w-[5%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
             <div className='flex flex-col gap-6'>
-              <NavLink to='/'>
+              <NavLink to='/dashboard'>
                 <FontAwesomeIcon
                   icon={faMap}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
-              <NavLink to='/categories'>
+
+              <NavLink to='/dashboard/categories'>
                 <FontAwesomeIcon
                   icon={faList}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/active'>
+              <NavLink to='/dashboard/active'>
                 <FontAwesomeIcon
                   icon={faChartLine}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/upcoming'>
+              <NavLink to='/dashboard/upcoming'>
                 <FontAwesomeIcon
                   icon={faAlarmClock}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/completed'>
+              <NavLink to='/dashboard/completed'>
                 <FontAwesomeIcon
                   icon={faCalendarCheck}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/failed-task'>
+              <NavLink to='/dashboard/failed-task'>
                 <FontAwesomeIcon
                   icon={faTriangleExclamation}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
             </div>
-            <div className=''>
-              <NavLink to={'/settings'}>
-                <FontAwesomeIcon
-                  icon={faGears}
-                  className='lg:text-3xl text-xl cursor-pointer hover:text-white'
-                />
-              </NavLink>
-            </div>
+
+            <NavLink to='/dashboard/settings'>
+              <FontAwesomeIcon
+                icon={faGears}
+                className='lg:text-3xl text-xl hover:text-white'
+              />
+            </NavLink>
           </div>
 
-          {/* THIS IS WHERE PAGES CHANGE */}
+          {/* MAIN CONTENT */}
           <div className='flex flex-col w-[80%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
             <Outlet />
           </div>
 
-          {/* Progress Tracker */}
+          {/* PROGRESS TRACKER */}
           <div className='flex flex-col w-[15%] gap-5 bg-blue-600 px-8 py-6 rounded-xl'>
             <h1 className='text-3xl font-bold underline'>Progress Tracker</h1>
+
             <div className='py-4 px-2 bg-sky-500 rounded-xl'>
               <h2 className='text-2xl mb-3 font-semibold'>Upcoming Task</h2>
               <p className='text-xl'>10</p>
             </div>
+
             <div className='py-4 px-2 bg-sky-500 rounded-xl'>
               <h2 className='text-2xl mb-3 font-semibold'>Ongoing Task</h2>
               <p className='text-xl'>10</p>
             </div>
+
             <div className='py-4 px-2 bg-sky-500 rounded-xl'>
               <h2 className='text-2xl mb-3 font-semibold'>Completed Task</h2>
               <p className='text-xl'>10</p>
@@ -266,11 +234,6 @@ function Layout() {
           </div>
         </div>
       </div>
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        mode={authMode}
-      />
     </main>
   );
 }
