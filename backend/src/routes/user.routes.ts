@@ -14,7 +14,7 @@ import { upload } from "../middlewares/multer.middlewares";
 const router = Router();
 
 router.route("/sign-up").post(signupUser);
-router.route("/log-in").post(loginUser);
+router.route("/login").post(loginUser);
 
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:token").post(changeCurrentPassword);
