@@ -25,7 +25,7 @@ const generateAccessAndRefreshToken = async (userId: string) => {
   } catch (error) {
     throw new ApiError(
       500,
-      "Something went wrong while generating refresh and access token",
+      "Something went wrong while generating refresh and access token"
     );
   }
 };
@@ -44,7 +44,7 @@ const signupUser = asyncHandler(async (req, res) => {
 
   if (
     [name, username, email, password, reEnterPassword].some(
-      (field) => field?.trim() === "",
+      (field) => field?.trim() === ""
     )
   ) {
     throw new ApiError(400, "All fields are required");
@@ -67,7 +67,7 @@ const signupUser = asyncHandler(async (req, res) => {
   });
 
   const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken",
+    "-password -refreshToken"
   );
 
   if (!createdUser) {
@@ -79,7 +79,7 @@ const signupUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User sign up successfully"));
 });
 
-const signinUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   // req body -> data
   // validation of email
   // find the user
@@ -102,11 +102,11 @@ const signinUser = asyncHandler(async (req, res) => {
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-    user._id.toString(),
+    user._id.toString()
   );
 
-  const signInUser = await User.findById(user._id).select(
-    "-password -refreshToken",
+  const logInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
   );
 
   const options = {
@@ -122,12 +122,12 @@ const signinUser = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
-          user: signInUser,
+          user: logInUser,
           accessToken,
           refreshToken,
         },
-        "User sign in successfully",
-      ),
+        "User logged in successfully"
+      )
     );
 });
 
@@ -149,7 +149,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     },
     {
       returnDocument: "after",
-    },
+    }
   );
 
   const options = {
@@ -173,8 +173,8 @@ const getCurrentUser = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         (req as any).user,
-        "Current user fetched successfully",
-      ),
+        "Current user fetched successfully"
+      )
     );
 });
 
@@ -210,8 +210,8 @@ const createProfilePicture = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         newProfilePicture,
-        "Profile picture create successfully",
-      ),
+        "Profile picture create successfully"
+      )
     );
 });
 
@@ -283,7 +283,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
 export {
   signupUser,
-  signinUser,
+  loginUser,
   logoutUser,
   getCurrentUser,
   createProfilePicture,
