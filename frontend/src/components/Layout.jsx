@@ -14,6 +14,7 @@ import {
   faGears,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,10 +22,10 @@ function Layout() {
 
   const navigate = useNavigate();
 
+  const {logout} = useAuth()
+
   const handleLogout = () => {
-    localStorage.removeItem('auth');
-    setIsDropdownOpen(false);
-    setIsMobileMenuOpen(false);
+    logout()
     navigate('/');
   };
 
