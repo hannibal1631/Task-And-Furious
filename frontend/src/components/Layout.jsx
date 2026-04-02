@@ -14,11 +14,15 @@ import {
   faGears,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
+import CardModal from './CardModal.jsx';
+import TaskCardMax from './TaskCardMax.jsx';
+import TaskCardEdit from './TaskCardEdit.jsx';
 
 function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [view, setView] = useState(null) //null | "max" | "edit"
 
   const navigate = useNavigate();
 
@@ -211,7 +215,7 @@ function Layout() {
 
           {/* MAIN CONTENT */}
           <div className='flex flex-col w-[80%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
-            <Outlet />
+            <Outlet context={{ setView }} />
           </div>
 
           {/* PROGRESS TRACKER */}
@@ -235,6 +239,11 @@ function Layout() {
           </div>
         </div>
       </div>
+      <CardModal isOpen={view !== null} onClose={() => setView(null)}>
+        {view === 'max' && <TaskCardMax onEdit={() => setView('edit')} onClose={() => setView(null)} />}
+
+        {view === 'edit' && <TaskCardEdit onClose={() => setView(null)} />}
+      </CardModal>
     </main>
   );
 }
