@@ -1,6 +1,7 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMaximize } from '@fortawesome/free-solid-svg-icons';
 
-function TaskCardMin({ onOpen }) {
+function TaskCardMin({onOpen}) {
   return (
     <div
       className='bg-green-700 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl 
