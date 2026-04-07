@@ -18,18 +18,21 @@ import { useAuth } from '../context/AuthContext.jsx';
 import CardModal from './CardModal.jsx';
 import TaskCardMax from './TaskCardMax.jsx';
 import TaskCardEdit from './TaskCardEdit.jsx';
+import AddTaskBtn from './AddTaskBtn.jsx';
+import ProgressTrackerBtn from './ProgressTrackerBtn.jsx';
 
 function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [view, setView] = useState(null) //null | "max" | "edit"
+  const [view, setView] = useState(null); //null | "max" | "edit"
+  const [isProgressOpen, setIsProgressOpen] = useState(false)
 
   const navigate = useNavigate();
 
-  const {logout} = useAuth()
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout()
+    logout();
     navigate('/');
   };
 
@@ -39,17 +42,17 @@ function Layout() {
         {/* HEADER */}
         <div className='flex items-center justify-between bg-yellow-300 py-4 px-4 md:px-7 relative'>
           {/* LOGO */}
-          <div className='shrink-0'>
+          <NavLink to='/dashboard' className='shrink-0'>
             <img
               src='./hero-logo.png'
               alt='task-and-furious'
               className='w-28 md:w-40'
             />
-          </div>
+          </NavLink>
 
           {/* DESKTOP SEARCH */}
           <div className='hidden md:flex flex-1 justify-center'>
-            <div className='flex items-center justify-between bg-white w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'>
+            <div className='flex items-center justify-between bg-white w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition' title='search tasks'>
               <input
                 type='text'
                 placeholder='Search tasks...'
@@ -74,7 +77,7 @@ function Layout() {
             />
 
             {/* PROFILE */}
-            <div className='relative'>
+            <div className='relative' title='user profile'>
               <FontAwesomeIcon
                 icon={faCircleUser}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -162,42 +165,42 @@ function Layout() {
           {/* SIDEBAR */}
           <div className='flex flex-col w-[5%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
             <div className='flex flex-col gap-6'>
-              <NavLink to='/dashboard'>
+              <NavLink to='/dashboard' title='dashboard'>
                 <FontAwesomeIcon
                   icon={faMap}
                   className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/dashboard/categories'>
+              <NavLink to='/dashboard/categories' title='categories'>
                 <FontAwesomeIcon
                   icon={faList}
                   className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/dashboard/active'>
+              <NavLink to='/dashboard/active' title='active tasks'>
                 <FontAwesomeIcon
                   icon={faChartLine}
                   className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/dashboard/upcoming'>
+              <NavLink to='/dashboard/upcoming' title='upcoming tasks'>
                 <FontAwesomeIcon
                   icon={faAlarmClock}
                   className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/dashboard/completed'>
+              <NavLink to='/dashboard/completed' title='completed tasks'>
                 <FontAwesomeIcon
                   icon={faCalendarCheck}
                   className='lg:text-3xl text-xl hover:text-white'
                 />
               </NavLink>
 
-              <NavLink to='/dashboard/failed-task'>
+              <NavLink to='/dashboard/failed-task' title='failed tasks'>
                 <FontAwesomeIcon
                   icon={faTriangleExclamation}
                   className='lg:text-3xl text-xl hover:text-white'
@@ -205,7 +208,7 @@ function Layout() {
               </NavLink>
             </div>
 
-            <NavLink to='/dashboard/settings'>
+            <NavLink to='/dashboard/settings' title='settings'>
               <FontAwesomeIcon
                 icon={faGears}
                 className='lg:text-3xl text-xl hover:text-white'
@@ -214,33 +217,29 @@ function Layout() {
           </div>
 
           {/* MAIN CONTENT */}
-          <div className='flex flex-col w-[80%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
-            <Outlet context={{ setView }} />
-          </div>
-
-          {/* PROGRESS TRACKER */}
-          <div className='flex flex-col w-[15%] gap-5 bg-blue-600 px-8 py-6 rounded-xl'>
-            <h1 className='text-3xl font-bold underline'>Progress Tracker</h1>
-
-            <div className='py-4 px-2 bg-sky-500 rounded-xl'>
-              <h2 className='text-2xl mb-3 font-semibold'>Upcoming Task</h2>
-              <p className='text-xl'>10</p>
+          <div className='relative flex flex-col w-[95%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
+            {/* <Outlet context={{ setView }} /> */}
+            <div className='flex-1 overflow-y-auto no-scrollbar px-8 py-6 pb-24'>
+              <Outlet context={{ setView }} />
             </div>
 
-            <div className='py-4 px-2 bg-sky-500 rounded-xl'>
-              <h2 className='text-2xl mb-3 font-semibold'>Ongoing Task</h2>
-              <p className='text-xl'>10</p>
-            </div>
+            {/* progress tracker button */}
+            <ProgressTrackerBtn isOpen={isProgressOpen} toggle={() => setIsProgressOpen(prev => !prev)} />
 
-            <div className='py-4 px-2 bg-sky-500 rounded-xl'>
-              <h2 className='text-2xl mb-3 font-semibold'>Completed Task</h2>
-              <p className='text-xl'>10</p>
-            </div>
+            {/* floating add new task button */}
+            <AddTaskBtn onClick={() => setView('edit')} />
           </div>
         </div>
       </div>
+
+      {/* card modal */}
       <CardModal isOpen={view !== null} onClose={() => setView(null)}>
-        {view === 'max' && <TaskCardMax onEdit={() => setView('edit')} onClose={() => setView(null)} />}
+        {view === 'max' && (
+          <TaskCardMax
+            onEdit={() => setView('edit')}
+            onClose={() => setView(null)}
+          />
+        )}
 
         {view === 'edit' && <TaskCardEdit onClose={() => setView(null)} />}
       </CardModal>
