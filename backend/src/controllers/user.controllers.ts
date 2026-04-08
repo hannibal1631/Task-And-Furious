@@ -1,3 +1,4 @@
+import { CookieOptions } from "express";
 import { User } from "../models/user.models";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
@@ -115,9 +116,10 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const options = {
+  const options: CookieOptions = {
     httpOnly: true,
     secure: true,
+    sameSite: "none",
   };
 
   return res
@@ -158,9 +160,10 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
   );
 
-  const options = {
+  const options: CookieOptions = {
     httpOnly: true,
     secure: true,
+    sameSite: "none",
   };
 
   return res
