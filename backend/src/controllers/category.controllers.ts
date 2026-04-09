@@ -5,11 +5,21 @@ import { asyncHandler } from "../utils/asyncHandler";
 
 const addCategory = asyncHandler(async (req, res) => {
   // get user id from params and category name from body
+  // check duplicate
   // create category
   // return res
 
   const { categoryName } = req.body;
   const { userId } = req.params;
+
+  const existingCategory = await Category.findOne({
+    categoryName: { $regex: `^${categoryName.trim()}$`, $options: "i" },
+    userId,
+  });
+
+  if (existingCategory) {
+    throw new ApiError(409, "Category already exists");
+  }
 
   const category = await Category.create({
     userId,
