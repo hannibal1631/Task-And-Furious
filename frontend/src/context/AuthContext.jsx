@@ -1,7 +1,8 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
-import API_BASE_URL from '../config/api';
+import API_BASE_URL from '../config/api.js';
+import axios from 'axios';
 
-const BASE_URL = API_BASE_URL
+const BASE_URL = API_BASE_URL;
 
 const AuthContext = createContext();
 
@@ -14,6 +15,9 @@ const initialState = {
 function authReducer(state, action) {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
+      if (action.payload?._id) {
+        localStorage.setItem('userId', action.payload._id);
+      }
       return {
         ...state,
         user: action.payload,
@@ -22,6 +26,7 @@ function authReducer(state, action) {
       };
 
     case 'LOGOUT':
+      localStorage.removeItem('userId');
       return {
         user: null,
         isAuthenticated: false,
@@ -46,20 +51,23 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${BASE_URL}/users/current-user`, {
-          credentials: 'include',
+        const res = await axios.get(`${BASE_URL}/users/current-user`, {
+          withCredentials: true,
         });
 
-        if (!res.ok) throw new Error();
-
-        const data = await res.json();
+        const userData = res.data?.data;
 
         dispatch({
           type: 'LOGIN_SUCCESS',
-          payload: data.user,
+          payload: userData,
         });
-      } catch {
-        dispatch({ type: 'STOP_LOADING' });
+      } catch (err) {
+        if (err.response?.status === 401) {
+          dispatch({ type: 'STOP_LOADING' });
+        } else {
+          console.error('Auth check failed', err);
+          dispatch({ type: 'STOP_LOADING' });
+        }
       }
     };
 
@@ -87,18 +95,19 @@ export function AuthProvider({ children }) {
       }
 
       const data = await res.json();
+      console.log('Login Response', data);
 
       if (!res.ok) throw new Error(data.message || 'Login failed');
 
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: data.user,
+        payload: data.data.user,
       });
 
       return { success: true };
     } catch (err) {
-        console.error(err);
-        
+      console.error(err);
+
       return { success: false, error: err.message };
     }
   };
@@ -121,7 +130,7 @@ export function AuthProvider({ children }) {
 
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: data.user,
+        payload: data.data.user,
       });
 
       return { success: true };
