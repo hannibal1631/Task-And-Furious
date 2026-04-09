@@ -24,6 +24,7 @@ const addCategory = asyncHandler(async (req, res) => {
   const category = await Category.create({
     userId,
     categoryName,
+    isDefault: false,
   });
 
   res
