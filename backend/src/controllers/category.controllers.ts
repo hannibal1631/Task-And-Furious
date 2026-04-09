@@ -84,4 +84,20 @@ const getDefaultCategories = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, categories));
 });
 
-export { addCategory, updateCategory, deleteCategory, getDefaultCategories };
+const getAllCategoriesByUserId = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  const categories = await Category.find({
+    $or: [{ isDefault: true }, { userId }],
+  }).sort({ createdAt: -1 });
+
+  return res.status(200).json(new ApiResponse(200, categories));
+});
+
+export {
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  getDefaultCategories,
+  getAllCategoriesByUserId,
+};
