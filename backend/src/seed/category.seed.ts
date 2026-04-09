@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Category } from "../models/category.models";
 import dotenv from "dotenv";
+import { DB_NAME } from "../constants";
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ const DEFAULT_CATEGORIES = [
 
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI as string);
+    await mongoose.connect(`${process.env.MONGODB_URI as string}/${DB_NAME}`);
 
     for (const categoryName of DEFAULT_CATEGORIES) {
       await Category.updateOne(

@@ -76,4 +76,12 @@ const deleteCategory = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "Category delete successfully"));
 });
 
-export { addCategory, updateCategory, deleteCategory };
+const getDefaultCategories = asyncHandler(async (req, res) => {
+  const categories = await Category.find({ isDefault: true })
+    .select("_id categoryName")
+    .sort({ categoryName: 1 });
+
+  return res.status(200).json(new ApiResponse(200, categories));
+});
+
+export { addCategory, updateCategory, deleteCategory, getDefaultCategories };
