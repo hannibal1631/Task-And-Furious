@@ -3,6 +3,7 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 interface ICategory extends Document {
   categoryName: string;
   userId: Types.ObjectId;
+  isDefault: boolean;
 }
 
 const categorySchema = new Schema<ICategory>(
@@ -14,9 +15,14 @@ const categorySchema = new Schema<ICategory>(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      default: null,
+    },
+    isDefault: {
+      type: Boolean,
+      default: false,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export const Category = mongoose.model<ICategory>("Category", categorySchema);

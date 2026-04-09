@@ -46,6 +46,14 @@
 
 **DELETE** `api/v1/categories/:categoryId`
 
+### Get Default Categories
+
+**GET** `api/v1/categories/default`
+
+### Get All Categories By UserId
+
+**GET** `api/v1/categories/:userId`
+
 ## Task Routes
 
 ### Add Task
@@ -64,6 +72,6 @@
 
 **PATCH** `api/v1/tasks/:taskId`
 
-### Get All Task
+### Get All Task by UserId
 
 **GET** `api/v1/tasks/user/:userId`

@@ -5,15 +5,26 @@ import { asyncHandler } from "../utils/asyncHandler";
 
 const addCategory = asyncHandler(async (req, res) => {
   // get user id from params and category name from body
+  // check duplicate
   // create category
   // return res
 
   const { categoryName } = req.body;
   const { userId } = req.params;
 
+  const existingCategory = await Category.findOne({
+    categoryName: { $regex: `^${categoryName.trim()}$`, $options: "i" },
+    userId,
+  });
+
+  if (existingCategory) {
+    throw new ApiError(409, "Category already exists");
+  }
+
   const category = await Category.create({
     userId,
     categoryName,
+    isDefault: false,
   });
 
   res
@@ -66,4 +77,35 @@ const deleteCategory = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "Category delete successfully"));
 });
 
-export { addCategory, updateCategory, deleteCategory };
+const getDefaultCategories = asyncHandler(async (req, res) => {
+  // find all default categories
+  // return res
+
+  const categories = await Category.find({ isDefault: true })
+    .select("_id categoryName")
+    .sort({ categoryName: 1 });
+
+  return res.status(200).json(new ApiResponse(200, categories));
+});
+
+const getAllCategoriesByUserId = asyncHandler(async (req, res) => {
+  // get user id from params
+  // find all categories by user id and default categories
+  // return res
+
+  const { userId } = req.params;
+
+  const categories = await Category.find({
+    $or: [{ isDefault: true }, { userId }],
+  }).sort({ createdAt: -1 });
+
+  return res.status(200).json(new ApiResponse(200, categories));
+});
+
+export {
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  getDefaultCategories,
+  getAllCategoriesByUserId,
+};
