@@ -64,6 +64,6 @@
 
 **PATCH** `api/v1/tasks/:taskId`
 
-### Get All Task
+### Get All Task by UserId
 
 **GET** `api/v1/tasks/user/:userId`
