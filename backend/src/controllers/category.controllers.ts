@@ -77,6 +77,9 @@ const deleteCategory = asyncHandler(async (req, res) => {
 });
 
 const getDefaultCategories = asyncHandler(async (req, res) => {
+  // find all default categories
+  // return res
+
   const categories = await Category.find({ isDefault: true })
     .select("_id categoryName")
     .sort({ categoryName: 1 });
@@ -85,6 +88,10 @@ const getDefaultCategories = asyncHandler(async (req, res) => {
 });
 
 const getAllCategoriesByUserId = asyncHandler(async (req, res) => {
+  // get user id from params
+  // find all categories by user id and default categories
+  // return res
+
   const { userId } = req.params;
 
   const categories = await Category.find({
