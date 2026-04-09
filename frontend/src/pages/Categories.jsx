@@ -2,10 +2,12 @@ import { useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useOutletContext } from 'react-router-dom';
 
 import TaskCardMin from '../components/TaskCardMin.jsx';
 
 function Categories() {
+  const {setView} = useOutletContext()
   const defaultCategories = [
     { value: 'work', label: 'Work' },
     { value: 'personal', label: 'Personal' },
@@ -79,15 +81,15 @@ function Categories() {
         <h2 className='text-4xl font-semibold mb-4'>Category Title</h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
-          <TaskCardMin />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
+          <TaskCardMin onOpen={() => setView('max')} />
         </div>
       </div>
     </div>
