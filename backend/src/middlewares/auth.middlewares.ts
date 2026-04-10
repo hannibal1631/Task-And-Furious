@@ -1,38 +1,56 @@
+import { Request, Response, NextFunction } from "express";
 import { User } from "../models/user.models";
 import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-export const verifyJWT = asyncHandler(async (req, res, next) => {
-  try {
-    const token =
-      req.cookies?.accessToken ||
-      req.header("Authorization")?.replace("Bearer ", "");
+export interface AuthRequest extends Request {
+  user?: any;
+}
 
-    if (!token) {
-      throw new ApiError(401, "Unauthorized request");
-    }
+export const verifyJWT = asyncHandler(
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      const authHeader = req.header("Authorization");
 
-    const decodedToken = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET as string,
-    ) as { _id: string };
+      const token =
+        req.cookies?.accessToken ||
+        (authHeader && authHeader.startsWith("Bearer ")
+          ? authHeader.split(" ")[1]
+          : null);
 
-    const user = await User.findById(decodedToken._id).select(
-      "-password -refreshToken",
-    );
+      if (!token) {
+        throw new ApiError(401, "Unauthorized request");
+      }
 
-    if (!user) {
+      const decodedToken = jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET as string
+      ) as JwtPayload;
+
+      const userId = decodedToken?.userId || decodedToken?._id;
+
+      if (!userId) {
+        throw new ApiError(401, "Invalid token payload");
+      }
+
+      const user = await User.findById(userId).select(
+        "-password -refreshToken"
+      );
+
+      if (!user) {
+        throw new ApiError(401, "Invalid access token");
+      }
+
+      req.user = user;
+
+      next();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new ApiError(401, error?.message || "Invalid access token");
+      }
+
       throw new ApiError(401, "Invalid access token");
     }
-
-    (req as any).user = user;
-    next();
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new ApiError(401, error?.message || "Invalid access token");
-    }
-
-    throw new ApiError(401, "Invalid access token");
   }
-});
+);

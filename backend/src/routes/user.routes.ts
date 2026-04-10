@@ -10,6 +10,7 @@ import {
 } from "../controllers/user.controllers";
 import { verifyJWT } from "../middlewares/auth.middlewares";
 import { upload } from "../middlewares/multer.middlewares";
+import { blockQueryIdentity } from "../middlewares/blockQueryIdentity";
 
 const router = Router();
 
@@ -20,8 +21,10 @@ router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:token").post(changeCurrentPassword);
 
 // secured routes
-router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/current-user").get(verifyJWT, getCurrentUser);
+router.route("/logout").post(verifyJWT, blockQueryIdentity, logoutUser);
+router
+  .route("/current-user")
+  .get(verifyJWT, blockQueryIdentity, getCurrentUser);
 
 router
   .route("/:userId/profile-picture")
