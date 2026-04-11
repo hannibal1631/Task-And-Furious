@@ -1,33 +1,84 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useOutletContext } from 'react-router-dom';
+import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 import TaskCardMin from '../components/TaskCardMin.jsx';
 
 function Categories() {
   const {setView} = useOutletContext()
-  const defaultCategories = [
-    { value: 'work', label: 'Work' },
-    { value: 'personal', label: 'Personal' },
-    { value: 'study', label: 'Study' },
-    { value: 'health', label: 'Health' },
-    { value: 'shopping', label: 'Shopping' },
-    { value: 'finance', label: 'Finance' },
-  ];
-
-  const [categories, setCategories] = useState(defaultCategories);
+  const {user} = useAuth()
+  const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleCreate = (inputValue) => {
-    const newCategory = {
-      value: inputValue.toLowerCase(),
-      label: inputValue,
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (!user?._id) return;
+
+      try {
+        // 1. get default categories
+        const defaultRes = await axios.get(
+          `${API_BASE_URL}/categories/default`,
+        );
+
+        // 2. get user categories
+        const userRes = await axios.get(
+          `${API_BASE_URL}/categories/${user._id}`,
+        );
+
+        const defaultCats = defaultRes.data?.data || [];
+        const userCats = userRes.data?.data || [];
+
+        const merged = [...defaultCats, ...userCats];
+
+        // remove duplicates using Map
+        const uniqueMap = new Map();
+
+        merged.forEach((cat) => {
+          uniqueMap.set(cat._id, cat);
+        });
+
+        const uniqueCats = Array.from(uniqueMap.values());
+
+        // map to react-select format
+        const formatted = uniqueCats.map((cat) => ({
+          value: cat._id, // 🔥 THIS IS THE FIX
+          label: cat.categoryName,
+        }));
+
+        setCategories(formatted);
+      } catch (err) {
+        console.error('Failed to fetch categories', err);
+      }
     };
 
-    setCategories((prev) => [...prev, newCategory]);
-    setSelectedCategory(newCategory);
+    fetchCategories();
+  }, [user]);
+
+  const handleCreate = async (inputValue) => {
+    if (!user?._id) return;
+
+    try {
+      const res = await axios.post(`${API_BASE_URL}/categories/${user._id}`, {
+        categoryName: inputValue,
+      });
+
+      const newCat = res.data?.data;
+
+      const formatted = {
+        value: newCat._id,
+        label: newCat.categoryName,
+      };
+
+      setCategories((prev) => [...prev, formatted]);
+      setSelectedCategory(formatted);
+    } catch (err) {
+      console.error('Failed to create category', err);
+    }
   };
 
   return (
@@ -78,7 +129,7 @@ function Categories() {
 
       {/* task section */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
-        <h2 className='text-4xl font-semibold mb-4'>Category Title</h2>
+        <h2 className='text-4xl font-semibold mb-4'>{selectedCategory?.label || 'Select a Category'}</h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
           <TaskCardMin onOpen={() => setView('max')} />
