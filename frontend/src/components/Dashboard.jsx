@@ -37,7 +37,6 @@ function Dashboard() {
   const upcomingTasks = tasks.filter(
     (task) => task.date && new Date(task.date) > new Date(),
   );
-  console.log('Tasks', tasks);
 
   return (
     <div className='flex flex-col gap-6'>
