@@ -25,6 +25,7 @@ function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [view, setView] = useState(null); //null | "max" | "edit"
+  const [categories, setCategories] = useState([]);
   const [isProgressOpen, setIsProgressOpen] = useState(false)
 
   const navigate = useNavigate();
@@ -220,7 +221,7 @@ function Layout() {
           <div className='relative flex flex-col w-[95%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
             {/* <Outlet context={{ setView }} /> */}
             <div className='flex-1 overflow-y-auto no-scrollbar px-8 py-6 pb-24'>
-              <Outlet context={{ setView }} />
+              <Outlet context={{ setView, categories, setCategories }} />
             </div>
 
             {/* progress tracker button */}
@@ -241,7 +242,7 @@ function Layout() {
           />
         )}
 
-        {view === 'edit' && <TaskCardEdit onClose={() => setView(null)} />}
+        {view === 'edit' && <TaskCardEdit onClose={() => setView(null)} categories={categories} />}
       </CardModal>
     </main>
   );
