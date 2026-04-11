@@ -13,19 +13,24 @@ import {
   faChartLine,
   faGears,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import CardModal from './CardModal.jsx';
 import TaskCardMax from './TaskCardMax.jsx';
 import TaskCardEdit from './TaskCardEdit.jsx';
 import AddTaskBtn from './AddTaskBtn.jsx';
 import ProgressTrackerBtn from './ProgressTrackerBtn.jsx';
+import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
 
 function Layout() {
+  const { user } = useAuth();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [view, setView] = useState(null); //null | "max" | "edit"
-  const [isProgressOpen, setIsProgressOpen] = useState(false)
+  const [categories, setCategories] = useState([]);
+  const [isProgressOpen, setIsProgressOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,6 +40,43 @@ function Layout() {
     logout();
     navigate('/');
   };
+
+  // fetching existing/default categories from backend server
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (!user?._id) return;
+
+      try {
+        const defaultRes = await axios.get(
+          `${API_BASE_URL}/categories/default`,
+        );
+
+        const userRes = await axios.get(
+          `${API_BASE_URL}/categories/${user._id}`,
+        );
+
+        const merged = [
+          ...(defaultRes.data?.data || []),
+          ...(userRes.data?.data || []),
+        ];
+
+        // remove duplicates
+        const uniqueMap = new Map();
+        merged.forEach((cat) => uniqueMap.set(cat._id, cat));
+
+        const formatted = Array.from(uniqueMap.values()).map((cat) => ({
+          value: cat._id,
+          label: cat.categoryName,
+        }));
+
+        setCategories(formatted);
+      } catch (err) {
+        console.error('Failed to fetch categories', err);
+      }
+    };
+
+    fetchCategories();
+  }, [user]);
 
   return (
     <main>
@@ -52,7 +94,10 @@ function Layout() {
 
           {/* DESKTOP SEARCH */}
           <div className='hidden md:flex flex-1 justify-center'>
-            <div className='flex items-center justify-between bg-white w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition' title='search tasks'>
+            <div
+              className='flex items-center justify-between bg-white w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'
+              title='search tasks'
+            >
               <input
                 type='text'
                 placeholder='Search tasks...'
@@ -220,11 +265,14 @@ function Layout() {
           <div className='relative flex flex-col w-[95%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
             {/* <Outlet context={{ setView }} /> */}
             <div className='flex-1 overflow-y-auto no-scrollbar px-8 py-6 pb-24'>
-              <Outlet context={{ setView }} />
+              <Outlet context={{ setView, categories, setCategories }} />
             </div>
 
             {/* progress tracker button */}
-            <ProgressTrackerBtn isOpen={isProgressOpen} toggle={() => setIsProgressOpen(prev => !prev)} />
+            <ProgressTrackerBtn
+              isOpen={isProgressOpen}
+              toggle={() => setIsProgressOpen((prev) => !prev)}
+            />
 
             {/* floating add new task button */}
             <AddTaskBtn onClick={() => setView('edit')} />
@@ -241,7 +289,9 @@ function Layout() {
           />
         )}
 
-        {view === 'edit' && <TaskCardEdit onClose={() => setView(null)} />}
+        {view === 'edit' && (
+          <TaskCardEdit onClose={() => setView(null)} categories={categories} />
+        )}
       </CardModal>
     </main>
   );

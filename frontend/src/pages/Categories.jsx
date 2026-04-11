@@ -1,33 +1,70 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useOutletContext } from 'react-router-dom';
+import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 import TaskCardMin from '../components/TaskCardMin.jsx';
 
 function Categories() {
-  const {setView} = useOutletContext()
-  const defaultCategories = [
-    { value: 'work', label: 'Work' },
-    { value: 'personal', label: 'Personal' },
-    { value: 'study', label: 'Study' },
-    { value: 'health', label: 'Health' },
-    { value: 'shopping', label: 'Shopping' },
-    { value: 'finance', label: 'Finance' },
-  ];
-
-  const [categories, setCategories] = useState(defaultCategories);
+  const { setView, categories, setCategories } = useOutletContext();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [loadingTasks, setLoadingTasks] = useState(false);
 
-  const handleCreate = (inputValue) => {
-    const newCategory = {
-      value: inputValue.toLowerCase(),
-      label: inputValue,
+  // to fetch tasks by userId and selected category
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!user?._id || !selectedCategory?.value) return;
+
+      setLoadingTasks(true);
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
+
+        const allTasks = res.data?.data || [];
+
+        // filter tasks by selected category
+        const filtered = allTasks.filter(
+          (task) => task.categoryId === selectedCategory.value,
+        );
+
+        setTasks(filtered);
+      } catch (err) {
+        console.error('Failed to fetch tasks', err);
+      } finally {
+        setLoadingTasks(false);
+      }
     };
 
-    setCategories((prev) => [...prev, newCategory]);
-    setSelectedCategory(newCategory);
+    fetchTasks();
+  }, [selectedCategory, user]);
+
+  // handleCreate to add more categories
+  const handleCreate = async (inputValue) => {
+    if (!user?._id) return;
+
+    try {
+      const res = await axios.post(`${API_BASE_URL}/categories/${user._id}`, {
+        categoryName: inputValue,
+      });
+
+      const newCat = res.data?.data;
+
+      const formatted = {
+        value: newCat._id,
+        label: newCat.categoryName,
+      };
+
+      setCategories((prev) => [...prev, formatted]);
+      setSelectedCategory(formatted);
+    } catch (err) {
+      console.error('Failed to create category', err);
+    }
   };
 
   return (
@@ -78,18 +115,32 @@ function Categories() {
 
       {/* task section */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
-        <h2 className='text-4xl font-semibold mb-4'>Category Title</h2>
+        <h2 className='text-4xl font-semibold mb-4'>
+          {selectedCategory?.label || 'Select a Category'}
+        </h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
+          {!selectedCategory ? (
+            <div className='col-span-3 text-center text-gray-600 text-lg'>
+              Select a category to view tasks
+            </div>
+          ) : loadingTasks ? (
+            <div className='col-span-3 text-center text-gray-600'>
+              Loading tasks...
+            </div>
+          ) : tasks.length === 0 ? (
+            <div className='col-span-3 text-center text-gray-600 text-lg'>
+              No tasks in this category
+            </div>
+          ) : (
+            tasks.map((task) => (
+              <TaskCardMin
+                key={task._id}
+                task={task}
+                onOpen={() => setView('max')}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

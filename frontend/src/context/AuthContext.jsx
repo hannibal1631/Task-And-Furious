@@ -15,9 +15,6 @@ const initialState = {
 function authReducer(state, action) {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
-      if (action.payload?._id) {
-        localStorage.setItem('userId', action.payload._id);
-      }
       return {
         ...state,
         user: action.payload,
@@ -26,7 +23,6 @@ function authReducer(state, action) {
       };
 
     case 'LOGOUT':
-      localStorage.removeItem('userId');
       return {
         user: null,
         isAuthenticated: false,
