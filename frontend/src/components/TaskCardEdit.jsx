@@ -119,7 +119,9 @@ function TaskCardEdit({ onClose, categories = [] }) {
             value={formData.categoryId}
             onChange={handleChange}
           >
-            <option value=''>Select Category</option>
+            <option value=''>
+              {categories.length ? 'Select Category' : 'Loading categories...'}
+            </option>
 
             {categories.map((cat) => (
               <option key={cat.value} value={cat.value}>
