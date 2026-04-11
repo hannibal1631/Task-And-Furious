@@ -16,51 +16,6 @@ function Categories() {
   const [tasks, setTasks] = useState([]);
   const [loadingTasks, setLoadingTasks] = useState(false);
 
-  // fetching existing/default categories from backend server
-  useEffect(() => {
-    const fetchCategories = async () => {
-      if (!user?._id) return;
-
-      try {
-        // 1. get default categories
-        const defaultRes = await axios.get(
-          `${API_BASE_URL}/categories/default`,
-        );
-
-        // 2. get user categories
-        const userRes = await axios.get(
-          `${API_BASE_URL}/categories/${user._id}`,
-        );
-
-        const defaultCats = defaultRes.data?.data || [];
-        const userCats = userRes.data?.data || [];
-
-        const merged = [...defaultCats, ...userCats];
-
-        // remove duplicates using Map
-        const uniqueMap = new Map();
-
-        merged.forEach((cat) => {
-          uniqueMap.set(cat._id, cat);
-        });
-
-        const uniqueCats = Array.from(uniqueMap.values());
-
-        // map to react-select format
-        const formatted = uniqueCats.map((cat) => ({
-          value: cat._id, // 🔥 THIS IS THE FIX
-          label: cat.categoryName,
-        }));
-
-        setCategories(formatted);
-      } catch (err) {
-        console.error('Failed to fetch categories', err);
-      }
-    };
-
-    fetchCategories();
-  }, [user]);
-
   // to fetch tasks by userId and selected category
   useEffect(() => {
     const fetchTasks = async () => {
