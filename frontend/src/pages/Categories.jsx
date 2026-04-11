@@ -10,11 +10,13 @@ import { useAuth } from '../context/AuthContext.jsx';
 import TaskCardMin from '../components/TaskCardMin.jsx';
 
 function Categories() {
-  const {setView} = useOutletContext()
-  const {user} = useAuth()
-  const [categories, setCategories] = useState([])
+  const { setView, categories, setCategories } = useOutletContext();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [loadingTasks, setLoadingTasks] = useState(false);
 
+  // fetching existing/default categories from backend server
   useEffect(() => {
     const fetchCategories = async () => {
       if (!user?._id) return;
@@ -59,6 +61,35 @@ function Categories() {
     fetchCategories();
   }, [user]);
 
+  // to fetch tasks by userId and selected category
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!user?._id || !selectedCategory?.value) return;
+
+      setLoadingTasks(true);
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
+
+        const allTasks = res.data?.data || [];
+
+        // filter tasks by selected category
+        const filtered = allTasks.filter(
+          (task) => task.categoryId === selectedCategory.value,
+        );
+
+        setTasks(filtered);
+      } catch (err) {
+        console.error('Failed to fetch tasks', err);
+      } finally {
+        setLoadingTasks(false);
+      }
+    };
+
+    fetchTasks();
+  }, [selectedCategory, user]);
+
+  // handleCreate to add more categories
   const handleCreate = async (inputValue) => {
     if (!user?._id) return;
 
@@ -129,18 +160,32 @@ function Categories() {
 
       {/* task section */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
-        <h2 className='text-4xl font-semibold mb-4'>{selectedCategory?.label || 'Select a Category'}</h2>
+        <h2 className='text-4xl font-semibold mb-4'>
+          {selectedCategory?.label || 'Select a Category'}
+        </h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
-          <TaskCardMin onOpen={() => setView('max')} />
+          {!selectedCategory ? (
+            <div className='col-span-3 text-center text-gray-600 text-lg'>
+              Select a category to view tasks
+            </div>
+          ) : loadingTasks ? (
+            <div className='col-span-3 text-center text-gray-600'>
+              Loading tasks...
+            </div>
+          ) : tasks.length === 0 ? (
+            <div className='col-span-3 text-center text-gray-600 text-lg'>
+              No tasks in this category
+            </div>
+          ) : (
+            tasks.map((task) => (
+              <TaskCardMin
+                key={task._id}
+                task={task}
+                onOpen={() => setView('max')}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
