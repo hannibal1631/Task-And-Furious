@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMaximize } from '@fortawesome/free-solid-svg-icons';
 
-function TaskCardMin({onOpen}) {
+function TaskCardMin({ task = {}, onOpen }) {
   return (
     <div
       className='bg-green-700 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl 
@@ -11,7 +11,7 @@ function TaskCardMin({onOpen}) {
       {/* Header */}
       <div className='flex justify-between items-start sm:items-center gap-3'>
         <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold leading-tight wrap-break-word'>
-          Task Title
+          {task.title}
         </h3>
 
         <FontAwesomeIcon
@@ -24,7 +24,7 @@ function TaskCardMin({onOpen}) {
       {/* Tags */}
       <div className='flex flex-wrap gap-2 sm:gap-3'>
         <span className='text-xs sm:text-sm lg:text-base bg-red-500 py-1 px-2 rounded-md whitespace-nowrap'>
-          High Priority
+          {task.priority}
         </span>
         <span className='text-xs sm:text-sm lg:text-base bg-red-500 py-1 px-2 rounded-md whitespace-nowrap'>
           Active
@@ -34,10 +34,7 @@ function TaskCardMin({onOpen}) {
       {/* Description */}
       <div className='bg-red-300 line-clamp-3 py-2 px-2 rounded-md'>
         <p className='text-sm sm:text-base leading-relaxed'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem,
-          deserunt? Nostrum omnis quasi ipsum explicabo ut, earum nesciunt
-          provident modi fuga dignissimos sunt fugit, iure eligendi! Eaque
-          mollitia distinctio molestias.
+          {task.description}
         </p>
       </div>
     </div>
