@@ -5,7 +5,7 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
-function TaskCardEdit({ onClose }) {
+function TaskCardEdit({ onClose, categories = [] }) {
   const { user, loading } = useAuth();
 
   const [today] = useState(() => {
@@ -39,11 +39,10 @@ function TaskCardEdit({ onClose }) {
 
   // add task handler
   const handleAddTask = async () => {
-    if(loading){
-      console.error("User no loaded yet");
-      return
+    if (loading) {
+      console.error('User no loaded yet');
+      return;
     }
-
 
     if (!user?._id) {
       console.error('User not loaded yet');
@@ -70,8 +69,8 @@ function TaskCardEdit({ onClose }) {
           time: formData.time,
         },
         {
-          withCredentials: true
-        }
+          withCredentials: true,
+        },
       );
       console.log('Task Created', res.data);
       onClose();
@@ -120,9 +119,13 @@ function TaskCardEdit({ onClose }) {
             value={formData.categoryId}
             onChange={handleChange}
           >
-            <option value=''>select</option>
-            <option value='CATEGORY_ID_1'>Personal</option>
-            <option value='CATEGORY_ID_2'>Study</option>
+            <option value=''>Select Category</option>
+
+            {categories.map((cat) => (
+              <option key={cat.value} value={cat.value}>
+                {cat.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -184,11 +187,12 @@ function TaskCardEdit({ onClose }) {
       {/* Buttons */}
       <div className='flex flex-wrap gap-3 mt-2'>
         <button
-          disabled={loading}
-          className='bg-green-600 px-4 py-2 rounded-md text-sm sm:text-base cursor-pointer'
+          disabled={loading || !user?._id}
+          className={`px-4 py-2 rounded-md text-sm sm:text-base cursor-pointer
+          ${loading || !user?._id ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600'}`}
           onClick={handleAddTask}
         >
-          Add Task
+          {loading ? 'Loading...' : 'Add Task'}
         </button>
 
         <button
