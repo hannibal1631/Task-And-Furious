@@ -34,6 +34,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: [true, "Username is required"],
       index: true,
+      maxLength: 6,
     },
     email: {
       type: String,
@@ -61,7 +62,7 @@ const userSchema = new Schema<IUser>(
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 userSchema.pre("save", async function () {
@@ -77,7 +78,7 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.isPasswordCorrect = async function (
-  userPassword: string,
+  userPassword: string
 ): Promise<boolean> {
   return await bcrypt.compare(userPassword, this.password);
 };
