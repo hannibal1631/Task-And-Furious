@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { uploadOnCloudinary } from "../utils/cloudinary";
 import { sendEmail } from "../utils/mailer";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userId: string) => {
   try {
@@ -173,6 +174,61 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  if (!incomingRefreshToken) {
+    throw new ApiError(401, "Unauthorized request");
+  }
+
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string
+    ) as JwtPayload;
+
+    const user = await User.findById(decodedToken?._id);
+
+    // console.log(user?.refreshToken);
+
+    if (!user) {
+      throw new ApiError(401, "Invalid token payload");
+    }
+
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "Refresh token is expired or used");
+    }
+
+    const options: CookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    };
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await generateAccessAndRefreshToken(user._id.toString());
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          { accessToken, newRefreshToken },
+          "Access token refreshed"
+        )
+      );
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new ApiError(401, error?.message || "Invalid refresh token");
+    }
+
+    throw new ApiError(401, "Invalid refresh token");
+  }
+});
+
 const getCurrentUser = asyncHandler(async (req, res) => {
   // return res
 
@@ -294,6 +350,7 @@ export {
   signupUser,
   loginUser,
   logoutUser,
+  refreshAccessToken,
   getCurrentUser,
   createProfilePicture,
   forgotPassword,
