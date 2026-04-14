@@ -11,13 +11,15 @@ export interface AuthRequest extends Request {
 export const verifyJWT = asyncHandler(
   async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const authHeader = req.header("Authorization");
+      // const authHeader = req.header("Authorization");
 
-      const token =
-        req.cookies?.accessToken ||
-        (authHeader && authHeader.startsWith("Bearer ")
-          ? authHeader.split(" ")[1]
-          : null);
+      // const token =
+      //   req.cookies?.accessToken ||
+      //   (authHeader && authHeader.startsWith("Bearer ")
+      //     ? authHeader.split(" ")[1]
+      //     : null);
+
+      const token = req.cookies?.accessToken;
 
       if (!token) {
         throw new ApiError(401, "Unauthorized request");
