@@ -292,7 +292,7 @@ function Layout() {
         )}
 
         {view === 'edit' && (
-          <TaskCardEdit onClose={() => setView(null)} categories={categories} />
+          <TaskCardEdit onClose={() => setView(null)} categories={categories} task={selectedTask} />
         )}
       </CardModal>
     </main>
