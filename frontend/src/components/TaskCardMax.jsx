@@ -7,7 +7,21 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 function TaskCardMax({ task, onEdit, onClose }) {
-  if(!task) return null
+  if (!task) return null;
+
+  // delete task handler
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_BASE_URL}/tasks/${task._id}`, {
+        withCredentials: true,
+      });
+
+      console.log('Task Deleted');
+      onClose();
+    } catch (err) {
+      console.error('Delete failed', err);
+    }
+  };
 
   return (
     <div
@@ -17,7 +31,7 @@ function TaskCardMax({ task, onEdit, onClose }) {
       {/* Header */}
       <div className='flex justify-between items-start gap-3'>
         <h2 className='text-xl sm:text-2xl lg:text-3xl font-semibold wrap-break-word'>
-          {task.title || "Task Title"}
+          {task.title || 'Task Title'}
         </h2>
 
         <button
@@ -43,7 +57,9 @@ function TaskCardMax({ task, onEdit, onClose }) {
         <span className='bg-blue-700 px-2 py-1 rounded-md'>
           Due: {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
         </span>
-        <span className='bg-blue-700 px-2 py-1 rounded-md'>Time: {task.time || 'N/A'}</span>
+        <span className='bg-blue-700 px-2 py-1 rounded-md'>
+          Time: {task.time || 'N/A'}
+        </span>
       </div>
 
       {/* Description */}
@@ -63,7 +79,10 @@ function TaskCardMax({ task, onEdit, onClose }) {
           Edit
         </button>
 
-        <button className='flex items-center gap-2 bg-red-600 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer'>
+        <button
+          onClick={handleDelete}
+          className='flex items-center gap-2 bg-red-600 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer'
+        >
           <FontAwesomeIcon icon={faTrash} />
           Delete
         </button>
