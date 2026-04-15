@@ -16,6 +16,10 @@
 
 **POST** `api/v1/users/logout`
 
+### Refresh Access Token
+
+**POST** `api/v1/users/refresh-token`
+
 ### Forgot Password
 
 **POST** `api/v1/users/forgot-password`
