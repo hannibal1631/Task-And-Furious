@@ -6,7 +6,7 @@ import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
 function Dashboard() {
-  const { setView } = useOutletContext();
+  const { setView, setSelectedTask } = useOutletContext();
   const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +44,7 @@ function Dashboard() {
 
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
         <h2 className='text-4xl font-semibold mb-5'>Ongoing Tasks</h2>
-        <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
+        <div className='grid grid-cols-4 gap-y-8 gap-x-6'>
           {loading ? (
             <p>Loading...</p>
           ) : ongoingTasks.length === 0 ? (
@@ -54,6 +54,7 @@ function Dashboard() {
               <TaskCardMin
                 key={task._id}
                 task={task}
+                setSelectedTask={setSelectedTask}
                 onOpen={() => setView('max')}
               />
             ))
@@ -63,7 +64,7 @@ function Dashboard() {
 
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
         <h2 className='text-4xl font-semibold mb-5'>Upcoming Tasks</h2>
-        <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
+        <div className='grid grid-cols-4 gap-y-8 gap-x-6'>
           {loading ? (
             <p>Loading...</p>
           ) : upcomingTasks.length === 0 ? (
