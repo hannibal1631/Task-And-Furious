@@ -74,6 +74,7 @@ function Dashboard() {
               <TaskCardMin
                 key={task._id}
                 task={task}
+                setSelectedTask={setSelectedTask}
                 onOpen={() => setView('max')}
               />
             ))

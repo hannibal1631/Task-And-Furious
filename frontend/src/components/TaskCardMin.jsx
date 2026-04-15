@@ -18,8 +18,8 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
           icon={faMaximize}
           className='text-lg sm:text-xl lg:text-2xl cursor-pointer hover:text-white shrink-0'
           onClick={() => {
-            if(setSelectedTask){
-              setSelectedTask(task)
+            if (setSelectedTask) {
+              setSelectedTask(task);
             }
             onOpen();
           }}
@@ -31,7 +31,10 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
         <span className='text-xs sm:text-sm lg:text-base bg-red-500 py-1 px-2 rounded-md whitespace-nowrap'>
           {task.priority}
         </span>
-        <span className='text-xs sm:text-sm lg:text-base bg-red-500 py-1 px-2 rounded-md whitespace-nowrap'>
+        <span
+          className={`text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md
+          ${task.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'}`}
+        >
           {task.status}
         </span>
       </div>
