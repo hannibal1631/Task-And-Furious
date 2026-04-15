@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMaximize } from '@fortawesome/free-solid-svg-icons';
 
-function TaskCardMin({ task = {}, onOpen }) {
+function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
   return (
     <div
       className='bg-green-700 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl 
@@ -10,14 +10,19 @@ function TaskCardMin({ task = {}, onOpen }) {
     >
       {/* Header */}
       <div className='flex justify-between items-start sm:items-center gap-3'>
-        <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold leading-tight wrap-break-word'>
+        <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold leading-tight wrap-break-word line-clamp-1'>
           {task.title}
         </h3>
 
         <FontAwesomeIcon
           icon={faMaximize}
           className='text-lg sm:text-xl lg:text-2xl cursor-pointer hover:text-white shrink-0'
-          onClick={onOpen}
+          onClick={() => {
+            if(setSelectedTask){
+              setSelectedTask(task)
+            }
+            onOpen();
+          }}
         />
       </div>
 
@@ -27,7 +32,7 @@ function TaskCardMin({ task = {}, onOpen }) {
           {task.priority}
         </span>
         <span className='text-xs sm:text-sm lg:text-base bg-red-500 py-1 px-2 rounded-md whitespace-nowrap'>
-          Active
+          {task.status}
         </span>
       </div>
 
