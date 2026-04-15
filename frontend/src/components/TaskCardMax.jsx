@@ -5,6 +5,8 @@ import {
   faCheck,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
 
 function TaskCardMax({ task, onEdit, onClose }) {
   if (!task) return null;
@@ -20,6 +22,24 @@ function TaskCardMax({ task, onEdit, onClose }) {
       onClose();
     } catch (err) {
       console.error('Delete failed', err);
+    }
+  };
+
+  // toggle status handler
+  const handleToggleComplete = async () => {
+    try {
+      const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+
+      await axios.patch(
+        `${API_BASE_URL}/tasks/${task._id}`,
+        { status: newStatus },
+        { withCredentials: true },
+      );
+
+      console.log('Status Updated');
+      onClose();
+    } catch (err) {
+      console.error('Status update failed', err);
     }
   };
 
@@ -47,7 +67,10 @@ function TaskCardMax({ task, onEdit, onClose }) {
         <span className='bg-red-500 text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md'>
           {task.priority}
         </span>
-        <span className='bg-green-500 text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md'>
+        <span
+          className={`text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md
+          ${task.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'}`}
+        >
           {task.status}
         </span>
       </div>
@@ -73,7 +96,7 @@ function TaskCardMax({ task, onEdit, onClose }) {
       <div className='flex flex-wrap gap-2 sm:gap-3 mt-2'>
         <button
           onClick={onEdit}
-          className='flex items-center gap-2 bg-yellow-500 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer'
+          className='flex items-center gap-2 bg-yellow-500 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer transition-all duration-200 hover:scale-105'
         >
           <FontAwesomeIcon icon={faPen} />
           Edit
@@ -81,15 +104,19 @@ function TaskCardMax({ task, onEdit, onClose }) {
 
         <button
           onClick={handleDelete}
-          className='flex items-center gap-2 bg-red-600 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer'
+          className='flex items-center gap-2 bg-red-600 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer transition-all duration-200 hover:scale-105'
         >
           <FontAwesomeIcon icon={faTrash} />
           Delete
         </button>
 
-        <button className='flex items-center gap-2 bg-green-600 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer'>
+        <button
+          onClick={handleToggleComplete}
+          className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm sm:text-base cursor-pointer transition-all duration-200 hover:scale-105
+          ${task.status === 'completed' ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-600 hover:bg-green-700'}`}
+        >
           <FontAwesomeIcon icon={faCheck} />
-          Complete
+          {task.status === 'completed' ? 'Mark Pending' : 'Mark Completed'}
         </button>
       </div>
     </div>
