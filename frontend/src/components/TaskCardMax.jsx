@@ -6,7 +6,9 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
-function TaskCardMax({ onEdit, onClose }) {
+function TaskCardMax({ task, onEdit, onClose }) {
+  if(!task) return null
+
   return (
     <div
       className='bg-blue-900 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl
@@ -15,7 +17,7 @@ function TaskCardMax({ onEdit, onClose }) {
       {/* Header */}
       <div className='flex justify-between items-start gap-3'>
         <h2 className='text-xl sm:text-2xl lg:text-3xl font-semibold wrap-break-word'>
-          Task Title
+          {task.title || "Task Title"}
         </h2>
 
         <button
@@ -29,25 +31,25 @@ function TaskCardMax({ onEdit, onClose }) {
       {/* Status */}
       <div className='flex flex-wrap gap-2 sm:gap-3'>
         <span className='bg-red-500 text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md'>
-          High Priority
+          {task.priority}
         </span>
         <span className='bg-green-500 text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md'>
-          Active
+          {task.status}
         </span>
       </div>
 
       {/* Due Date & Time */}
       <div className='flex flex-wrap gap-3 text-sm sm:text-base'>
         <span className='bg-blue-700 px-2 py-1 rounded-md'>
-          Due: 12 Apr 2026
+          Due: {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
         </span>
-        <span className='bg-blue-700 px-2 py-1 rounded-md'>Time: 10:30 AM</span>
+        <span className='bg-blue-700 px-2 py-1 rounded-md'>Time: {task.time || 'N/A'}</span>
       </div>
 
       {/* Description */}
       <div className='bg-blue-800 p-3 rounded-md'>
         <p className='text-sm sm:text-base leading-relaxed'>
-          Detailed task description goes here.
+          {task.description}
         </p>
       </div>
 
