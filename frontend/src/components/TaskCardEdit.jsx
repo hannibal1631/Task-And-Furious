@@ -5,7 +5,7 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
-function TaskCardEdit({ onClose, categories = [] }) {
+function TaskCardEdit({ onClose, categories = [], task }) {
   const { user, loading } = useAuth();
 
   const [today] = useState(() => {
@@ -20,12 +20,12 @@ function TaskCardEdit({ onClose, categories = [] }) {
 
   // formdata
   const [formData, setFormData] = useState({
-    title: '',
-    categoryId: '',
-    priority: 'low',
-    date: '',
-    time: '',
-    description: '',
+    title: task?.title || '',
+    categoryId: task?.categoryId?._id || task?.categoryId || '',
+    priority: task?.priority || 'low',
+    date: task?.date ? task.date.split('T')[0] : '',
+    time: task?.time || '',
+    description: task?.description || '',
   });
 
   // handle input changes
@@ -37,10 +37,10 @@ function TaskCardEdit({ onClose, categories = [] }) {
     }));
   };
 
-  // add task handler
-  const handleAddTask = async () => {
+  // add/edit task handler
+  const handleSubmit = async () => {
     if (loading) {
-      console.error('User no loaded yet');
+      console.error('User not loaded yet');
       return;
     }
 
@@ -53,29 +53,49 @@ function TaskCardEdit({ onClose, categories = [] }) {
       console.error('Category not selected');
       return;
     }
-    try {
-      console.log('USER:', user);
-      console.log('USER ID:', user._id);
-      console.log('CATEGORY ID:', formData.categoryId);
 
-      const res = await axios.post(
-        `${API_BASE_URL}/tasks/${user._id}/${formData.categoryId}`,
-        {
-          title: formData.title,
-          description: formData.description,
-          priority: formData.priority,
-          status: 'pending',
-          date: formData.date ? new Date(formData.date) : null,
-          time: formData.time,
-        },
-        {
-          withCredentials: true,
-        },
-      );
-      console.log('Task Created', res.data);
+    try {
+      if (task) {
+        // 🔥 EDIT MODE
+        await axios.put(
+          `${API_BASE_URL}/tasks/${task._id}`,
+          {
+            title: formData.title,
+            description: formData.description,
+            priority: formData.priority,
+            categoryId: formData.categoryId,
+            date: formData.date ? new Date(formData.date) : null,
+            time: formData.time,
+          },
+          {
+            withCredentials: true,
+          },
+        );
+
+        console.log('Task Updated');
+      } else {
+        // 🔥 CREATE MODE
+        await axios.post(
+          `${API_BASE_URL}/tasks/${user._id}/${formData.categoryId}`,
+          {
+            title: formData.title,
+            description: formData.description,
+            priority: formData.priority,
+            status: 'pending',
+            date: formData.date ? new Date(formData.date) : null,
+            time: formData.time,
+          },
+          {
+            withCredentials: true,
+          },
+        );
+
+        console.log('Task Created');
+      }
+
       onClose();
     } catch (error) {
-      console.error('Failed to create task', error);
+      console.error('Failed to save task', error);
     }
   };
 
@@ -86,7 +106,7 @@ function TaskCardEdit({ onClose, categories = [] }) {
     >
       {/* Header */}
       <div className='flex justify-between items-center'>
-        <h2 className='text-xl sm:text-2xl font-semibold'>Add Your Task</h2>
+        <h2 className='text-xl sm:text-2xl font-semibold'>{task? 'Edit Task': 'Add New Task'}</h2>
 
         <button
           onClick={onClose}
@@ -192,9 +212,9 @@ function TaskCardEdit({ onClose, categories = [] }) {
           disabled={loading || !user?._id}
           className={`px-4 py-2 rounded-md text-sm sm:text-base cursor-pointer
           ${loading || !user?._id ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600'}`}
-          onClick={handleAddTask}
+          onClick={handleSubmit}
         >
-          {loading ? 'Loading...' : 'Add Task'}
+          {loading ? 'Loading...' : task? 'Update Task' : 'Add Task'}
         </button>
 
         <button
