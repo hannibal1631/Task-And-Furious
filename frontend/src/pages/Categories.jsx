@@ -10,7 +10,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import TaskCardMin from '../components/TaskCardMin.jsx';
 
 function Categories() {
-  const { setView, categories, setCategories } = useOutletContext();
+  const { setView, categories, setCategories, setSelectedTask } = useOutletContext();
   const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -137,6 +137,7 @@ function Categories() {
               <TaskCardMin
                 key={task._id}
                 task={task}
+                setSelectedTask={setSelectedTask}
                 onOpen={() => setView('max')}
               />
             ))
