@@ -12,11 +12,12 @@ import {
 import { verifyJWT } from "../middlewares/auth.middlewares";
 import { upload } from "../middlewares/multer.middlewares";
 import { blockQueryIdentity } from "../middlewares/blockQueryIdentity";
+import { authLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
 
-router.route("/sign-up").post(signupUser);
-router.route("/login").post(loginUser);
+router.route("/sign-up").post(authLimiter, signupUser);
+router.route("/login").post(authLimiter, loginUser);
 
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:token").post(changeCurrentPassword);
