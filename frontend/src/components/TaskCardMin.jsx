@@ -47,8 +47,8 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
       </div>
 
       {/* Description */}
-      <div className='bg-red-300 line-clamp-3 py-2 px-2 rounded-md'>
-        <p className='text-sm sm:text-base leading-relaxed'>
+      <div className='bg-red-300 py-2 px-2 rounded-md'>
+        <p className='text-sm sm:text-base leading-relaxed line-clamp-2'>
           {task.description}
         </p>
       </div>
