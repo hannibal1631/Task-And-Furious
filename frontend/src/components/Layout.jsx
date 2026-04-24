@@ -12,6 +12,7 @@ import {
   faTriangleExclamation,
   faChartLine,
   faGears,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -31,7 +32,7 @@ function Layout() {
   const [view, setView] = useState(null); //null | "max" | "edit"
   const [categories, setCategories] = useState([]);
   const [isProgressOpen, setIsProgressOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null)
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const navigate = useNavigate();
 
@@ -113,21 +114,31 @@ function Layout() {
 
           {/* DESKTOP ACTIONS */}
           <div className='hidden md:flex items-center gap-4'>
-            <FontAwesomeIcon
-              icon={faBell}
-              className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
-            />
-            <FontAwesomeIcon
-              icon={faPalette}
-              className='lg:text-4xl text-2xl hover:cursor-pointer hover:text-white'
-            />
+            <div title='Switch Teams'>
+              <FontAwesomeIcon
+                icon={faUsers}
+                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
+              />
+            </div>
+            <div title='Notifications'>
+              <FontAwesomeIcon
+                icon={faBell}
+                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
+              />
+            </div>
+            <div title='Change Theme'>
+              <FontAwesomeIcon
+                icon={faPalette}
+                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
+              />
+            </div>
 
             {/* PROFILE */}
-            <div className='relative' title='user profile'>
+            <div className='relative' title='User Profile'>
               <FontAwesomeIcon
                 icon={faCircleUser}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className='lg:text-4xl text-2xl cursor-pointer hover:text-white'
+                className='lg:text-3xl text-2xl cursor-pointer hover:text-white'
               />
 
               {isDropdownOpen && (
@@ -205,11 +216,12 @@ function Layout() {
             </div>
           )}
         </div>
+        {/* header ends here */}
 
         {/* BODY */}
-        <div className='flex flex-1 items-stretch gap-6 bg-red-500 py-4 px-7 overflow-hidden'>
+        <div className='flex flex-1 items-stretch gap-4 bg-red-500 py-4 px-7 overflow-hidden'>
           {/* SIDEBAR */}
-          <div className='flex flex-col w-[5%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
+          <div className='flex flex-col w-[3%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
             <div className='flex flex-col gap-6'>
               <NavLink to='/dashboard' title='dashboard'>
                 <FontAwesomeIcon
@@ -263,10 +275,17 @@ function Layout() {
           </div>
 
           {/* MAIN CONTENT */}
-          <div className='relative flex flex-col w-[95%] px-8 py-6 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
+          <div className='relative flex flex-col w-[97%] md:px-8 md:py-6 px-1 py-1 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
             {/* <Outlet context={{ setView }} /> */}
-            <div className='flex-1 overflow-y-auto no-scrollbar px-8 py-6 pb-24'>
-              <Outlet context={{ setView, categories, setCategories, setSelectedTask }} />
+            <div className='flex-1 overflow-y-auto no-scrollbar px-8 py-6 sm:p-0 pb-24'>
+              <Outlet
+                context={{
+                  setView,
+                  categories,
+                  setCategories,
+                  setSelectedTask,
+                }}
+              />
             </div>
 
             {/* progress tracker button */}
@@ -292,7 +311,11 @@ function Layout() {
         )}
 
         {view === 'edit' && (
-          <TaskCardEdit onClose={() => setView(null)} categories={categories} task={selectedTask} />
+          <TaskCardEdit
+            onClose={() => setView(null)}
+            categories={categories}
+            task={selectedTask}
+          />
         )}
       </CardModal>
     </main>
