@@ -29,10 +29,12 @@ app.use(cookieParser());
 import userRouter from "./routes/user.routes";
 import categoryRouter from "./routes/category.routes";
 import taskRouter from "./routes/task.routes";
+import workspaceRouter from "./routes/workspace.routes";
 
 // routes declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/tasks", taskRouter);
+app.use("/api/v1/workspace", workspaceRouter);
 
 export { app };
