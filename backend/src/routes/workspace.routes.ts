@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { createWorkspace } from "../controllers/workspace.controllers";
+import {
+  addTeammates,
+  createWorkspace,
+} from "../controllers/workspace.controllers";
 
 const router = Router();
 
-router.route("/").post(createWorkspace);
+router.route("/:userId").post(createWorkspace);
+router.route("/:workspaceId/members/:userId").post(addTeammates);
 
 export default router;

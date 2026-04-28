@@ -1,14 +1,23 @@
+import { User } from "../models/user.models";
 import { Workspace } from "../models/workspace.models";
+import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 
 const createWorkspace = asyncHandler(async (req, res) => {
   const { name } = req.body;
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "user not found");
+  }
 
   const workspace = await Workspace.create({
     name,
-    owner: req.user?._id,
-    members: [{ user: req.user?._id, role: "admin" }],
+    owner: user._id,
+    members: [{ user: user._id, role: "admin" }],
   });
 
   res
@@ -16,4 +25,80 @@ const createWorkspace = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, workspace, "Workspace create successfully"));
 });
 
-export { createWorkspace };
+const addTeammates = asyncHandler(async (req, res) => {
+  let { teammates } = req.body;
+  const { workspaceId, userId } = req.params;
+
+  if (!teammates && req.body.email) {
+    teammates = [{ email: req.body.email }];
+  }
+
+  if (!userId) {
+    throw new ApiError(400, "userId is required");
+  }
+
+  if (!Array.isArray(teammates)) {
+    throw new ApiError(400, "Teammates must be an array");
+  }
+
+  const currentUser = await User.findById(userId);
+
+  if (!currentUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const workspace = await Workspace.findById(workspaceId);
+
+  if (!workspace) {
+    throw new ApiError(404, "Workspace not found");
+  }
+
+  // console.log(user);
+
+  const isAdmin = workspace?.members.some(
+    (m) =>
+      m.user &&
+      m.user.toString() === currentUser._id.toString() &&
+      m.role === "admin"
+
+    // console.log(m)
+  );
+
+  if (!isAdmin) {
+    throw new ApiError(403, "Only admin allowed");
+  }
+
+  let added = 0;
+  let notFound: string[] = [];
+
+  for (const mate of teammates) {
+    if (!mate.email) continue;
+
+    const user = await User.findOne({ email: mate.email });
+
+    if (!user) {
+      notFound.push(mate.email);
+      continue;
+    }
+
+    const exists = workspace.members.some(
+      (m) => m.user && m.user.toString() === user._id.toString()
+    );
+
+    if (!exists) {
+      workspace?.members.push({
+        user: user._id,
+        role: "member",
+      });
+      added++;
+    }
+  }
+
+  await workspace.save();
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, { added, notFound }, "Teammates processed"));
+});
+
+export { createWorkspace, addTeammates };
