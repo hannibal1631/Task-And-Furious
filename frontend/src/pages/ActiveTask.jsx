@@ -1,37 +1,74 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
+import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useOutletContext } from 'react-router-dom';
 
 function ActiveTask() {
+  const { user } = useAuth();
+  const { setView, setSelectedTask } = useOutletContext();
+
   const [selectedPriority, setSelectedPriority] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // fetching tasks from backend
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!user?._id) return;
+
+      setLoading(true);
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`, {
+          withCredentials: true,
+        });
+
+        setTasks(res.data?.data || []);
+      } catch (err) {
+        console.error('Failed to fetch tasks', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [user]);
+
+  // active task filtering logic
+  const now = new Date();
+
+  const todayISO = now.toLocaleDateString('en-CA');
+  const currentTime = now.toTimeString().slice(0, 5);
+
+  const activeTasks = tasks.filter((task) => {
+    if (!task.date) return false;
+
+    const taskDate = new Date(task.date).toLocaleDateString('en-CA');
+
+    return task.status === 'pending' && taskDate === todayISO;
+  });
+
+  // priority filter task
+  const filteredTasks = selectedPriority
+    ? activeTasks.filter((t) => t.priority === selectedPriority.value)
+    : activeTasks;
 
   const priorities = [
+    {value: 'all', label: 'All'},
     { value: 'low', label: 'Low' },
     { value: 'medium', label: 'Medium' },
     { value: 'high', label: 'High' },
   ];
 
-
-  // temporary tasks (later comes from backend)
-  const tasks = [
-    { id: 1, title: 'Design UI', dueDate: '2026-03-12' },
-    { id: 2, title: 'Fix navbar', dueDate: '2026-03-12' },
-    { id: 3, title: 'Update dashboard', dueDate: '2026-03-15' },
-  ];
-
   const today = new Date();
 
-  // YYYY-MM-DD for filtering
-  const todayISO = today.toISOString().split('T')[0];
-
-  // Mar 12, 2026 for display
   const formattedDate = `Today — ${today.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   })}`;
-
-  // filter today's tasks
-  const todayTasks = tasks.filter((task) => task.dueDate === todayISO);
 
   return (
     <div className='flex flex-col gap-6'>
@@ -43,9 +80,16 @@ function ActiveTask() {
         {priorities.map((priority) => (
           <button
             key={priority.value}
-            onClick={() => setSelectedPriority(priority)}
+            onClick={() => {
+              if (priority.value === 'all') {
+                setSelectedPriority(null);
+              } else {
+                setSelectedPriority(priority);
+              }
+            }}
             className={`px-4 py-2 rounded-full border transition cursor-pointer
       ${
+        (priority.value === 'all' && !selectedPriority) ||
         selectedPriority?.value === priority.value
           ? 'bg-black text-white'
           : 'bg-gray-100 hover:bg-gray-200'
@@ -60,10 +104,21 @@ function ActiveTask() {
         <h2 className='text-4xl font-semibold mb-5'>{formattedDate}</h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
-          {todayTasks.length > 0 ? (
-            todayTasks.map((task) => <TaskCardMin key={task.id} />)
+          {loading ? (
+            <p className='col-span-3 text-center'>Loading tasks...</p>
+          ) : filteredTasks.length === 0 ? (
+            <p className='col-span-3 text-center'>No active tasks right now.</p>
           ) : (
-            <p>No active tasks for today.</p>
+            filteredTasks.map((task) => (
+              <TaskCardMin
+                key={task._id}
+                task={task}
+                onOpen={() => {
+                  setSelectedTask(task);
+                  setView('max');
+                }}
+              />
+            ))
           )}
         </div>
       </div>
