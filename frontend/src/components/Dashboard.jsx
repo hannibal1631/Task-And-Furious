@@ -42,11 +42,12 @@ function Dashboard() {
     <div className='flex flex-col gap-6'>
       <h1 className='text-xl md:text-4xl font-bold underline'>Dashboard</h1>
 
+{/* ongoing tasks */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
         <h2 className='text-xl md:text-4xl font-semibold mb-1 md:mb-5'>
           Ongoing Tasks
         </h2>
-        <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-y-2 md:gap-y-4 gap-x-4'>
+        <div className='grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-y-2 md:gap-y-4 gap-x-4'>
           {loading ? (
             <p>Loading...</p>
           ) : ongoingTasks.length === 0 ? (
@@ -64,6 +65,7 @@ function Dashboard() {
         </div>
       </div>
 
+{/* upcoming tasks */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
         <h2 className='text-xl md:text-4xl font-semibold mb-1 md:mb-5'>
           Upcoming Tasks
