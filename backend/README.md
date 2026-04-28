@@ -79,3 +79,13 @@
 ### Get All Task by UserId
 
 **GET** `api/v1/tasks/user/:userId`
+
+## Workspace Routes
+
+### Create Workspace
+
+**POST** `api/v1/workspace/:userId`
+
+### Add Teammates
+
+**POST** `api/v1/workspace/:workspaceId/members/:userId`
