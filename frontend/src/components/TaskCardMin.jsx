@@ -4,13 +4,13 @@ import { faExpand } from '@fortawesome/free-solid-svg-icons';
 function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
   return (
     <div
-      className='bg-green-700 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl 
+      className='bg-green-700 w-full lg:w-76 lg:h-50
     px-4 sm:px-5 py-3 flex flex-col gap-4 sm:gap-5 
     rounded-2xl transition-all hover:scale-[1.02] sm:hover:scale-105'
     >
       {/* Header */}
       <div className='flex justify-between items-start sm:items-center gap-3'>
-        <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold leading-tight wrap-break-word line-clamp-1'>
+        <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold leading-tight line-clamp-1'>
           {task.title}
         </h3>
 
@@ -39,10 +39,8 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
         >
           {task.status}
         </span>
-        <span
-          className='text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md bg-yellow-500'
-        >
-          {task.date ? new Date(task.date).toLocaleDateString(): 'N/A'}
+        <span className='text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md bg-yellow-500'>
+          {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
         </span>
       </div>
 
