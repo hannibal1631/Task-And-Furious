@@ -5,6 +5,11 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 
 const createWorkspace = asyncHandler(async (req, res) => {
+  // get userId from params and name from body
+  // check if user exists
+  // create workspace with user as owner and member with admin role
+  // return workspace
+
   const { name } = req.body;
   const { userId } = req.params;
 
@@ -26,6 +31,21 @@ const createWorkspace = asyncHandler(async (req, res) => {
 });
 
 const addTeammates = asyncHandler(async (req, res) => {
+  // get userId and workspaceId from params and teammates from body
+  // check if user exists
+  // check if workspace exists
+  // check if user is admin of workspace
+  // for each teammate email, find user and add to workspace members if not already a member
+  // return number of teammates added and list of emails not found
+  // if teammates is not provided but email is provided, convert to teammates array with single email
+  // if teammates is not an array, throw error
+  // if userId is not provided, throw error
+  // if user is not admin, throw error
+  // if teammate email is not found, add to notFound list and continue
+  // if teammate is already a member, skip and continue
+  // after processing all teammates, save workspace and return response with count of added teammates and list of not found emails
+  // return res
+
   let { teammates } = req.body;
   const { workspaceId, userId } = req.params;
 
@@ -53,15 +73,11 @@ const addTeammates = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Workspace not found");
   }
 
-  // console.log(user);
-
   const isAdmin = workspace?.members.some(
     (m) =>
       m.user &&
       m.user.toString() === currentUser._id.toString() &&
       m.role === "admin"
-
-    // console.log(m)
   );
 
   if (!isAdmin) {
