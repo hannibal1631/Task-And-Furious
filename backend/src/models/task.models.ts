@@ -10,7 +10,7 @@ interface ITask extends Document {
   date?: Date;
   time?: string;
   type?: "personal" | "team";
-  workspace: Types.ObjectId;
+  workspaceId: Types.ObjectId;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -49,7 +49,7 @@ const taskSchema = new Schema<ITask>(
       type: String,
       enum: ["personal", "team"],
     },
-    workspace: {
+    workspaceId: {
       type: Schema.Types.ObjectId,
       ref: "Workspace",
       default: null,

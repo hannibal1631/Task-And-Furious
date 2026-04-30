@@ -1,9 +1,11 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
+import { ref } from "process";
 
 interface ICategory extends Document {
   categoryName: string;
   userId: Types.ObjectId;
   isDefault: boolean;
+  workspaceId: Types.ObjectId;
 }
 
 const categorySchema = new Schema<ICategory>(
@@ -20,6 +22,11 @@ const categorySchema = new Schema<ICategory>(
     isDefault: {
       type: Boolean,
       default: false,
+    },
+    workspaceId: {
+      type: Schema.Types.ObjectId,
+      ref: "Workspace",
+      default: null,
     },
   },
   { timestamps: true }

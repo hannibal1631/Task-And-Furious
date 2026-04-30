@@ -9,7 +9,9 @@ import {
 
 const router = Router();
 
-router.route("/:userId").post(addCategory);
+router.route("/personal/:userId").post(addCategory);
+router.route("/team/:workspaceId/:userId").post(addCategory);
+
 router.route("/:categoryId").put(updateCategory);
 router.route("/:categoryId").delete(deleteCategory);
 
