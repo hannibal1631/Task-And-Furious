@@ -38,9 +38,13 @@
 
 ## Category Routes
 
-### Add Category
+### Add Category - Personal
 
-**POST** `api/v1/categories/:userId`
+**POST** `api/v1/categories/personal/:userId`
+
+### Add Category - Team
+
+**POST** `api/v1/categories/team/:workspaceId/:userId`
 
 ### Update Category
 
@@ -60,9 +64,13 @@
 
 ## Task Routes
 
-### Add Task
+### Add Task - Personal
 
-**POST** `api/v1/tasks/:userId/:categoryId`
+**POST** `api/v1/tasks/personal/:userId/:categoryId`
+
+### Add Task - Team
+
+**POST** `api/v1/tasks/team/:workspaceId/:userId/:categoryId`
 
 ### Update Task
 
