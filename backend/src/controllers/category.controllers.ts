@@ -1,35 +1,75 @@
 import { Category } from "../models/category.models";
+import { User } from "../models/user.models";
+import { Workspace } from "../models/workspace.models";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 
 const addCategory = asyncHandler(async (req, res) => {
-  // get user id from params and category name from body
-  // check duplicate
+  // get category name from body and user id, workspace id from params
+  // find user by user id
+  // if user not found throw error
+  // if workspace id is present then find workspace by workspace id
+  // if workspace not found throw error
+  // if workspace id is present then check user is member of workspace or not
+  // if not member throw error
+  // check category with same name already exists for user in workspace or not
+  // if exists throw error
   // create category
   // return res
 
   const { categoryName } = req.body;
-  const { userId } = req.params;
+  const { userId, workspaceId } = req.params;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (workspaceId) {
+    const workspace = await Workspace.findById(workspaceId);
+
+    if (!workspace) {
+      throw new ApiError(404, "Workspace not found");
+    }
+
+    const isMember = workspace.members.some(
+      (m) => m.user && m.user.toString() === user._id.toString()
+    );
+
+    if (!isMember) {
+      throw new ApiError(403, "Not a workspace member");
+    }
+  }
 
   const existingCategory = await Category.findOne({
-    categoryName: { $regex: `^${categoryName.trim()}$`, $options: "i" },
+    categoryName,
     userId,
+    workspace: workspaceId || null,
   });
 
   if (existingCategory) {
-    throw new ApiError(409, "Category already exists");
+    throw new ApiError(400, "Category already exists");
   }
 
   const category = await Category.create({
     userId,
     categoryName,
+    workspaceId: workspaceId ? (workspaceId as any) : null,
     isDefault: false,
   });
 
   res
-    .status(200)
-    .json(new ApiResponse(200, category, "Category create successfully"));
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        category,
+        workspaceId
+          ? "Team Category create successfully"
+          : "Personal category create successfully"
+      )
+    );
 });
 
 const updateCategory = asyncHandler(async (req, res) => {

@@ -9,6 +9,8 @@ interface ITask extends Document {
   priority?: "low" | "medium" | "high";
   date?: Date;
   time?: string;
+  type?: "personal" | "team";
+  workspaceId: Types.ObjectId;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -42,6 +44,15 @@ const taskSchema = new Schema<ITask>(
     time: {
       type: String,
       match: /^([01]\d|2[0-3]):([0-5]\d)$/,
+    },
+    type: {
+      type: String,
+      enum: ["personal", "team"],
+    },
+    workspaceId: {
+      type: Schema.Types.ObjectId,
+      ref: "Workspace",
+      default: null,
     },
   },
   { timestamps: true }
