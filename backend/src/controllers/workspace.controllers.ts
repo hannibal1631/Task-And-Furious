@@ -32,19 +32,14 @@ const createWorkspace = asyncHandler(async (req, res) => {
 
 const addTeammates = asyncHandler(async (req, res) => {
   // get userId and workspaceId from params and teammates from body
-  // check if user exists
-  // check if workspace exists
-  // check if user is admin of workspace
-  // for each teammate email, find user and add to workspace members if not already a member
-  // return number of teammates added and list of emails not found
-  // if teammates is not provided but email is provided, convert to teammates array with single email
-  // if teammates is not an array, throw error
-  // if userId is not provided, throw error
-  // if user is not admin, throw error
-  // if teammate email is not found, add to notFound list and continue
-  // if teammate is already a member, skip and continue
-  // after processing all teammates, save workspace and return response with count of added teammates and list of not found emails
-  // return res
+  // if teammates is not array and email is present, convert to array of objects with email
+  // check userId exists
+  // teammates is array of objects
+  // check current user found
+  // check workspace found
+  // check current user is admin of workspace
+  // for each teammate check if user with email exists, if not add to notFound array, if exists check if already a member of workspace, if not add to members with role member and increment added count
+  // return added count and notFound array
 
   let { teammates } = req.body;
   const { workspaceId, userId } = req.params;
