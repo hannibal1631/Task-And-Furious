@@ -4,9 +4,11 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useMode } from '../context/ModeContext.jsx';
 
 function TaskCardEdit({ onClose, categories = [], task }) {
   const { user, loading } = useAuth();
+  const {mode, workspaceId} = useMode()
 
   const [today] = useState(() => {
     const now = new Date();
@@ -54,9 +56,14 @@ function TaskCardEdit({ onClose, categories = [], task }) {
       return;
     }
 
+    if(mode === 'team' && !workspaceId){
+      console.error('No workspace Selected');
+      return
+    }
+
     try {
       if (task) {
-        // 🔥 EDIT MODE
+        // EDIT MODE
         await axios.put(
           `${API_BASE_URL}/tasks/${task._id}`,
           {
@@ -74,9 +81,14 @@ function TaskCardEdit({ onClose, categories = [], task }) {
 
         console.log('Task Updated');
       } else {
-        // 🔥 CREATE MODE
+        // CREATE MODE
+        const endpoint =
+          mode === 'team'
+            ? `${API_BASE_URL}/tasks/team/${workspaceId}/${user._id}/${formData.categoryId}`
+            : `${API_BASE_URL}/tasks/personal/${user._id}/${formData.categoryId}`;
+
         await axios.post(
-          `${API_BASE_URL}/tasks/${user._id}/${formData.categoryId}`,
+          endpoint,
           {
             title: formData.title,
             description: formData.description,

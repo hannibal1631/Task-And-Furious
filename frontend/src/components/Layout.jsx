@@ -24,8 +24,12 @@ import ProgressTrackerBtn from './ProgressTrackerBtn.jsx';
 import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 
+// mode imports
+import {useMode} from '../context/ModeContext.jsx'
+
 function Layout() {
   const { user } = useAuth();
+  const {mode, setMode, workspaceId, setWorkspaceId} = useMode()
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,6 +37,9 @@ function Layout() {
   const [categories, setCategories] = useState([]);
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  // for mode switch
+  const [isModeOpen, setIsModeOpen] = useState(false)
+  const [workspaces, setWorkspaces] = useState([])
 
   const navigate = useNavigate();
 
@@ -53,9 +60,14 @@ function Layout() {
           `${API_BASE_URL}/categories/default`,
         );
 
-        const userRes = await axios.get(
-          `${API_BASE_URL}/categories/${user._id}`,
-        );
+        const userRes =
+          mode === 'team'
+            ? await axios.get(
+                `${API_BASE_URL}/categories/team/${workspaceId}/${user._id}`,
+              )
+            : await axios.get(
+                `${API_BASE_URL}/categories/personal/${user._id}`,
+              );
 
         const merged = [
           ...(defaultRes.data?.data || []),
@@ -79,6 +91,27 @@ function Layout() {
 
     fetchCategories();
   }, [user]);
+
+  // fetch workspaces
+  // useEffect(() => {
+  //   const fetchWorkspaces = async () => {
+  //     if (!user?._id) return;
+
+  //     try {
+  //       const res = await axios.get(`${API_BASE_URL}/workspace/${user._id}`);
+
+  //       setWorkspaces(res.data?.data || []);
+  //     } catch (err) {
+  //       console.error('Failed to fetch workspaces', err);
+  //     }
+  //   };
+
+  //   fetchWorkspaces();
+  // }, [user]);
+  // temp hardcoded workspace
+  useEffect(() => {
+    setWorkspaces([{ _id: 'demo-workspace-1', name: 'My Team' }]);
+  }, []);
 
   return (
     <main>
@@ -114,11 +147,72 @@ function Layout() {
 
           {/* DESKTOP ACTIONS */}
           <div className='hidden md:flex items-center gap-4'>
-            <div title='Switch Teams'>
+            {/* <div title='Switch Teams'>
               <FontAwesomeIcon
                 icon={faUsers}
                 className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
               />
+            </div> */}
+            <div className='relative' title='Switch Mode'>
+              <FontAwesomeIcon
+                icon={faUsers}
+                onClick={() => setIsModeOpen((prev) => !prev)}
+                className={`lg:text-3xl text-2xl cursor-pointer transition ${
+                  mode === 'team' ? 'text-green-400' : 'hover:text-white'
+                }`}
+              />
+
+              {isModeOpen && (
+                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                  <div className='flex flex-col text-sm'>
+                    {/* PERSONAL */}
+                    <div
+                      onClick={() => {
+                        setMode('personal');
+                        setWorkspaceId(null);
+                        setIsModeOpen(false);
+                      }}
+                      className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                        mode === 'personal' ? 'bg-blue-700 font-semibold' : ''
+                      }`}
+                    >
+                      Personal
+                    </div>
+
+                    {/* DIVIDER */}
+                    <div className='border-t border-blue-600 my-1'></div>
+
+                    {/* WORKSPACES */}
+                    {workspaces.map((ws) => (
+                      <div
+                        key={ws._id}
+                        onClick={() => {
+                          setMode('team');
+                          setWorkspaceId(ws._id);
+                          setIsModeOpen(false);
+                        }}
+                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                          workspaceId === ws._id
+                            ? 'bg-blue-700 font-semibold'
+                            : ''
+                        }`}
+                      >
+                        {ws.name}
+                      </div>
+                    ))}
+
+                    {/* CREATE */}
+                    <div
+                      onClick={() => {
+                        console.log('open create workspace modal');
+                      }}
+                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                    >
+                      + Create Workspace
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <div title='Notifications'>
               <FontAwesomeIcon
