@@ -60,9 +60,14 @@ function Layout() {
           `${API_BASE_URL}/categories/default`,
         );
 
-        const userRes = await axios.get(
-          `${API_BASE_URL}/categories/${user._id}`,
-        );
+        const userRes =
+          mode === 'team'
+            ? await axios.get(
+                `${API_BASE_URL}/categories/team/${workspaceId}/${user._id}`,
+              )
+            : await axios.get(
+                `${API_BASE_URL}/categories/personal/${user._id}`,
+              );
 
         const merged = [
           ...(defaultRes.data?.data || []),
@@ -103,6 +108,10 @@ function Layout() {
 
   //   fetchWorkspaces();
   // }, [user]);
+  // temp hardcoded workspace
+  useEffect(() => {
+    setWorkspaces([{ _id: 'demo-workspace-1', name: 'My Team' }]);
+  }, []);
 
   return (
     <main>
