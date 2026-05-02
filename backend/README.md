@@ -97,3 +97,7 @@
 ### Add Teammates
 
 **POST** `api/v1/workspace/:workspaceId/members/:userId`
+
+### Get Workspace by UserId
+
+**POST** `api/v1/workspace/user/:userId`
