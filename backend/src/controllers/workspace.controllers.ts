@@ -112,4 +112,31 @@ const addTeammates = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, { added, notFound }, "Teammates processed"));
 });
 
-export { createWorkspace, addTeammates };
+const getWorkspaceByUserId = asyncHandler(async (req, res) => {
+  // get userId and workspaceId from params
+  // check userId exists
+  // check usr exists
+  // find workspace where user is owner or member
+  // return response
+
+  const { userId } = req.params;
+
+  if (!userId) {
+    throw new ApiError(400, "userId is required");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const workspace = await Workspace.find({
+    $or: [{ owner: userId }, { "members.user": userId }],
+  }).populate("members.user", "name email");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, workspace, "Workspace fetched successfully"));
+});
+
+export { createWorkspace, addTeammates, getWorkspaceByUserId };
