@@ -1,8 +1,11 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import dotenv from "dotenv";
+
+import { requestLogger } from "./middlewares/requestLogger";
+import { errorHandler } from "./middlewares/errorHandler";
 
 dotenv.config();
 
@@ -25,6 +28,12 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+app.use(requestLogger);
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("Happy Coding!");
+});
+
 // routes
 import userRouter from "./routes/user.routes";
 import categoryRouter from "./routes/category.routes";
@@ -36,5 +45,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/tasks", taskRouter);
 app.use("/api/v1/workspace", workspaceRouter);
+
+app.use(errorHandler);
 
 export { app };
