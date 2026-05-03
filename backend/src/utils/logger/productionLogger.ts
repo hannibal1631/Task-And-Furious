@@ -1,7 +1,7 @@
 import * as winston from "winston";
 
 const { format, transports, createLogger } = winston;
-const { combine, timestamp, printf, label, simple } = format;
+const { combine, timestamp, printf, errors } = format;
 
 const myFormat = printf(({ level, message, timestamp }) => {
   return `[${level}] ${timestamp} ${message}`;
