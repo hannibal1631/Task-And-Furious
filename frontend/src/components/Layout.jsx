@@ -14,7 +14,7 @@ import {
   faGears,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import CardModal from './CardModal.jsx';
 import TaskCardMax from './TaskCardMax.jsx';
@@ -40,6 +40,10 @@ function Layout() {
   // for mode switch
   const [isModeOpen, setIsModeOpen] = useState(false);
   const [workspaces, setWorkspaces] = useState([]);
+
+  // outside click menu closing refs
+  const profileRef = useRef(null)
+  const modeRef = useRef(null)
 
   const navigate = useNavigate();
 
@@ -113,6 +117,35 @@ function Layout() {
     setWorkspaces([{ _id: 'demo-workspace-1', name: 'My Team' }]);
   }, []);
 
+  // outside click handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // close profile dropdown
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+
+      // close workspace dropdown
+      if (modeRef.current && !modeRef.current.contains(event.target)) {
+        setIsModeOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // close every dropdown upon menu closing
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      setIsDropdownOpen(false);
+      setIsModeOpen(false);
+    }
+  }, [isMobileMenuOpen]);
+
   return (
     <main>
       <div className='bg-blue-900 h-screen max-w-full flex flex-col overflow-hidden'>
@@ -153,7 +186,7 @@ function Layout() {
                 className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
               />
             </div> */}
-            <div className='relative' title='Switch Mode'>
+            <div className='relative' title='Switch Mode' ref={modeRef}>
               <FontAwesomeIcon
                 icon={faUsers}
                 onClick={() => setIsModeOpen((prev) => !prev)}
@@ -236,7 +269,7 @@ function Layout() {
             </div>
 
             {/* PROFILE */}
-            <div className='relative' title='User Profile'>
+            <div className='relative' title='User Profile' ref={profileRef}>
               <FontAwesomeIcon
                 icon={faCircleUser}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -287,7 +320,7 @@ function Layout() {
               {/* ICONS */}
               <div className='flex justify-around items-center relative'>
                 {/* MODE SWITCH */}
-                <div className='relative'>
+                <div className='relative' ref={modeRef}>
                   <FontAwesomeIcon
                     icon={faUsers}
                     onClick={() => setIsModeOpen((prev) => !prev)}
@@ -358,7 +391,7 @@ function Layout() {
                 <FontAwesomeIcon icon={faPalette} className='text-xl' />
 
                 {/* PROFILE */}
-                <div className='relative'>
+                <div className='relative' ref={profileRef}>
                   <FontAwesomeIcon
                     icon={faCircleUser}
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
