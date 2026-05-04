@@ -163,7 +163,7 @@ function Layout() {
               />
 
               {isModeOpen && (
-                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
                   <div className='flex flex-col text-sm'>
                     {/* PERSONAL */}
                     <div
@@ -210,6 +210,14 @@ function Layout() {
                     >
                       + Create Workspace
                     </div>
+                    <div
+                      onClick={() => {
+                        console.log('open join workspace modal');
+                      }}
+                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                    >
+                      + Join Workspace
+                    </div>
                   </div>
                 </div>
               )}
@@ -236,7 +244,7 @@ function Layout() {
               />
 
               {isDropdownOpen && (
-                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
                   <ul className='flex flex-col text-sm'>
                     <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
                       User Settings
