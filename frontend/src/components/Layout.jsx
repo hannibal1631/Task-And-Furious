@@ -25,11 +25,11 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 
 // mode imports
-import {useMode} from '../context/ModeContext.jsx'
+import { useMode } from '../context/ModeContext.jsx';
 
 function Layout() {
   const { user } = useAuth();
-  const {mode, setMode, workspaceId, setWorkspaceId} = useMode()
+  const { mode, setMode, workspaceId, setWorkspaceId } = useMode();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,8 +38,8 @@ function Layout() {
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   // for mode switch
-  const [isModeOpen, setIsModeOpen] = useState(false)
-  const [workspaces, setWorkspaces] = useState([])
+  const [isModeOpen, setIsModeOpen] = useState(false);
+  const [workspaces, setWorkspaces] = useState([]);
 
   const navigate = useNavigate();
 
@@ -285,7 +285,75 @@ function Layout() {
               </div>
 
               {/* ICONS */}
-              <div className='flex justify-around items-center'>
+              <div className='flex justify-around items-center relative'>
+                {/* MODE SWITCH */}
+                <div className='relative'>
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    onClick={() => setIsModeOpen((prev) => !prev)}
+                    className={`text-xl cursor-pointer ${
+                      mode === 'team' ? 'text-green-500' : ''
+                    }`}
+                  />
+
+                  {isModeOpen && (
+                    <div className='absolute top-7 left-0 w-56 bg-blue-800 text-white rounded-lg shadow-lg z-50 overflow-hidden'>
+                      <div className='flex flex-col text-sm'>
+                        {/* PERSONAL */}
+                        <div
+                          onClick={() => {
+                            setMode('personal');
+                            setWorkspaceId(null);
+                            setIsModeOpen(false);
+                          }}
+                          className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                            mode === 'personal'
+                              ? 'bg-blue-700 font-semibold'
+                              : ''
+                          }`}
+                        >
+                          Personal
+                        </div>
+
+                        <div className='border-t border-blue-600 my-1'></div>
+
+                        {/* WORKSPACES */}
+                        {workspaces.map((ws) => (
+                          <div
+                            key={ws._id}
+                            onClick={() => {
+                              setMode('team');
+                              setWorkspaceId(ws._id);
+                              setIsModeOpen(false);
+                            }}
+                            className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                              workspaceId === ws._id
+                                ? 'bg-blue-700 font-semibold'
+                                : ''
+                            }`}
+                          >
+                            {ws.name}
+                          </div>
+                        ))}
+
+                        {/* ACTIONS */}
+                        <div
+                          className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                          onClick={() => console.log('create workspace')}
+                        >
+                          + Create Workspace
+                        </div>
+
+                        <div
+                          className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                          onClick={() => console.log('join workspace')}
+                        >
+                          + Join Workspace
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <FontAwesomeIcon icon={faBell} className='text-xl' />
                 <FontAwesomeIcon icon={faPalette} className='text-xl' />
 
