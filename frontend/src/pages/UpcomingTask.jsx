@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 function UpcomingTask() {
   const [upcomingDate, setUpcomingDate] = useState('');
   const [allTasks, setAllTasks] = useState([])
-  const [filteredTasks, setFilteredTasks] = useState([])
+  // const [filteredTasks, setFilteredTasks] = useState([])
   const [loading, setLoading] = useState(false)
 
   const {user} = useAuth()
@@ -33,7 +33,7 @@ function UpcomingTask() {
     };
 
     fetchTasks();
-  }, [user]);
+  }, [user._id]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -51,18 +51,9 @@ function UpcomingTask() {
   });
 
   // date filtering
-  useEffect(() => {
-    if (!upcomingDate) {
-      setFilteredTasks(upcomingTasks);
-      return;
-    }
-
-    const filtered = upcomingTasks.filter((task) => {
-      return task.date?.split('T')[0] === upcomingDate;
-    });
-
-    setFilteredTasks(filtered);
-  }, [upcomingDate, upcomingTasks, allTasks]);
+  const filteredTasks = upcomingDate
+    ? upcomingTasks.filter((task) => task.date?.split('T')[0] === upcomingDate)
+    : upcomingTasks;
 
   const tomorrowISO = tomorrow.toISOString().split('T')[0];
 
@@ -120,7 +111,7 @@ function UpcomingTask() {
   // this week handler
   const handleWeekClick = () => {
     if (groupedTasks.thisWeek.length > 0) {
-      setUpcomingDate(groupedTasks.thisWeek[0].dueDate);
+      setUpcomingDate(groupedTasks.thisWeek[0].date.split('T')[0]);
     }
   };
 
