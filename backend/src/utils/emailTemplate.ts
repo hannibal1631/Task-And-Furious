@@ -2,7 +2,7 @@ export const welcomeEmailTemplate = (name: string) => {};
 
 export const resetPasswordTemplate = (
   name: string,
-  hashedToken: string,
+  hashedToken: string
 ): string => {
   return `<div
     style="
@@ -49,3 +49,24 @@ export const resetPasswordTemplate = (
 };
 
 export const planUpgradeTemplate = (name: string, plan: string) => {};
+
+export const inviteToWorkspaceTemplate = (
+  name: string,
+  workspaceName: string,
+  inviteLink: string
+) => {
+  return `<div style="font-family: Arial; padding: 20px;">
+      <h2>Hello ${name},</h2>
+
+      <p>You have been invited to join the workspace:</p>
+
+      <h3>${workspaceName}</h3>
+
+      <a href="${inviteLink}" 
+         style="display:inline-block;padding:10px 15px;background:#4CAF50;color:#fff;text-decoration:none;border-radius:5px;">
+         Join Workspace
+      </a>
+
+      <p>This link will expire in 24 hours.</p>
+    </div>`;
+};
