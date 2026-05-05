@@ -1,22 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
+import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function UpcomingTask() {
   const [upcomingDate, setUpcomingDate] = useState('');
+  const [allTasks, setAllTasks] = useState([])
+  const [filteredTasks, setFilteredTasks] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  // temporary tasks (later comes from backend)
-  const tasks = [
-    { id: 1, title: 'Design UI', dueDate: '2026-03-11' },
-    { id: 2, title: 'Write API docs', dueDate: '2026-03-12' },
-    { id: 2, title: 'Write API docs', dueDate: '2026-03-13' },
-    { id: 3, title: 'Fix navbar', dueDate: '2026-03-14' },
-    { id: 4, title: 'Update dashboard', dueDate: '2026-03-18' },
-  ];
+  const {user} = useAuth()
+
+  // fetch all upcoming tasks
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!user?._id) return;
+
+      setLoading(true);
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
+
+        const data = res.data?.data || [];
+
+        setAllTasks(data);
+      } catch (err) {
+        console.error('Failed to fetch tasks', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [user]);
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const tomorrow = new Date();
+  const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
+
+  const upcomingTasks = allTasks.filter((task) => {
+    if (!task.date) return false;
+
+    const due = new Date(task.date);
+    due.setHours(0, 0, 0, 0);
+
+    return due >= tomorrow;
+  });
+
+  // date filtering
+  useEffect(() => {
+    if (!upcomingDate) {
+      setFilteredTasks(upcomingTasks);
+      return;
+    }
+
+    const filtered = upcomingTasks.filter((task) => {
+      return task.date?.split('T')[0] === upcomingDate;
+    });
+
+    setFilteredTasks(filtered);
+  }, [upcomingDate, upcomingTasks, allTasks]);
 
   const tomorrowISO = tomorrow.toISOString().split('T')[0];
 
@@ -29,18 +75,17 @@ function UpcomingTask() {
       year: 'numeric',
     });
 
+  // grouped tasks
   const groupTasks = (tasks) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-
-    const endOfWeek = new Date();
+    const endOfWeek = new Date(today);
     endOfWeek.setDate(today.getDate() + 7);
 
     return tasks.reduce(
       (groups, task) => {
-        const due = new Date(task.dueDate);
+        const due = new Date(task.date);
+        due.setHours(0, 0, 0, 0);
 
-        if (due.toDateString() === tomorrow.toDateString()) {
+        if (due.getTime() === tomorrow.getTime()) {
           groups.tomorrow.push(task);
         } else if (due > tomorrow && due <= endOfWeek) {
           groups.thisWeek.push(task);
@@ -55,12 +100,9 @@ function UpcomingTask() {
     );
   };
 
-  const groupedTasks = groupTasks(tasks);
+  const groupedTasks = groupTasks(upcomingTasks);
 
-  const hasAnyUpcoming =
-    groupedTasks.tomorrow.length > 0 || groupedTasks.thisWeek.length > 0;
-
-  const selectedTasks = tasks.filter((task) => task.dueDate === upcomingDate);
+  const hasAnyUpcoming = upcomingTasks.length > 0;
 
   // handle date change and prevent user from changing it from browser dev tools
   const handleDateChange = (e) => {
@@ -112,14 +154,18 @@ function UpcomingTask() {
         // selected date view
         <div className='max-w-full py-3 px-4 bg-yellow-400'>
           <h2 className='text-3xl font-semibold mb-5'>
-            {formatDate(upcomingDate)}
+            {upcomingDate ? formatDate(upcomingDate) : 'All Upcoming Tasks'}
           </h2>
 
           <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
-            {selectedTasks.length ? (
-              selectedTasks.map((task) => <TaskCardMin key={task.id} />)
+            {loading ? (
+              <p>Loading...</p>
+            ) : filteredTasks.length > 0 ? (
+              filteredTasks.map((task) => (
+                <TaskCardMin key={task._id} task={task} />
+              ))
             ) : (
-              <p>No tasks for this date.</p>
+              <p>No tasks found.</p>
             )}
           </div>
         </div>
@@ -137,7 +183,7 @@ function UpcomingTask() {
 
               <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
                 {groupedTasks.tomorrow.map((task) => (
-                  <TaskCardMin key={task.id} />
+                  <TaskCardMin key={task._id} task={task} />
                 ))}
               </div>
             </div>
@@ -155,7 +201,7 @@ function UpcomingTask() {
 
               <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
                 {groupedTasks.thisWeek.map((task) => (
-                  <TaskCardMin key={task.id} />
+                  <TaskCardMin key={task._id} task={task} />
                 ))}
               </div>
             </div>
