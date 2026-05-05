@@ -42,8 +42,8 @@ function Layout() {
   const [workspaces, setWorkspaces] = useState([]);
 
   // outside click menu closing refs
-  const profileRef = useRef(null)
-  const modeRef = useRef(null)
+  const profileRef = useRef(null);
+  const modeRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -58,6 +58,7 @@ function Layout() {
   useEffect(() => {
     const fetchCategories = async () => {
       if (!user?._id) return;
+      if(mode === 'team' && !workspaceId) return;
 
       try {
         const defaultRes = await axios.get(
@@ -65,12 +66,10 @@ function Layout() {
         );
 
         const userRes =
-          mode === 'team'
-            ? await axios.get(
-                `${API_BASE_URL}/categories/team/${workspaceId}/${user._id}`,
-              )
+          mode === 'personal'
+            ? await axios.get(`${API_BASE_URL}/categories/${user._id}`)
             : await axios.get(
-                `${API_BASE_URL}/categories/personal/${user._id}`,
+                `${API_BASE_URL}/categories/team/${workspaceId}/${user._id}`,
               );
 
         const merged = [
@@ -94,7 +93,7 @@ function Layout() {
     };
 
     fetchCategories();
-  }, [user]);
+  }, [user, mode, workspaceId]);
 
   // fetch workspaces
   // useEffect(() => {
