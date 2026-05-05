@@ -3,7 +3,7 @@ import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useOutletContext } from 'react-router-dom';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -15,25 +15,18 @@ function Categories() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loadingTasks, setLoadingTasks] = useState(false);
+  const [allTasks, setAllTasks] = useState([])
 
-  // to fetch tasks by userId and selected category
+  // to fetch tasks 
   useEffect(() => {
     const fetchTasks = async () => {
-      if (!user?._id || !selectedCategory?.value) return;
+      if (!user?._id) return;
 
       setLoadingTasks(true);
 
       try {
         const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
-
-        const allTasks = res.data?.data || [];
-
-        // filter tasks by selected category
-        const filtered = allTasks.filter(
-          (task) => task.categoryId === selectedCategory.value,
-        );
-
-        setTasks(filtered);
+        setAllTasks(res.data?.data || []);
       } catch (err) {
         console.error('Failed to fetch tasks', err);
       } finally {
@@ -42,14 +35,30 @@ function Categories() {
     };
 
     fetchTasks();
-  }, [selectedCategory, user]);
+  }, [user]);
+
+  // showing tasks when category changes
+  useEffect(() => {
+    if (!selectedCategory) {
+      setTasks(allTasks);
+      return;
+    }
+
+    const filtered = allTasks.filter(
+      (task) =>
+        task.categoryId === selectedCategory.value ||
+        task.categoryId?._id === selectedCategory.value,
+    );
+
+    setTasks(filtered);
+  }, [selectedCategory, allTasks]);
 
   // handleCreate to add more categories
   const handleCreate = async (inputValue) => {
     if (!user?._id) return;
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/categories/${user._id}`, {
+      const res = await axios.post(`${API_BASE_URL}/categories/personal/${user._id}`, {
         categoryName: inputValue,
       });
 
