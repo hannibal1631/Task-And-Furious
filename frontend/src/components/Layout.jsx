@@ -14,7 +14,7 @@ import {
   faGears,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import CardModal from './CardModal.jsx';
 import TaskCardMax from './TaskCardMax.jsx';
@@ -25,11 +25,11 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 
 // mode imports
-import {useMode} from '../context/ModeContext.jsx'
+import { useMode } from '../context/ModeContext.jsx';
 
 function Layout() {
   const { user } = useAuth();
-  const {mode, setMode, workspaceId, setWorkspaceId} = useMode()
+  const { mode, setMode, workspaceId, setWorkspaceId } = useMode();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,8 +38,12 @@ function Layout() {
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   // for mode switch
-  const [isModeOpen, setIsModeOpen] = useState(false)
-  const [workspaces, setWorkspaces] = useState([])
+  const [isModeOpen, setIsModeOpen] = useState(false);
+  const [workspaces, setWorkspaces] = useState([]);
+
+  // outside click menu closing refs
+  const profileRef = useRef(null);
+  const modeRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -54,6 +58,7 @@ function Layout() {
   useEffect(() => {
     const fetchCategories = async () => {
       if (!user?._id) return;
+      if(mode === 'team' && !workspaceId) return;
 
       try {
         const defaultRes = await axios.get(
@@ -61,12 +66,10 @@ function Layout() {
         );
 
         const userRes =
-          mode === 'team'
-            ? await axios.get(
-                `${API_BASE_URL}/categories/team/${workspaceId}/${user._id}`,
-              )
+          mode === 'personal'
+            ? await axios.get(`${API_BASE_URL}/categories/${user._id}`)
             : await axios.get(
-                `${API_BASE_URL}/categories/personal/${user._id}`,
+                `${API_BASE_URL}/categories/team/${workspaceId}/${user._id}`,
               );
 
         const merged = [
@@ -90,7 +93,7 @@ function Layout() {
     };
 
     fetchCategories();
-  }, [user]);
+  }, [user, mode, workspaceId]);
 
   // fetch workspaces
   // useEffect(() => {
@@ -112,6 +115,35 @@ function Layout() {
   useEffect(() => {
     setWorkspaces([{ _id: 'demo-workspace-1', name: 'My Team' }]);
   }, []);
+
+  // outside click handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // close profile dropdown
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+
+      // close workspace dropdown
+      if (modeRef.current && !modeRef.current.contains(event.target)) {
+        setIsModeOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // close every dropdown upon menu closing
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      setIsDropdownOpen(false);
+      setIsModeOpen(false);
+    }
+  }, [isMobileMenuOpen]);
 
   return (
     <main>
@@ -153,7 +185,7 @@ function Layout() {
                 className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
               />
             </div> */}
-            <div className='relative' title='Switch Mode'>
+            <div className='relative' title='Switch Mode' ref={modeRef}>
               <FontAwesomeIcon
                 icon={faUsers}
                 onClick={() => setIsModeOpen((prev) => !prev)}
@@ -163,7 +195,7 @@ function Layout() {
               />
 
               {isModeOpen && (
-                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
                   <div className='flex flex-col text-sm'>
                     {/* PERSONAL */}
                     <div
@@ -210,6 +242,14 @@ function Layout() {
                     >
                       + Create Workspace
                     </div>
+                    <div
+                      onClick={() => {
+                        console.log('open join workspace modal');
+                      }}
+                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                    >
+                      + Join Workspace
+                    </div>
                   </div>
                 </div>
               )}
@@ -228,7 +268,7 @@ function Layout() {
             </div>
 
             {/* PROFILE */}
-            <div className='relative' title='User Profile'>
+            <div className='relative' title='User Profile' ref={profileRef}>
               <FontAwesomeIcon
                 icon={faCircleUser}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -236,7 +276,7 @@ function Layout() {
               />
 
               {isDropdownOpen && (
-                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
+                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
                   <ul className='flex flex-col text-sm'>
                     <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
                       User Settings
@@ -277,12 +317,80 @@ function Layout() {
               </div>
 
               {/* ICONS */}
-              <div className='flex justify-around items-center'>
+              <div className='flex justify-around items-center relative'>
+                {/* MODE SWITCH */}
+                <div className='relative' ref={modeRef}>
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    onClick={() => setIsModeOpen((prev) => !prev)}
+                    className={`text-xl cursor-pointer ${
+                      mode === 'team' ? 'text-green-500' : ''
+                    }`}
+                  />
+
+                  {isModeOpen && (
+                    <div className='absolute top-7 left-0 w-56 bg-blue-800 text-white rounded-lg shadow-lg z-50 overflow-hidden'>
+                      <div className='flex flex-col text-sm'>
+                        {/* PERSONAL */}
+                        <div
+                          onClick={() => {
+                            setMode('personal');
+                            setWorkspaceId(null);
+                            setIsModeOpen(false);
+                          }}
+                          className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                            mode === 'personal'
+                              ? 'bg-blue-700 font-semibold'
+                              : ''
+                          }`}
+                        >
+                          Personal
+                        </div>
+
+                        <div className='border-t border-blue-600 my-1'></div>
+
+                        {/* WORKSPACES */}
+                        {workspaces.map((ws) => (
+                          <div
+                            key={ws._id}
+                            onClick={() => {
+                              setMode('team');
+                              setWorkspaceId(ws._id);
+                              setIsModeOpen(false);
+                            }}
+                            className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                              workspaceId === ws._id
+                                ? 'bg-blue-700 font-semibold'
+                                : ''
+                            }`}
+                          >
+                            {ws.name}
+                          </div>
+                        ))}
+
+                        {/* ACTIONS */}
+                        <div
+                          className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                          onClick={() => console.log('create workspace')}
+                        >
+                          + Create Workspace
+                        </div>
+
+                        <div
+                          className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                          onClick={() => console.log('join workspace')}
+                        >
+                          + Join Workspace
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <FontAwesomeIcon icon={faBell} className='text-xl' />
                 <FontAwesomeIcon icon={faPalette} className='text-xl' />
 
                 {/* PROFILE */}
-                <div className='relative'>
+                <div className='relative' ref={profileRef}>
                   <FontAwesomeIcon
                     icon={faCircleUser}
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
