@@ -12,7 +12,7 @@ interface SendEmailParams {
   name: string;
   email: string;
   emailType: "RESET" | "WELCOME" | "INVITE";
-  userId: Types.ObjectId;
+  userId?: Types.ObjectId;
   html?: string;
   inviteLink?: string;
 }
