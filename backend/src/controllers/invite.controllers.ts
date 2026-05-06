@@ -8,6 +8,15 @@ import { sendEmail } from "../utils/mailer";
 import { User } from "../models/user.models";
 
 const sendInvite = asyncHandler(async (req, res) => {
+  // Get workspaceId and userId from params, email from body
+  // Validate email is provided
+  // Check if workspace exists
+  // Check if user is admin of the workspace
+  // Generate a invite token
+  // Create an invite document with email, workspaceId, token and expiry
+  // Send an email to the invited user with the invite link
+  // Return success response
+
   const { workspaceId, userId } = req.params;
   const { email } = req.body;
 
@@ -52,6 +61,15 @@ const sendInvite = asyncHandler(async (req, res) => {
 });
 
 const acceptInvite = asyncHandler(async (req, res) => {
+  // Get token and userId from params
+  // Find the invite by token and check if it's valid
+  // Find the workspace and user
+  // Check if the invite email matches the user email
+  // Check if the user is already a member of the workspace
+  // If not, add the user to the workspace members
+  // Mark the invite as accepted
+  // Return success response
+
   const { token, userId } = req.params;
 
   const invite = await Invite.findOne({
