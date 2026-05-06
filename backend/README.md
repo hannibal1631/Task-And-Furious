@@ -101,3 +101,13 @@
 ### Get Workspace by UserId
 
 **POST** `api/v1/workspace/user/:userId`
+
+## Invite Workspace Routes
+
+### Send Invite
+
+**POST** `api/v1/invite/send/:workspaceId/:userId`
+
+### Accept Invite
+
+**POST** `api/v1/invite/accept/:token/:userId`

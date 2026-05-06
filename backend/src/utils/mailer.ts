@@ -3,14 +3,18 @@ import { User } from "../models/user.models";
 import { ApiError } from "./ApiError";
 import nodemailer, { SendMailOptions } from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
-import { resetPasswordTemplate } from "./emailTemplate";
+import {
+  inviteToWorkspaceTemplate,
+  resetPasswordTemplate,
+} from "./emailTemplate";
 
 interface SendEmailParams {
   name: string;
   email: string;
-  emailType: "RESET" | "WELCOME";
-  userId: Types.ObjectId;
+  emailType: "RESET" | "WELCOME" | "INVITE";
+  userId?: Types.ObjectId;
   html?: string;
+  inviteLink?: string;
 }
 
 export const sendEmail = async ({
@@ -18,11 +22,14 @@ export const sendEmail = async ({
   email,
   emailType,
   userId,
+  inviteLink,
 }: SendEmailParams) => {
   try {
-    const hashedToken = uuidv4();
+    let hashedToken = "";
 
     if (emailType === "RESET") {
+      hashedToken = uuidv4();
+
       await User.findByIdAndUpdate(userId, {
         $set: {
           forgotPasswordToken: hashedToken,
@@ -40,12 +47,24 @@ export const sendEmail = async ({
       },
     });
 
+    let subject = "";
+    let html = "";
+
+    if (emailType === "RESET") {
+      subject = "Reset your password";
+      html = resetPasswordTemplate(name, hashedToken);
+    }
+
+    if (emailType === "INVITE") {
+      subject = "You're invited to join a workspace";
+      html = inviteToWorkspaceTemplate(name, inviteLink!, "Your Workspace");
+    }
+
     const mailOptions: SendMailOptions = {
       from: "abc@example.com",
       to: email,
-      subject: emailType === "RESET" ? "Reset your password" : "",
-      html:
-        emailType === "RESET" ? resetPasswordTemplate(name, hashedToken) : "",
+      subject,
+      html,
     };
 
     const mailResponse = await transporter.sendMail(mailOptions);
