@@ -40,14 +40,23 @@ function ActiveTask() {
   const now = new Date();
 
   const todayISO = now.toLocaleDateString('en-CA');
-  const currentTime = now.toTimeString().slice(0, 5);
 
+  // active task filter to filter out failed tasks
   const activeTasks = tasks.filter((task) => {
     if (!task.date) return false;
 
-    const taskDate = new Date(task.date).toLocaleDateString('en-CA');
+    // must still be pending
+    if (task.status !== 'pending') return false;
 
-    return task.status === 'pending' && taskDate === todayISO;
+    const taskDateTime = new Date(task.date);
+
+    const taskDate = taskDateTime.toLocaleDateString('en-CA');
+
+    // only today's tasks
+    if (taskDate !== todayISO) return false;
+
+    // if task time already passed -> failed
+    return taskDateTime >= now;
   });
 
   // priority filter task
