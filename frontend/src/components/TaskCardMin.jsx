@@ -33,12 +33,31 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
         >
           {task.priority}
         </span>
-        <span
-          className={`text-xs sm:text-sm lg:text-base p-1 rounded-md capitalize
-          ${task.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'}`}
-        >
-          {task.status}
-        </span>
+        {(() => {
+          const now = new Date();
+
+          const taskDate = task.date ? new Date(task.date) : null;
+
+          const isFailed =
+            task.status !== 'completed' && taskDate && taskDate < now;
+
+          const displayStatus = isFailed ? 'failed' : task.status;
+
+          return (
+            <span
+              className={`text-xs sm:text-sm lg:text-base p-1 rounded-md capitalize
+      ${
+        displayStatus === 'completed'
+          ? 'bg-green-500'
+          : displayStatus === 'failed'
+            ? 'bg-red-500'
+            : 'bg-yellow-500'
+      }`}
+            >
+              {displayStatus}
+            </span>
+          );
+        })()}
         <span className='text-xs sm:text-sm lg:text-base p-1 rounded-md bg-yellow-500'>
           {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
         </span>
