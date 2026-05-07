@@ -27,19 +27,19 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
       </div>
 
       {/* Tags */}
-      <div className='flex flex-wrap gap-2 sm:gap-3'>
+      <div className='flex flex-wrap gap-2'>
         <span
-          className={`text-xs sm:text-sm lg:text-base py-1 px-2 rounded-md whitespace-nowrap capitalize ${task.priority === 'low' ? 'bg-green-500' : task.priority === 'medium' ? 'bg-yellow-500' : 'bg-red-500'}`}
+          className={`text-xs sm:text-sm lg:text-base p-1 rounded-md whitespace-nowrap capitalize ${task.priority === 'low' ? 'bg-green-500' : task.priority === 'medium' ? 'bg-yellow-500' : 'bg-red-500'}`}
         >
           {task.priority}
         </span>
         <span
-          className={`text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md capitalize
+          className={`text-xs sm:text-sm lg:text-base p-1 rounded-md capitalize
           ${task.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'}`}
         >
           {task.status}
         </span>
-        <span className='text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md bg-yellow-500'>
+        <span className='text-xs sm:text-sm lg:text-base p-1 rounded-md bg-yellow-500'>
           {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
         </span>
       </div>
