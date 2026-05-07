@@ -32,8 +32,23 @@ function Dashboard() {
     fetchTasks();
   }, [user]);
 
-  const ongoingTasks = tasks.filter((task) => task.status === 'pending');
+  // ongoing task filter
+  const now = new Date();
 
+  const ongoingTasks = tasks.filter((task) => {
+    // must be pending
+    if (task.status !== 'pending') return false;
+
+    // must have a date
+    if (!task.date) return false;
+
+    const taskDate = new Date(task.date);
+
+    // if current time already passed -> it's failed
+    return taskDate >= now;
+  });
+
+  // upcoming task filter
   const upcomingTasks = tasks.filter(
     (task) => task.date && new Date(task.date) > new Date(),
   );
@@ -42,7 +57,7 @@ function Dashboard() {
     <div className='flex flex-col gap-6'>
       <h1 className='text-xl md:text-4xl font-bold underline'>Dashboard</h1>
 
-{/* ongoing tasks */}
+      {/* ongoing tasks */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
         <h2 className='text-xl md:text-4xl font-semibold mb-1 md:mb-5'>
           Ongoing Tasks
@@ -65,7 +80,7 @@ function Dashboard() {
         </div>
       </div>
 
-{/* upcoming tasks */}
+      {/* upcoming tasks */}
       <div className='max-w-full py-3 px-4 bg-yellow-400'>
         <h2 className='text-xl md:text-4xl font-semibold mb-1 md:mb-5'>
           Upcoming Tasks
