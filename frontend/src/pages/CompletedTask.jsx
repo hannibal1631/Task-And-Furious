@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 function CompletedTask() {
   const today = new Date().toISOString().split('T')[0];
 
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState('');
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -26,6 +26,9 @@ function CompletedTask() {
 
         const now = new Date();
 
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
         const completedTasks = allTasks.filter((task) => {
           // must be completed
           if (task.status !== 'completed') return false;
@@ -35,11 +38,19 @@ function CompletedTask() {
 
           const taskDate = new Date(task.date);
 
-          // completed task must already be in the past/current time
+          // must already be completed in real time
           if (taskDate > now) return false;
 
-          // filter by selected date
-          return task.date.split('T')[0] === selectedDate;
+          // exact date filtering
+          if (selectedDate) {
+            return task.date.split('T')[0] === selectedDate;
+          }
+
+          // default current month filtering
+          return (
+            taskDate.getMonth() === currentMonth &&
+            taskDate.getFullYear() === currentYear
+          );
         });
 
         setTasks(completedTasks);
@@ -59,14 +70,24 @@ function CompletedTask() {
       <div className='flex items-center justify-between flex-wrap gap-4'>
         <h1 className='text-4xl font-bold underline'>Completed Task</h1>
 
-        <input
-          type='date'
-          max={today}
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          className='bg-white border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
+        <div className='flex gap-3'>
+          <input
+            type='date'
+            max={today}
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className='bg-white border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
                      focus:outline-none focus:ring-2 focus:ring-black transition'
-        />
+          />
+          {selectedDate && (
+            <button
+              onClick={() => setSelectedDate('')}
+              className='border px-3 py-1 bg-gray-200 rounded-md'
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Cards Section */}
@@ -80,7 +101,9 @@ function CompletedTask() {
             tasks.map((task) => <TaskCardMin key={task._id} task={task} />)
           ) : (
             <p className='col-span-full text-center text-gray-800 font-medium'>
-              No completed tasks for this date
+              {selectedDate
+                ? 'No completed tasks for this date'
+                : 'No completed tasks for this month'}
             </p>
           )}
         </div>
