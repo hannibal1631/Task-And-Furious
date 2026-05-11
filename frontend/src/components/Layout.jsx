@@ -147,9 +147,9 @@ function Layout() {
 
   return (
     <main>
-      <div className='bg-blue-900 h-screen max-w-full flex flex-col overflow-hidden'>
+      <div className='bg-neutral-900 h-screen max-w-full flex flex-col overflow-hidden text-neutral-900'>
         {/* HEADER */}
-        <div className='flex items-center justify-between bg-yellow-300 py-4 px-4 md:px-7 relative'>
+        <div className='flex items-center justify-between bg-stone-700 py-4 px-4 md:px-7 relative'>
           {/* LOGO */}
           <NavLink to='/dashboard' className='shrink-0'>
             <img
@@ -162,7 +162,7 @@ function Layout() {
           {/* DESKTOP SEARCH */}
           <div className='hidden md:flex flex-1 justify-center'>
             <div
-              className='flex items-center justify-between bg-white w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'
+              className='flex items-center justify-between bg-orange-100 w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'
               title='search tasks'
             >
               <input
@@ -172,7 +172,7 @@ function Layout() {
               />
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
-                className='text-gray-500 cursor-pointer'
+                className='text-neutral-800 cursor-pointer hover:scale-125 hover:text-slate-500 transition-all ease-in-out'
               />
             </div>
           </div>
@@ -190,7 +190,7 @@ function Layout() {
                 icon={faUsers}
                 onClick={() => setIsModeOpen((prev) => !prev)}
                 className={`lg:text-3xl text-2xl cursor-pointer transition ${
-                  mode === 'team' ? 'text-green-400' : 'hover:text-white'
+                  mode === 'team' ? 'text-green-400' : 'hover:text-orange-100'
                 }`}
               />
 
@@ -257,13 +257,13 @@ function Layout() {
             <div title='Notifications'>
               <FontAwesomeIcon
                 icon={faBell}
-                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
+                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
               />
             </div>
             <div title='Change Theme'>
               <FontAwesomeIcon
                 icon={faPalette}
-                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
+                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
               />
             </div>
 
@@ -272,7 +272,7 @@ function Layout() {
               <FontAwesomeIcon
                 icon={faCircleUser}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className='lg:text-3xl text-2xl cursor-pointer hover:text-white'
+                className='lg:text-3xl text-2xl cursor-pointer hover:text-orange-100'
               />
 
               {isDropdownOpen && (
@@ -421,49 +421,49 @@ function Layout() {
         {/* header ends here */}
 
         {/* BODY */}
-        <div className='flex flex-1 items-stretch gap-4 bg-red-500 py-4 px-7 overflow-hidden'>
+        <div className='flex flex-1 items-stretch gap-4 bg-stone-700 py-4 px-7 overflow-hidden'>
           {/* SIDEBAR */}
-          <div className='flex flex-col w-[3%] justify-between items-center bg-blue-600 px-8 py-6 rounded-xl'>
+          <div className='flex flex-col w-[3%] justify-between items-center bg-neutral-500 px-8 py-6 rounded-xl'>
             <div className='flex flex-col gap-6'>
               <NavLink to='/dashboard' title='dashboard'>
                 <FontAwesomeIcon
                   icon={faMap}
-                  className='lg:text-3xl text-xl hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
                 />
               </NavLink>
 
               <NavLink to='/dashboard/categories' title='categories'>
                 <FontAwesomeIcon
                   icon={faList}
-                  className='lg:text-3xl text-xl hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
                 />
               </NavLink>
 
               <NavLink to='/dashboard/active' title='active tasks'>
                 <FontAwesomeIcon
                   icon={faChartLine}
-                  className='lg:text-3xl text-xl hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
                 />
               </NavLink>
 
               <NavLink to='/dashboard/upcoming' title='upcoming tasks'>
                 <FontAwesomeIcon
                   icon={faAlarmClock}
-                  className='lg:text-3xl text-xl hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
                 />
               </NavLink>
 
               <NavLink to='/dashboard/completed' title='completed tasks'>
                 <FontAwesomeIcon
                   icon={faCalendarCheck}
-                  className='lg:text-3xl text-xl hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
                 />
               </NavLink>
 
               <NavLink to='/dashboard/failed-task' title='failed tasks'>
                 <FontAwesomeIcon
                   icon={faTriangleExclamation}
-                  className='lg:text-3xl text-xl hover:text-white'
+                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
                 />
               </NavLink>
             </div>
@@ -471,13 +471,13 @@ function Layout() {
             <NavLink to='/dashboard/settings' title='settings'>
               <FontAwesomeIcon
                 icon={faGears}
-                className='lg:text-3xl text-xl hover:text-white'
+                className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
               />
             </NavLink>
           </div>
 
           {/* MAIN CONTENT */}
-          <div className='relative flex flex-col w-[97%] md:px-8 md:py-6 px-1 py-1 bg-blue-600 rounded-xl overflow-y-auto no-scrollbar'>
+          <div className='relative flex flex-col w-[97%] md:px-8 md:py-6 px-1 py-1 bg-neutral-500 rounded-xl overflow-y-auto no-scrollbar'>
             {/* <Outlet context={{ setView }} /> */}
             <div className='flex-1 overflow-y-auto no-scrollbar px-8 py-6 sm:p-0 pb-24'>
               <Outlet
