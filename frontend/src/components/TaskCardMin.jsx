@@ -4,9 +4,9 @@ import { faExpand } from '@fortawesome/free-solid-svg-icons';
 function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
   return (
     <div
-      className='bg-green-700 w-full lg:w-76 lg:h-50
-    px-4 sm:px-5 py-3 flex flex-col gap-4 sm:gap-5 
-    rounded-2xl transition-all hover:scale-[1.02] sm:hover:scale-105'
+      className='bg-neutral-600 w-full lg:w-76 lg:h-50
+    px-3 py-3 flex flex-col gap-4 sm:gap-5 
+    rounded-2xl transition-all ease-in-out hover:scale-[1.02] sm:hover:scale-105'
     >
       {/* Header */}
       <div className='flex justify-between items-start sm:items-center gap-3'>
@@ -29,7 +29,7 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
       {/* Tags */}
       <div className='flex flex-wrap gap-2'>
         <span
-          className={`text-xs sm:text-sm lg:text-base p-1 rounded-md whitespace-nowrap capitalize ${task.priority === 'low' ? 'bg-green-500' : task.priority === 'medium' ? 'bg-yellow-500' : 'bg-red-500'}`}
+          className={`text-xs sm:text-sm lg:text-base font-semibold p-1 rounded-md whitespace-nowrap capitalize ${task.priority === 'low' ? 'bg-green-500 text-slate-700' : task.priority === 'medium' ? 'bg-yellow-500 text-slate-700' : 'bg-red-500 text-orange-100'}`}
         >
           {task.priority}
         </span>
@@ -45,26 +45,26 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
 
           return (
             <span
-              className={`text-xs sm:text-sm lg:text-base p-1 rounded-md capitalize
+              className={`text-xs sm:text-sm lg:text-base font-semibold p-1 rounded-md capitalize
       ${
         displayStatus === 'completed'
-          ? 'bg-green-500'
+          ? 'bg-green-500 text-slate-700'
           : displayStatus === 'failed'
-            ? 'bg-red-500'
-            : 'bg-yellow-500'
+            ? 'bg-red-500 text-orange-100'
+            : 'bg-yellow-500 text-slate-700'
       }`}
             >
               {displayStatus}
             </span>
           );
         })()}
-        <span className='text-xs sm:text-sm lg:text-base p-1 rounded-md bg-yellow-500'>
+        <span className='text-xs sm:text-sm lg:text-base font-semibold p-1 rounded-md bg-neutral-500 text-orange-100'>
           {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
         </span>
       </div>
 
       {/* Description */}
-      <div className='bg-red-300 py-2 px-2 rounded-md'>
+      <div className='bg-neutral-500 py-2 px-2 rounded-md'>
         <p className='text-sm sm:text-base leading-relaxed line-clamp-2'>
           {task.description}
         </p>
