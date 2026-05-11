@@ -58,7 +58,7 @@ function Dashboard() {
       <h1 className='text-xl md:text-4xl font-bold underline'>Dashboard</h1>
 
       {/* ongoing tasks */}
-      <div className='max-w-full py-3 px-4 bg-yellow-400'>
+      <div className='max-w-full py-3 px-3 bg-neutral-800 text-orange-100 rounded-xl'>
         <h2 className='text-xl md:text-4xl font-semibold mb-1 md:mb-5'>
           Ongoing Tasks
         </h2>
@@ -81,7 +81,7 @@ function Dashboard() {
       </div>
 
       {/* upcoming tasks */}
-      <div className='max-w-full py-3 px-4 bg-yellow-400'>
+      <div className='max-w-full py-3 px-3 bg-neutral-800 text-orange-100 rounded-xl'>
         <h2 className='text-xl md:text-4xl font-semibold mb-1 md:mb-5'>
           Upcoming Tasks
         </h2>

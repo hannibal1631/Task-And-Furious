@@ -9,8 +9,8 @@ function AddTaskButton({ onClick }) {
       className='
         absolute bottom-6 right-6 z-40
         flex items-center gap-2
-        bg-green-600 hover:bg-green-700
-        text-white
+        bg-stone-700 hover:bg-stone-600
+        text-orange-100
         px-4 py-3 rounded-full
         shadow-lg
         transition-all duration-200
