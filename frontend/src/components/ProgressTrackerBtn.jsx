@@ -11,7 +11,7 @@ function ProgressTrackerBtn({ isOpen, toggle }) {
         className='
           absolute bottom-20 right-6 z-40
           bg-neutral-700 hover:bg-neutral-600
-          text-white
+          text-orange-100
           p-4 rounded-full
           shadow-lg
           transition-all duration-200
