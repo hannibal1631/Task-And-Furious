@@ -10,7 +10,7 @@ function ProgressTrackerBtn({ isOpen, toggle }) {
         onClick={toggle}
         className='
           absolute bottom-20 right-6 z-40
-          bg-blue-800 hover:bg-blue-700
+          bg-neutral-700 hover:bg-neutral-600
           text-white
           p-4 rounded-full
           shadow-lg
@@ -27,7 +27,7 @@ function ProgressTrackerBtn({ isOpen, toggle }) {
           className='
             absolute bottom-36 right-6 z-40
             w-60
-            bg-blue-900
+            bg-stone-700 text-orange-100
             rounded-xl
             shadow-xl
             p-4
@@ -44,17 +44,17 @@ function ProgressTrackerBtn({ isOpen, toggle }) {
           </div>
 
           {/* Stats */}
-          <div className='bg-sky-500 p-3 rounded-lg'>
+          <div className='bg-slate-600 p-3 rounded-lg'>
             <h3 className='text-sm font-semibold'>Upcoming Tasks</h3>
             <p className='text-lg'>10</p>
           </div>
 
-          <div className='bg-sky-500 p-3 rounded-lg'>
+          <div className='bg-slate-600 p-3 rounded-lg'>
             <h3 className='text-sm font-semibold'>Ongoing Tasks</h3>
             <p className='text-lg'>10</p>
           </div>
 
-          <div className='bg-sky-500 p-3 rounded-lg'>
+          <div className='bg-slate-600 p-3 rounded-lg'>
             <h3 className='text-sm font-semibold'>Completed Tasks</h3>
             <p className='text-lg'>10</p>
           </div>
