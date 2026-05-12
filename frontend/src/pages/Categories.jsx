@@ -96,7 +96,7 @@ function Categories() {
           {/* create category button */}
           <button
             onClick={() => handleCreate(`Category ${categories.length + 1}`)}
-            className='px-4 py-2 bg-black text-white rounded-md flex items-center gap-2 cursor-pointer hover:bg-gray-800'
+            className='px-4 py-2 bg-neutral-800 text-orange-100 rounded-md flex items-center gap-2 cursor-pointer hover:bg-neutral-700 transition-all ease-in-out'
           >
             <FontAwesomeIcon icon={faPlus} />
             Create
@@ -110,11 +110,11 @@ function Categories() {
           <button
             key={cat.value}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-2 rounded-full border transition cursor-pointer
+            className={`px-4 py-2 rounded-full border transition-all ease-in-out cursor-pointer
             ${
               selectedCategory?.value === cat.value
-                ? 'bg-black text-white'
-                : 'bg-gray-100 hover:bg-gray-200'
+                ? 'bg-slate-700 text-orange-100 font-semibold'
+                : 'bg-neutral-400 hover:bg-neutral-300'
             }`}
           >
             {cat.label}
@@ -123,22 +123,22 @@ function Categories() {
       </div>
 
       {/* task section */}
-      <div className='max-w-full py-3 px-4 bg-yellow-400'>
-        <h2 className='text-4xl font-semibold mb-4'>
+      <div className='max-w-full py-3 px-3 rounded-xl bg-neutral-800'>
+        <h2 className='text-4xl font-semibold text-orange-100 mb-4'>
           {selectedCategory?.label || 'Select a Category'}
         </h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
           {!selectedCategory ? (
-            <div className='col-span-3 text-center text-gray-600 text-lg'>
+            <div className='col-span-3 text-center text-orange-100 text-lg'>
               Select a category to view tasks
             </div>
           ) : loadingTasks ? (
-            <div className='col-span-3 text-center text-gray-600'>
+            <div className='col-span-3 text-center text-orange-100'>
               Loading tasks...
             </div>
           ) : tasks.length === 0 ? (
-            <div className='col-span-3 text-center text-gray-600 text-lg'>
+            <div className='col-span-3 text-center text-orange-100 text-lg'>
               No tasks in this category
             </div>
           ) : (
