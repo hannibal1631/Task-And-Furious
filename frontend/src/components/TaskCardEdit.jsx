@@ -113,12 +113,14 @@ function TaskCardEdit({ onClose, categories = [], task }) {
 
   return (
     <div
-      className='bg-blue-500 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl
+      className='bg-neutral-800 text-orange-100 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl
       px-4 sm:px-5 py-4 flex flex-col gap-5 rounded-2xl'
     >
       {/* Header */}
       <div className='flex justify-between items-center'>
-        <h2 className='text-xl sm:text-2xl font-semibold'>{task? 'Edit Task': 'Add New Task'}</h2>
+        <h2 className='text-xl sm:text-2xl font-semibold'>
+          {task ? 'Edit Task' : 'Add New Task'}
+        </h2>
 
         <button
           onClick={onClose}
@@ -134,7 +136,7 @@ function TaskCardEdit({ onClose, categories = [], task }) {
         <input
           type='text'
           placeholder='Enter title'
-          className='bg-white p-2 rounded-md text-sm sm:text-base outline-none'
+          className='bg-orange-100 text-slate-800 p-2 rounded-md text-sm sm:text-base outline-none'
           name='title'
           value={formData.title}
           onChange={handleChange}
@@ -146,7 +148,7 @@ function TaskCardEdit({ onClose, categories = [], task }) {
         <div className='flex flex-col gap-1 w-full'>
           <label className='text-sm sm:text-base'>Category</label>
           <select
-            className='bg-white p-2 rounded-md text-sm sm:text-base cursor-pointer'
+            className='bg-orange-100 text-slate-800 p-2 rounded-md text-sm sm:text-base cursor-pointer'
             name='categoryId'
             value={formData.categoryId}
             onChange={handleChange}
@@ -166,7 +168,7 @@ function TaskCardEdit({ onClose, categories = [], task }) {
         <div className='flex flex-col gap-1 w-full'>
           <label className='text-sm sm:text-base'>Priority</label>
           <select
-            className='bg-white p-2 rounded-md text-sm sm:text-base cursor-pointer'
+            className='bg-orange-100 text-slate-800 p-2 rounded-md text-sm sm:text-base cursor-pointer'
             name='priority'
             value={formData.priority}
             onChange={handleChange}
@@ -188,7 +190,7 @@ function TaskCardEdit({ onClose, categories = [], task }) {
             value={formData.date}
             onChange={handleChange}
             min={today}
-            className='bg-white p-2 rounded-md text-sm sm:text-base'
+            className='bg-orange-100 text-slate-800 p-2 rounded-md text-sm sm:text-base'
           />
         </div>
 
@@ -200,7 +202,7 @@ function TaskCardEdit({ onClose, categories = [], task }) {
             value={formData.time}
             onChange={handleChange}
             min={currentTime}
-            className='bg-white p-2 rounded-md text-sm sm:text-base'
+            className='bg-orange-100 text-slate-800 p-2 rounded-md text-sm sm:text-base'
           />
         </div>
       </div>
@@ -214,7 +216,7 @@ function TaskCardEdit({ onClose, categories = [], task }) {
           onChange={handleChange}
           rows={4}
           placeholder='Enter task details...'
-          className='bg-white p-2 rounded-md text-sm sm:text-base outline-none resize-none'
+          className='bg-orange-100 text-slate-800 p-2 rounded-md text-sm sm:text-base outline-none resize-none'
         />
       </div>
 
@@ -222,16 +224,16 @@ function TaskCardEdit({ onClose, categories = [], task }) {
       <div className='flex flex-wrap gap-3 mt-2'>
         <button
           disabled={loading || !user?._id}
-          className={`px-4 py-2 rounded-md text-sm sm:text-base cursor-pointer
-          ${loading || !user?._id ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600'}`}
+          className={`px-4 py-2 rounded-md text-sm sm:text-base cursor-pointer font-semibold text-orange-100 hover:scale-105 transition-all ease-in-out
+          ${loading || !user?._id ? 'bg-gray-400 cursor-not-allowed' : 'bg-slate-500 hover:bg-green-600 hover:text-slate-800'}`}
           onClick={handleSubmit}
         >
-          {loading ? 'Loading...' : task? 'Update Task' : 'Add Task'}
+          {loading ? 'Loading...' : task ? 'Update Task' : 'Add Task'}
         </button>
 
         <button
           onClick={onClose}
-          className='bg-red-500 px-4 py-2 rounded-md text-white text-sm sm:text-base cursor-pointer'
+          className='bg-slate-600 hover:bg-red-500 px-4 py-2 rounded-md text-orange-100 font-semibold hover:scale-105 transition-all ease-in-out text-sm sm:text-base cursor-pointer'
         >
           Cancel
         </button>

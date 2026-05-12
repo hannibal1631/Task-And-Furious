@@ -100,8 +100,8 @@ function ActiveTask() {
       ${
         (priority.value === 'all' && !selectedPriority) ||
         selectedPriority?.value === priority.value
-          ? 'bg-black text-white'
-          : 'bg-gray-100 hover:bg-gray-200'
+          ? 'bg-slate-700 text-orange-100 font-semibold'
+          : 'bg-neutral-400 hover:bg-neutral-300'
       }`}
           >
             {priority.label}
@@ -109,14 +109,14 @@ function ActiveTask() {
         ))}
       </div>
 
-      <div className='max-w-full py-3 px-4 bg-yellow-400'>
-        <h2 className='text-4xl font-semibold mb-5'>{formattedDate}</h2>
+      <div className='max-w-full py-3 px-3 rounded-xl bg-neutral-800'>
+        <h2 className='text-4xl font-semibold text-orange-100 mb-5'>{formattedDate}</h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
           {loading ? (
-            <p className='col-span-3 text-center'>Loading tasks...</p>
+            <p className='col-span-3 text-center text-orange-100'>Loading tasks...</p>
           ) : filteredTasks.length === 0 ? (
-            <p className='col-span-3 text-center'>No active tasks right now.</p>
+            <p className='col-span-3 text-center text-orange-100'>No active tasks right now.</p>
           ) : (
             filteredTasks.map((task) => (
               <TaskCardMin

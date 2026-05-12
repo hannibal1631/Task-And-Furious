@@ -10,7 +10,7 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
     >
       {/* Header */}
       <div className='flex justify-between items-start sm:items-center gap-3'>
-        <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold leading-tight line-clamp-1'>
+        <h3 className='text-lg sm:text-2xl lg:text-3xl font-semibold text-orange-100 leading-tight line-clamp-1'>
           {task.title}
         </h3>
 
@@ -65,7 +65,7 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
 
       {/* Description */}
       <div className='bg-neutral-500 py-2 px-2 rounded-md'>
-        <p className='text-sm sm:text-base leading-relaxed line-clamp-2'>
+        <p className='text-sm sm:text-base text-orange-100 leading-relaxed line-clamp-2'>
           {task.description}
         </p>
       </div>

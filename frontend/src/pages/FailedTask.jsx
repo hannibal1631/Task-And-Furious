@@ -79,20 +79,20 @@ function FailedTask() {
           <h1 className='text-4xl font-bold underline'>Failed Task</h1>
         </div>
 
-        <div className='flex items-center gap-3'>
+        <div className='flex gap-3'>
           <input
             type='date'
             max={yesterday}
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className='bg-white border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
-                     focus:outline-none focus:ring-2 focus:ring-black transition'
+            className='bg-orange-100 border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
+                     focus:outline-none focus:ring-2 focus:ring-slate-600 transition'
           />
 
           {selectedDate && (
             <button
               onClick={() => setSelectedDate('')}
-              className='px-3 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition cursor-pointer'
+              className='border px-3 py-1 bg-orange-100 hover:bg-slate-600 hover:text-orange-100 rounded-md cursor-pointer transition-all ease-in-out'
             >
               Clear
             </button>
@@ -101,16 +101,16 @@ function FailedTask() {
       </div>
 
       {/* Cards */}
-      <div className='max-w-full py-4 px-5 bg-yellow-400 rounded-lg shadow-sm'>
+      <div className='max-w-full py-3 px-3 bg-neutral-800 rounded-xl shadow-sm'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
           {loading ? (
-            <p className='col-span-full text-center text-gray-800 font-medium'>
+            <p className='col-span-full text-center text-orange-100 font-medium'>
               Loading...
             </p>
           ) : tasks.length > 0 ? (
             tasks.map((task) => <TaskCardMin key={task._id} task={task} />)
           ) : (
-            <p className='col-span-full text-center text-red-700 font-medium'>
+            <p className='col-span-full text-center text-orange-100 font-medium'>
               No failed tasks found
             </p>
           )}
