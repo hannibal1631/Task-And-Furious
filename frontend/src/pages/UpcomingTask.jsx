@@ -126,14 +126,14 @@ function UpcomingTask() {
             value={upcomingDate}
             min={minDate}
             onChange={handleDateChange}
-            className='bg-white border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
-                     focus:outline-none focus:ring-2 focus:ring-black transition'
+            className='bg-orange-100 border border-gray-300 px-3 py-2 rounded-md cursor-pointer 
+                     focus:outline-none focus:ring-2 focus:ring-slate-600 transition'
           />
 
           {upcomingDate && (
             <button
               onClick={() => setUpcomingDate('')}
-              className='border px-3 py-1 bg-gray-200'
+              className='border px-3 py-1 bg-orange-100 hover:bg-slate-600 hover:text-orange-100 rounded-md cursor-pointer transition-all ease-in-out'
             >
               Clear
             </button>
@@ -143,12 +143,12 @@ function UpcomingTask() {
 
       {upcomingDate ? (
         // selected date view
-        <div className='max-w-full py-3 px-4 bg-yellow-400'>
-          <h2 className='text-3xl font-semibold mb-5'>
+        <div className='max-w-full py-3 px-4 rounded-xl bg-neutral-800'>
+          <h2 className='text-3xl font-semibold mb-5 text-orange-100'>
             {upcomingDate ? formatDate(upcomingDate) : 'All Upcoming Tasks'}
           </h2>
 
-          <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
+          <div className='grid grid-cols-3 gap-y-8 gap-x-6 text-orange-100'>
             {loading ? (
               <p>Loading...</p>
             ) : filteredTasks.length > 0 ? (
@@ -164,10 +164,10 @@ function UpcomingTask() {
         <>
           {/* Tomorrow */}
           {groupedTasks.tomorrow.length > 0 && (
-            <div className='max-w-full py-3 px-4 bg-yellow-400'>
+            <div className='max-w-full py-3 px-3 rounded-xl bg-neutral-800'>
               <h2
                 onClick={handleTomorrowClick}
-                className='text-3xl font-semibold mb-5 cursor-pointer hover:text-gray-700 transition'
+                className='text-3xl font-semibold mb-5 text-orange-100'
               >
                 Tomorrow
               </h2>
@@ -182,10 +182,10 @@ function UpcomingTask() {
 
           {/* This Week */}
           {groupedTasks.thisWeek.length > 0 && (
-            <div className='max-w-full py-3 px-4 bg-yellow-400'>
+            <div className='max-w-full py-3 px-3 rounded-xl bg-neutral-800'>
               <h2
                 onClick={handleWeekClick}
-                className='text-3xl font-semibold mb-5 cursor-pointer hover:text-gray-700 transition'
+                className='text-3xl font-semibold mb-5 text-orange-100'
               >
                 This Week
               </h2>
@@ -199,7 +199,7 @@ function UpcomingTask() {
           )}
         </>
       ) : (
-        <div className='py-10 bg-yellow-400'>
+        <div className='py-10 bg-neutral-800'>
           <p className='text-center text-gray-800 font-medium'>
             No upcoming tasks
           </p>
