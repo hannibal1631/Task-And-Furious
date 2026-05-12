@@ -109,7 +109,7 @@ function ActiveTask() {
         ))}
       </div>
 
-      <div className='max-w-full py-3 px-4 bg-neutral-800'>
+      <div className='max-w-full py-3 px-3 rounded-xl bg-neutral-800'>
         <h2 className='text-4xl font-semibold text-orange-100 mb-5'>{formattedDate}</h2>
 
         <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
