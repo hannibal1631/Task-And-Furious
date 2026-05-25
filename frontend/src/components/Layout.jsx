@@ -195,8 +195,8 @@ function Layout() {
               />
 
               {isModeOpen && (
-                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
-                  <div className='flex flex-col text-sm'>
+                <div className='absolute right-0 mt-3 w-56 bg-slate-700 text-orange-100 rounded-lg overflow-hidden shadow-lg z-50'>
+                  <div className='flex flex-col'>
                     {/* PERSONAL */}
                     <div
                       onClick={() => {
@@ -204,15 +204,12 @@ function Layout() {
                         setWorkspaceId(null);
                         setIsModeOpen(false);
                       }}
-                      className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                        mode === 'personal' ? 'bg-blue-700 font-semibold' : ''
+                      className={`px-4 py-2 cursor-pointer hover:text-orange-200 hover:tracking-wider transition-all ease-in-out ${
+                        mode === 'personal' ? 'font-semibold text-orange-300' : ''
                       }`}
                     >
                       Personal
                     </div>
-
-                    {/* DIVIDER */}
-                    <div className='border-t border-blue-600 my-1'></div>
 
                     {/* WORKSPACES */}
                     {workspaces.map((ws) => (
@@ -223,9 +220,9 @@ function Layout() {
                           setWorkspaceId(ws._id);
                           setIsModeOpen(false);
                         }}
-                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
+                        className={`px-4 py-2 cursor-pointer hover:text-orange-200 hover:tracking-wider transition-all ease-in-out ${
                           workspaceId === ws._id
-                            ? 'bg-blue-700 font-semibold'
+                            ? 'text-orange-300 font-semibold'
                             : ''
                         }`}
                       >
@@ -238,7 +235,7 @@ function Layout() {
                       onClick={() => {
                         console.log('open create workspace modal');
                       }}
-                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                      className='px-4 py-2 text-green-400 cursor-pointer hover:text-orange-200 hover:tracking-wider transition-all ease-in-out'
                     >
                       + Create Workspace
                     </div>
@@ -246,7 +243,7 @@ function Layout() {
                       onClick={() => {
                         console.log('open join workspace modal');
                       }}
-                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
+                      className='px-4 py-2 text-green-400 cursor-pointer hover:text-orange-200 hover:tracking-wider transition-all ease-in-out'
                     >
                       + Join Workspace
                     </div>
