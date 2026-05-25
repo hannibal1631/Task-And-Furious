@@ -1,19 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCircleUser,
-  faPalette,
-  faBell,
-  faMagnifyingGlass,
-  faMap,
-  faList,
-  faAlarmClock,
-  faCalendarCheck,
-  faTriangleExclamation,
-  faChartLine,
-  faGears,
-  faUsers,
-} from '@fortawesome/free-solid-svg-icons';
+import { Outlet } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import CardModal from './CardModal.jsx';
@@ -23,42 +8,31 @@ import AddTaskBtn from './AddTaskBtn.jsx';
 import ProgressTrackerBtn from './ProgressTrackerBtn.jsx';
 import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
+import Header from './Header.jsx';
 
 // mode imports
 import { useMode } from '../context/ModeContext.jsx';
+import Sidebar from './Sidebar.jsx';
 
 function Layout() {
   const { user } = useAuth();
   const { mode, setMode, workspaceId, setWorkspaceId } = useMode();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [view, setView] = useState(null); //null | "max" | "edit"
   const [categories, setCategories] = useState([]);
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
-  // for mode switch
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModeOpen, setIsModeOpen] = useState(false);
-  const [workspaces, setWorkspaces] = useState([]);
-
-  // outside click menu closing refs
   const profileRef = useRef(null);
   const modeRef = useRef(null);
-
-  const navigate = useNavigate();
-
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   // fetching existing/default categories from backend server
   useEffect(() => {
     const fetchCategories = async () => {
       if (!user?._id) return;
-      if(mode === 'team' && !workspaceId) return;
+      if (mode === 'team' && !workspaceId) return;
 
       try {
         const defaultRes = await axios.get(
@@ -95,27 +69,6 @@ function Layout() {
     fetchCategories();
   }, [user, mode, workspaceId]);
 
-  // fetch workspaces
-  // useEffect(() => {
-  //   const fetchWorkspaces = async () => {
-  //     if (!user?._id) return;
-
-  //     try {
-  //       const res = await axios.get(`${API_BASE_URL}/workspace/${user._id}`);
-
-  //       setWorkspaces(res.data?.data || []);
-  //     } catch (err) {
-  //       console.error('Failed to fetch workspaces', err);
-  //     }
-  //   };
-
-  //   fetchWorkspaces();
-  // }, [user]);
-  // temp hardcoded workspace
-  useEffect(() => {
-    setWorkspaces([{ _id: 'demo-workspace-1', name: 'My Team' }]);
-  }, []);
-
   // outside click handler
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -149,332 +102,14 @@ function Layout() {
     <main>
       <div className='bg-neutral-900 h-screen max-w-full flex flex-col overflow-hidden text-neutral-900'>
         {/* HEADER */}
-        <div className='flex items-center justify-between bg-stone-700 py-4 px-4 md:px-7 relative'>
-          {/* LOGO */}
-          <NavLink to='/dashboard' className='shrink-0'>
-            <img
-              src='./hero-logo.png'
-              alt='task-and-furious'
-              className='w-28 md:w-40'
-            />
-          </NavLink>
-
-          {/* DESKTOP SEARCH */}
-          <div className='hidden md:flex flex-1 justify-center'>
-            <div
-              className='flex items-center justify-between bg-orange-100 w-full max-w-md gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl focus-within:border-black transition'
-              title='search tasks'
-            >
-              <input
-                type='text'
-                placeholder='Search tasks...'
-                className='outline-none bg-transparent text-base md:text-xl w-[90%]'
-              />
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                className='text-neutral-800 cursor-pointer hover:scale-125 hover:text-slate-500 transition-all ease-in-out'
-              />
-            </div>
-          </div>
-
-          {/* DESKTOP ACTIONS */}
-          <div className='hidden md:flex items-center gap-4'>
-            {/* <div title='Switch Teams'>
-              <FontAwesomeIcon
-                icon={faUsers}
-                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-white'
-              />
-            </div> */}
-            <div className='relative' title='Switch Mode' ref={modeRef}>
-              <FontAwesomeIcon
-                icon={faUsers}
-                onClick={() => setIsModeOpen((prev) => !prev)}
-                className={`lg:text-3xl text-2xl cursor-pointer transition ${
-                  mode === 'team' ? 'text-green-400' : 'hover:text-orange-100'
-                }`}
-              />
-
-              {isModeOpen && (
-                <div className='absolute right-0 mt-3 w-56 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
-                  <div className='flex flex-col text-sm'>
-                    {/* PERSONAL */}
-                    <div
-                      onClick={() => {
-                        setMode('personal');
-                        setWorkspaceId(null);
-                        setIsModeOpen(false);
-                      }}
-                      className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                        mode === 'personal' ? 'bg-blue-700 font-semibold' : ''
-                      }`}
-                    >
-                      Personal
-                    </div>
-
-                    {/* DIVIDER */}
-                    <div className='border-t border-blue-600 my-1'></div>
-
-                    {/* WORKSPACES */}
-                    {workspaces.map((ws) => (
-                      <div
-                        key={ws._id}
-                        onClick={() => {
-                          setMode('team');
-                          setWorkspaceId(ws._id);
-                          setIsModeOpen(false);
-                        }}
-                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                          workspaceId === ws._id
-                            ? 'bg-blue-700 font-semibold'
-                            : ''
-                        }`}
-                      >
-                        {ws.name}
-                      </div>
-                    ))}
-
-                    {/* CREATE */}
-                    <div
-                      onClick={() => {
-                        console.log('open create workspace modal');
-                      }}
-                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
-                    >
-                      + Create Workspace
-                    </div>
-                    <div
-                      onClick={() => {
-                        console.log('open join workspace modal');
-                      }}
-                      className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
-                    >
-                      + Join Workspace
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div title='Notifications'>
-              <FontAwesomeIcon
-                icon={faBell}
-                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
-              />
-            </div>
-            <div title='Change Theme'>
-              <FontAwesomeIcon
-                icon={faPalette}
-                className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
-              />
-            </div>
-
-            {/* PROFILE */}
-            <div className='relative' title='User Profile' ref={profileRef}>
-              <FontAwesomeIcon
-                icon={faCircleUser}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className='lg:text-3xl text-2xl cursor-pointer hover:text-orange-100'
-              />
-
-              {isDropdownOpen && (
-                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
-                  <ul className='flex flex-col text-sm'>
-                    <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
-                      User Settings
-                    </li>
-
-                    <li
-                      onClick={handleLogout}
-                      className='px-4 py-2 hover:bg-red-500 cursor-pointer'
-                    >
-                      Sign Out
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* MOBILE MENU BUTTON */}
-          <div className='md:hidden'>
-            <FontAwesomeIcon
-              icon={faList}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className='text-2xl cursor-pointer'
-            />
-          </div>
-
-          {/* MOBILE PANEL */}
-          {isMobileMenuOpen && (
-            <div className='absolute top-full left-0 w-full bg-yellow-200 p-4 flex flex-col gap-4 md:hidden z-50'>
-              {/* SEARCH */}
-              <div className='flex items-center bg-white gap-2 px-3 py-2 border-2 border-gray-400 rounded-2xl'>
-                <input
-                  type='text'
-                  placeholder='Search tasks...'
-                  className='outline-none bg-transparent w-full'
-                />
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </div>
-
-              {/* ICONS */}
-              <div className='flex justify-around items-center relative'>
-                {/* MODE SWITCH */}
-                <div className='relative' ref={modeRef}>
-                  <FontAwesomeIcon
-                    icon={faUsers}
-                    onClick={() => setIsModeOpen((prev) => !prev)}
-                    className={`text-xl cursor-pointer ${
-                      mode === 'team' ? 'text-green-500' : ''
-                    }`}
-                  />
-
-                  {isModeOpen && (
-                    <div className='absolute top-7 left-0 w-56 bg-blue-800 text-white rounded-lg shadow-lg z-50 overflow-hidden'>
-                      <div className='flex flex-col text-sm'>
-                        {/* PERSONAL */}
-                        <div
-                          onClick={() => {
-                            setMode('personal');
-                            setWorkspaceId(null);
-                            setIsModeOpen(false);
-                          }}
-                          className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                            mode === 'personal'
-                              ? 'bg-blue-700 font-semibold'
-                              : ''
-                          }`}
-                        >
-                          Personal
-                        </div>
-
-                        <div className='border-t border-blue-600 my-1'></div>
-
-                        {/* WORKSPACES */}
-                        {workspaces.map((ws) => (
-                          <div
-                            key={ws._id}
-                            onClick={() => {
-                              setMode('team');
-                              setWorkspaceId(ws._id);
-                              setIsModeOpen(false);
-                            }}
-                            className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                              workspaceId === ws._id
-                                ? 'bg-blue-700 font-semibold'
-                                : ''
-                            }`}
-                          >
-                            {ws.name}
-                          </div>
-                        ))}
-
-                        {/* ACTIONS */}
-                        <div
-                          className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
-                          onClick={() => console.log('create workspace')}
-                        >
-                          + Create Workspace
-                        </div>
-
-                        <div
-                          className='px-4 py-2 text-green-400 cursor-pointer hover:bg-blue-700'
-                          onClick={() => console.log('join workspace')}
-                        >
-                          + Join Workspace
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <FontAwesomeIcon icon={faBell} className='text-xl' />
-                <FontAwesomeIcon icon={faPalette} className='text-xl' />
-
-                {/* PROFILE */}
-                <div className='relative' ref={profileRef}>
-                  <FontAwesomeIcon
-                    icon={faCircleUser}
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className='text-xl cursor-pointer'
-                  />
-
-                  {isDropdownOpen && (
-                    <div className='absolute right-0 mt-2 w-40 bg-blue-800 text-white rounded-lg shadow-lg z-50'>
-                      <ul className='flex flex-col text-sm'>
-                        <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
-                          User Settings
-                        </li>
-
-                        <li
-                          onClick={handleLogout}
-                          className='px-4 py-2 hover:bg-red-500 cursor-pointer'
-                        >
-                          Sign Out
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <Header />
         {/* header ends here */}
 
         {/* BODY */}
         <div className='flex flex-1 items-stretch gap-4 bg-stone-700 py-4 px-7 overflow-hidden'>
           {/* SIDEBAR */}
-          <div className='flex flex-col w-[3%] justify-between items-center bg-neutral-500 px-8 py-6 rounded-xl'>
-            <div className='flex flex-col gap-6'>
-              <NavLink to='/dashboard' title='dashboard'>
-                <FontAwesomeIcon
-                  icon={faMap}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/categories' title='categories'>
-                <FontAwesomeIcon
-                  icon={faList}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/active' title='active tasks'>
-                <FontAwesomeIcon
-                  icon={faChartLine}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/upcoming' title='upcoming tasks'>
-                <FontAwesomeIcon
-                  icon={faAlarmClock}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/completed' title='completed tasks'>
-                <FontAwesomeIcon
-                  icon={faCalendarCheck}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/failed-task' title='failed tasks'>
-                <FontAwesomeIcon
-                  icon={faTriangleExclamation}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-            </div>
-
-            <NavLink to='/dashboard/settings' title='settings'>
-              <FontAwesomeIcon
-                icon={faGears}
-                className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-              />
-            </NavLink>
-          </div>
+          <Sidebar />
+          {/* SIDEBAR ENDS HERE */}
 
           {/* MAIN CONTENT */}
           <div className='relative flex flex-col w-[97%] md:px-8 md:py-6 px-1 py-1 bg-neutral-500 rounded-xl overflow-y-auto no-scrollbar'>
