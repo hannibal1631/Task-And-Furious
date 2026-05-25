@@ -205,7 +205,9 @@ function Layout() {
                         setIsModeOpen(false);
                       }}
                       className={`px-4 py-2 cursor-pointer hover:text-orange-200 hover:tracking-wider transition-all ease-in-out ${
-                        mode === 'personal' ? 'font-semibold text-orange-300' : ''
+                        mode === 'personal'
+                          ? 'font-semibold text-orange-300'
+                          : ''
                       }`}
                     >
                       Personal
@@ -273,15 +275,15 @@ function Layout() {
               />
 
               {isDropdownOpen && (
-                <div className='absolute right-0 mt-3 w-48 bg-blue-800 text-white rounded-lg overflow-hidden shadow-lg z-50'>
+                <div className='absolute right-0 mt-3 w-48 bg-slate-700 text-white rounded-lg overflow-hidden shadow-lg z-50'>
                   <ul className='flex flex-col text-sm'>
-                    <li className='px-4 py-2 hover:bg-blue-700 cursor-pointer'>
+                    <li className='px-4 py-2 hover:text-orange-200 hover:tracking-wider transition-all ease-in-out cursor-pointer'>
                       User Settings
                     </li>
 
                     <li
                       onClick={handleLogout}
-                      className='px-4 py-2 hover:bg-red-500 cursor-pointer'
+                      className='px-4 py-2 hover:text-red-500 hover:tracking-wider transition-all ease-in-out cursor-pointer'
                     >
                       Sign Out
                     </li>
