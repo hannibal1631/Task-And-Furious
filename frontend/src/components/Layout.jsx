@@ -1,14 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faMap,
-  faList,
-  faAlarmClock,
-  faCalendarCheck,
-  faTriangleExclamation,
-  faChartLine,
-  faGears,
-} from '@fortawesome/free-solid-svg-icons';
+import { Outlet } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import CardModal from './CardModal.jsx';
@@ -22,6 +12,7 @@ import Header from './Header.jsx';
 
 // mode imports
 import { useMode } from '../context/ModeContext.jsx';
+import Sidebar from './Sidebar.jsx';
 
 function Layout() {
   const { user } = useAuth();
@@ -34,8 +25,8 @@ function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModeOpen, setIsModeOpen] = useState(false);
-  
-  const { logout } = useAuth();
+  const profileRef = useRef(null);
+  const modeRef = useRef(null);
 
   // fetching existing/default categories from backend server
   useEffect(() => {
@@ -117,58 +108,8 @@ function Layout() {
         {/* BODY */}
         <div className='flex flex-1 items-stretch gap-4 bg-stone-700 py-4 px-7 overflow-hidden'>
           {/* SIDEBAR */}
-          <div className='flex flex-col w-[3%] justify-between items-center bg-neutral-500 px-8 py-6 rounded-xl'>
-            <div className='flex flex-col gap-6'>
-              <NavLink to='/dashboard' title='dashboard'>
-                <FontAwesomeIcon
-                  icon={faMap}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/categories' title='categories'>
-                <FontAwesomeIcon
-                  icon={faList}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/active' title='active tasks'>
-                <FontAwesomeIcon
-                  icon={faChartLine}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/upcoming' title='upcoming tasks'>
-                <FontAwesomeIcon
-                  icon={faAlarmClock}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/completed' title='completed tasks'>
-                <FontAwesomeIcon
-                  icon={faCalendarCheck}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-
-              <NavLink to='/dashboard/failed-task' title='failed tasks'>
-                <FontAwesomeIcon
-                  icon={faTriangleExclamation}
-                  className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-                />
-              </NavLink>
-            </div>
-
-            <NavLink to='/dashboard/settings' title='settings'>
-              <FontAwesomeIcon
-                icon={faGears}
-                className='lg:text-3xl text-xl hover:text-orange-100 transition-all ease-in-out'
-              />
-            </NavLink>
-          </div>
+          <Sidebar />
+          {/* SIDEBAR ENDS HERE */}
 
           {/* MAIN CONTENT */}
           <div className='relative flex flex-col w-[97%] md:px-8 md:py-6 px-1 py-1 bg-neutral-500 rounded-xl overflow-y-auto no-scrollbar'>
