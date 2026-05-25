@@ -200,7 +200,7 @@ function UpcomingTask() {
         </>
       ) : (
         <div className='py-10 bg-neutral-800'>
-          <p className='text-center text-gray-800 font-medium'>
+          <p className='text-center text-orange-100 font-medium'>
             No upcoming tasks
           </p>
         </div>
