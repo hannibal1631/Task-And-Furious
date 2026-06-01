@@ -7,6 +7,8 @@ import {
   faMagnifyingGlass,
   faList,
   faUsers,
+  faBellSlash,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { useState, useEffect, useRef } from 'react';
@@ -50,14 +52,14 @@ function Header() {
       if (modeRef.current && !modeRef.current.contains(event.target)) {
         setIsModeOpen(false);
       }
-    };
 
-    if (
-      notificationRef.current &&
-      !notificationRef.current.contains(event.target)
-    ) {
-      setIsNotificationOpen(false);
-    }
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setIsNotificationOpen(false);
+      }
+    };
 
     document.addEventListener('mousedown', handleClickOutside);
 
@@ -166,11 +168,45 @@ function Header() {
         </div>
 
         {/* NOTIFICATIONS */}
-        <div title='Notifications'>
+        <div title='Notifications' className='relative' ref={notificationRef}>
           <FontAwesomeIcon
             icon={faBell}
-            className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
+            onClick={() => setIsNotificationOpen((prev) => !prev)}
+            className='lg:text-3xl text-2xl cursor-pointer hover:text-orange-100'
           />
+
+          {isNotificationOpen && (
+            <div
+              className='absolute right-0 mt-3
+              w-70 sm:w-[320px]
+            bg-slate-700 text-orange-100
+              rounded-lg shadow-lg z-50 overflow-hidden'
+            >
+              {/* Header */}
+              <div className='flex items-center justify-between px-4 py-3 border-b border-slate-600'>
+                <h3 className='font-semibold text-lg'>Notifications</h3>
+
+                <button
+                  onClick={() => setIsNotificationOpen(false)}
+                  className='text-xl hover:text-red-400 transition'
+                >
+                  <FontAwesomeIcon icon={faXmark} className='cursor-pointer' />
+                </button>
+              </div>
+
+              {/* Empty State */}
+              <div className='flex flex-col items-center justify-center py-10 px-4 text-center'>
+                {/* Put your FontAwesome icon here */}
+                <div className='text-4xl mb-3'>
+                  <FontAwesomeIcon icon={faBellSlash} />
+                </div>
+
+                <p className='text-sm sm:text-base text-orange-100'>
+                  No tasks for now
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* THEME */}
