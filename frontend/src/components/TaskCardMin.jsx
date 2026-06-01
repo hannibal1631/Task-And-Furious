@@ -6,7 +6,7 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
     <div
       className='bg-neutral-600 w-full lg:w-76 lg:h-50
     px-3 py-3 flex flex-col gap-4 sm:gap-5 
-    rounded-2xl transition-all ease-in-out hover:scale-[1.02] sm:hover:scale-105'
+    rounded-2xl'
     >
       {/* Header */}
       <div className='flex justify-between items-start sm:items-center gap-3'>
@@ -16,7 +16,7 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
 
         <FontAwesomeIcon
           icon={faExpand}
-          className='text-lg sm:text-xl lg:text-2xl cursor-pointer hover:text-white shrink-0'
+          className='text-lg sm:text-xl lg:text-2xl cursor-pointer text-orange-100 shrink-0 hover:scale-110'
           onClick={() => {
             if (setSelectedTask) {
               setSelectedTask(task);

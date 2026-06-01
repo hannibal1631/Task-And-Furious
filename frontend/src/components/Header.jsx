@@ -7,6 +7,8 @@ import {
   faMagnifyingGlass,
   faList,
   faUsers,
+  faBellSlash,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { useState, useEffect, useRef } from 'react';
@@ -20,11 +22,17 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModeOpen, setIsModeOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isThemeOpen, setIsThemeOpen] = useState(false);
 
   const [workspaces, setWorkspaces] = useState([]);
 
   const profileRef = useRef(null);
   const modeRef = useRef(null);
+  const notificationRef = useRef(null);
+  const themeRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -48,6 +56,26 @@ function Header() {
       if (modeRef.current && !modeRef.current.contains(event.target)) {
         setIsModeOpen(false);
       }
+
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setIsNotificationOpen(false);
+      }
+
+      if (themeRef.current && !themeRef.current.contains(event.target)) {
+        setIsThemeOpen(false);
+      }
+
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        hamburgerRef.current &&
+        !hamburgerRef.current.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -62,6 +90,8 @@ function Header() {
     if (!isMobileMenuOpen) {
       setIsDropdownOpen(false);
       setIsModeOpen(false);
+      setIsNotificationOpen(false);
+      setIsThemeOpen(false);
     }
   }, [isMobileMenuOpen]);
 
@@ -157,19 +187,113 @@ function Header() {
         </div>
 
         {/* NOTIFICATIONS */}
-        <div title='Notifications'>
+        <div title='Notifications' className='relative' ref={notificationRef}>
           <FontAwesomeIcon
             icon={faBell}
-            className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
+            onClick={() => setIsNotificationOpen((prev) => !prev)}
+            className='lg:text-3xl text-2xl cursor-pointer hover:text-orange-100'
           />
+
+          {isNotificationOpen && (
+            <div
+              className='absolute right-0 mt-3
+              w-70 sm:w-[320px]
+            bg-slate-700 text-orange-100
+              rounded-lg shadow-lg z-50 overflow-hidden'
+            >
+              {/* Header */}
+              <div className='flex items-center justify-between px-4 py-3 border-b border-slate-600'>
+                <h3 className='font-semibold text-lg'>Notifications</h3>
+
+                <button
+                  onClick={() => setIsNotificationOpen(false)}
+                  className='text-xl hover:text-red-400 transition'
+                >
+                  <FontAwesomeIcon icon={faXmark} className='cursor-pointer' />
+                </button>
+              </div>
+
+              {/* Empty State */}
+              <div className='flex flex-col items-center justify-center py-10 px-4 text-center'>
+                {/* Put your FontAwesome icon here */}
+                <div className='text-4xl mb-3'>
+                  <FontAwesomeIcon icon={faBellSlash} />
+                </div>
+
+                <p className='text-sm sm:text-base text-orange-100'>
+                  No tasks for now
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* THEME */}
-        <div title='Change Theme'>
+        <div title='Change Theme' className='relative' ref={themeRef}>
           <FontAwesomeIcon
             icon={faPalette}
-            className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
+            onClick={() => setIsThemeOpen((prev) => !prev)}
+            className='lg:text-3xl text-2xl cursor-pointer hover:text-orange-100'
           />
+
+          {isThemeOpen && (
+            <div
+              className='absolute right-0 mt-3 w-64
+      bg-slate-700 text-orange-100
+      rounded-lg shadow-lg z-50 overflow-hidden'
+            >
+              {/* Header */}
+              <div className='flex items-center justify-between px-4 py-3 border-b border-slate-600'>
+                <h3 className='font-semibold text-lg'>Themes</h3>
+
+                <button
+                  onClick={() => setIsThemeOpen(false)}
+                  className='text-xl hover:text-red-400 transition'
+                >
+                  <FontAwesomeIcon icon={faXmark} className='cursor-pointer' />
+                </button>
+              </div>
+
+              {/* Theme List */}
+              <div className='p-3 flex flex-col gap-2'>
+                {/* Chalkboard */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-neutral-800 hover:text-orange-100'
+                >
+                  Classic Chalkboard
+                </div>
+
+                {/* Blue */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-blue-950 hover:text-yellow-300'
+                >
+                  Oldschool Blue
+                </div>
+
+                {/* Fallout */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-green-950 hover:text-green-400'
+                >
+                  Fallout Green
+                </div>
+
+                {/* Comic */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-blue-900 hover:text-red-500'
+                >
+                  Comicbook
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* PROFILE */}
@@ -200,13 +324,70 @@ function Header() {
       </div>
 
       {/* MOBILE MENU BUTTON */}
-      <div className='md:hidden'>
+      <div className='md:hidden' ref={hamburgerRef}>
         <FontAwesomeIcon
           icon={faList}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           className='text-2xl cursor-pointer'
         />
       </div>
+
+      {/* MOBILE PANEL */}
+      {isMobileMenuOpen && (
+        <div
+          ref={mobileMenuRef}
+          className='absolute top-full left-0 w-full
+    bg-slate-700 text-orange-100
+    border-t border-slate-600
+    z-50 p-4'
+        >
+          {/* Search */}
+          <div className='flex items-center gap-2 bg-orange-100 rounded-lg px-3 py-2 mb-4'>
+            <input
+              type='text'
+              placeholder='Search tasks...'
+              className='w-full bg-transparent text-black outline-none'
+            />
+
+            <FontAwesomeIcon icon={faMagnifyingGlass} className='text-black' />
+          </div>
+
+          {/* Menu Items */}
+          <div className='flex flex-col gap-3'>
+            <button
+              onClick={() => setIsModeOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faUsers} />
+              <span>Workspace</span>
+            </button>
+
+            <button
+              onClick={() => setIsNotificationOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faBell} />
+              <span>Notifications</span>
+            </button>
+
+            <button
+              onClick={() => setIsThemeOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faPalette} />
+              <span>Themes</span>
+            </button>
+
+            <button
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faCircleUser} />
+              <span>Profile</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
