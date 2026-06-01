@@ -20,11 +20,13 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModeOpen, setIsModeOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const [workspaces, setWorkspaces] = useState([]);
 
   const profileRef = useRef(null);
   const modeRef = useRef(null);
+  const notificationRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -49,6 +51,13 @@ function Header() {
         setIsModeOpen(false);
       }
     };
+
+    if (
+      notificationRef.current &&
+      !notificationRef.current.contains(event.target)
+    ) {
+      setIsNotificationOpen(false);
+    }
 
     document.addEventListener('mousedown', handleClickOutside);
 
