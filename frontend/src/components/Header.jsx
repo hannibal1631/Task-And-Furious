@@ -31,7 +31,8 @@ function Header() {
   const modeRef = useRef(null);
   const notificationRef = useRef(null);
   const themeRef = useRef(null);
-  const mobileMenuRef = useRef(null)
+  const mobileMenuRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -69,7 +70,9 @@ function Header() {
 
       if (
         mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target)
+        !mobileMenuRef.current.contains(event.target) &&
+        hamburgerRef.current &&
+        !hamburgerRef.current.contains(event.target)
       ) {
         setIsMobileMenuOpen(false);
       }
@@ -321,7 +324,7 @@ function Header() {
       </div>
 
       {/* MOBILE MENU BUTTON */}
-      <div className='md:hidden'>
+      <div className='md:hidden' ref={hamburgerRef}>
         <FontAwesomeIcon
           icon={faList}
           onClick={() => setIsMobileMenuOpen((prev) => !prev)}
@@ -332,7 +335,7 @@ function Header() {
       {/* MOBILE PANEL */}
       {isMobileMenuOpen && (
         <div
-        ref={mobileMenuRef}
+          ref={mobileMenuRef}
           className='absolute top-full left-0 w-full
     bg-slate-700 text-orange-100
     border-t border-slate-600
