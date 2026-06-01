@@ -31,6 +31,7 @@ function Header() {
   const modeRef = useRef(null);
   const notificationRef = useRef(null);
   const themeRef = useRef(null);
+  const mobileMenuRef = useRef(null)
 
   const navigate = useNavigate();
 
@@ -64,6 +65,13 @@ function Header() {
 
       if (themeRef.current && !themeRef.current.contains(event.target)) {
         setIsThemeOpen(false);
+      }
+
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
       }
     };
 
@@ -324,6 +332,7 @@ function Header() {
       {/* MOBILE PANEL */}
       {isMobileMenuOpen && (
         <div
+        ref={mobileMenuRef}
           className='absolute top-full left-0 w-full
     bg-slate-700 text-orange-100
     border-t border-slate-600
