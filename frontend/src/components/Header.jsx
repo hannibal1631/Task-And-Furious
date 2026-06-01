@@ -23,12 +23,14 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModeOpen, setIsModeOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isThemeOpen, setIsThemeOpen] = useState(false);
 
   const [workspaces, setWorkspaces] = useState([]);
 
   const profileRef = useRef(null);
   const modeRef = useRef(null);
   const notificationRef = useRef(null);
+  const themeRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -59,6 +61,10 @@ function Header() {
       ) {
         setIsNotificationOpen(false);
       }
+
+      if (themeRef.current && !themeRef.current.contains(event.target)) {
+        setIsThemeOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -73,6 +79,8 @@ function Header() {
     if (!isMobileMenuOpen) {
       setIsDropdownOpen(false);
       setIsModeOpen(false);
+      setIsNotificationOpen(false);
+      setIsThemeOpen(false);
     }
   }, [isMobileMenuOpen]);
 
@@ -210,11 +218,71 @@ function Header() {
         </div>
 
         {/* THEME */}
-        <div title='Change Theme'>
+        <div title='Change Theme' className='relative' ref={themeRef}>
           <FontAwesomeIcon
             icon={faPalette}
-            className='lg:text-3xl text-2xl hover:cursor-pointer hover:text-orange-100'
+            onClick={() => setIsThemeOpen((prev) => !prev)}
+            className='lg:text-3xl text-2xl cursor-pointer hover:text-orange-100'
           />
+
+          {isThemeOpen && (
+            <div
+              className='absolute right-0 mt-3 w-64
+      bg-slate-700 text-orange-100
+      rounded-lg shadow-lg z-50 overflow-hidden'
+            >
+              {/* Header */}
+              <div className='flex items-center justify-between px-4 py-3 border-b border-slate-600'>
+                <h3 className='font-semibold text-lg'>Themes</h3>
+
+                <button
+                  onClick={() => setIsThemeOpen(false)}
+                  className='text-xl hover:text-red-400 transition'
+                >
+                  <FontAwesomeIcon icon={faXmark} className='cursor-pointer' />
+                </button>
+              </div>
+
+              {/* Theme List */}
+              <div className='p-3 flex flex-col gap-2'>
+                {/* Chalkboard */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-neutral-800 hover:text-orange-100'
+                >
+                  Classic Chalkboard
+                </div>
+
+                {/* Blue */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-blue-950 hover:text-yellow-300'
+                >
+                  Oldschool Blue
+                </div>
+
+                {/* Fallout */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-green-950 hover:text-green-400'
+                >
+                  Fallout Green
+                </div>
+
+                {/* Comic */}
+                <div
+                  className='px-3 py-2 rounded-lg cursor-pointer
+                  transition-all duration-200
+                hover:bg-blue-900 hover:text-red-500'
+                >
+                  Comicbook
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* PROFILE */}
