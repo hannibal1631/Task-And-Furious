@@ -316,10 +316,66 @@ function Header() {
       <div className='md:hidden'>
         <FontAwesomeIcon
           icon={faList}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           className='text-2xl cursor-pointer'
         />
       </div>
+
+      {/* MOBILE PANEL */}
+      {isMobileMenuOpen && (
+        <div
+          className='absolute top-full left-0 w-full
+    bg-slate-700 text-orange-100
+    border-t border-slate-600
+    z-50 p-4'
+        >
+          {/* Search */}
+          <div className='flex items-center gap-2 bg-orange-100 rounded-lg px-3 py-2 mb-4'>
+            <input
+              type='text'
+              placeholder='Search tasks...'
+              className='w-full bg-transparent text-black outline-none'
+            />
+
+            <FontAwesomeIcon icon={faMagnifyingGlass} className='text-black' />
+          </div>
+
+          {/* Menu Items */}
+          <div className='flex flex-col gap-3'>
+            <button
+              onClick={() => setIsModeOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faUsers} />
+              <span>Workspace</span>
+            </button>
+
+            <button
+              onClick={() => setIsNotificationOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faBell} />
+              <span>Notifications</span>
+            </button>
+
+            <button
+              onClick={() => setIsThemeOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faPalette} />
+              <span>Themes</span>
+            </button>
+
+            <button
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+              className='flex items-center gap-3'
+            >
+              <FontAwesomeIcon icon={faCircleUser} />
+              <span>Profile</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
