@@ -4,37 +4,14 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useOutletContext } from 'react-router-dom';
+import { useTasks } from '../context/TaskContext.jsx';
 
 function ActiveTask() {
   const { user } = useAuth();
   const { setView, setSelectedTask } = useOutletContext();
+  const {tasks, loading} = useTasks()
 
   const [selectedPriority, setSelectedPriority] = useState(null);
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // fetching tasks from backend
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!user?._id) return;
-
-      setLoading(true);
-
-      try {
-        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`, {
-          withCredentials: true,
-        });
-
-        setTasks(res.data?.data || []);
-      } catch (err) {
-        console.error('Failed to fetch tasks', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, [user]);
 
   // active task filtering logic
   const now = new Date();

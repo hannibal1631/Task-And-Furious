@@ -4,33 +4,12 @@ import { useOutletContext } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useTasks } from '../context/TaskContext.jsx';
 
 function Dashboard() {
   const { setView, setSelectedTask } = useOutletContext();
   const { user } = useAuth();
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // fetch tasks
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!user?._id) return;
-
-      try {
-        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`, {
-          withCredentials: true,
-        });
-
-        setTasks(res.data?.data || []);
-      } catch (err) {
-        console.error('Failed to fetch tasks', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, [user]);
+  const {tasks, loading} = useTasks()
 
   // ongoing task filter
   const now = new Date();

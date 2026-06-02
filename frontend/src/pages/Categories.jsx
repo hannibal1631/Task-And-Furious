@@ -3,39 +3,17 @@ import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useOutletContext } from 'react-router-dom';
-import axios, { all } from 'axios';
-import API_BASE_URL from '../config/api.js';
+import { useTasks } from '../context/TaskContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
 import TaskCardMin from '../components/TaskCardMin.jsx';
 
 function Categories() {
   const { setView, categories, setCategories, setSelectedTask } = useOutletContext();
-  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const {user } = useAuth()
+  const { tasks: allTasks, loading } = useTasks();
   const [tasks, setTasks] = useState([]);
-  const [loadingTasks, setLoadingTasks] = useState(false);
-  const [allTasks, setAllTasks] = useState([])
-
-  // to fetch tasks 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!user?._id) return;
-
-      setLoadingTasks(true);
-
-      try {
-        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
-        setAllTasks(res.data?.data || []);
-      } catch (err) {
-        console.error('Failed to fetch tasks', err);
-      } finally {
-        setLoadingTasks(false);
-      }
-    };
-
-    fetchTasks();
-  }, [user]);
 
   // showing tasks when category changes
   useEffect(() => {
@@ -133,7 +111,7 @@ function Categories() {
             <div className='col-span-3 text-center text-orange-100 text-lg'>
               Select a category to view tasks
             </div>
-          ) : loadingTasks ? (
+          ) : loading ? (
             <div className='col-span-3 text-center text-orange-100'>
               Loading tasks...
             </div>

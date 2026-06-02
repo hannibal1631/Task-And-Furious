@@ -1,39 +1,11 @@
 import { useState, useEffect } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
-import axios from 'axios';
-import API_BASE_URL from '../config/api.js';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useTasks } from '../context/TaskContext.jsx';
 
 function UpcomingTask() {
   const [upcomingDate, setUpcomingDate] = useState('');
-  const [allTasks, setAllTasks] = useState([])
+  const { tasks, loading } = useTasks();
   // const [filteredTasks, setFilteredTasks] = useState([])
-  const [loading, setLoading] = useState(false)
-
-  const {user} = useAuth()
-
-  // fetch all upcoming tasks
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!user?._id) return;
-
-      setLoading(true);
-
-      try {
-        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
-
-        const data = res.data?.data || [];
-
-        setAllTasks(data);
-      } catch (err) {
-        console.error('Failed to fetch tasks', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, [user._id]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -41,7 +13,7 @@ function UpcomingTask() {
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
 
-  const upcomingTasks = allTasks.filter((task) => {
+  const upcomingTasks = tasks.filter((task) => {
     if (!task.date) return false;
 
     const due = new Date(task.date);

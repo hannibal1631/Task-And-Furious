@@ -5,10 +5,12 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useMode } from '../context/ModeContext.jsx';
+import { useTasks } from '../context/TaskContext.jsx';
 
 function TaskCardEdit({ onClose, categories = [], task }) {
   const { user, loading } = useAuth();
   const {mode, workspaceId} = useMode()
+  const {fetchTasks} = useTasks()
 
   const [today] = useState(() => {
     const now = new Date();
@@ -79,6 +81,8 @@ function TaskCardEdit({ onClose, categories = [], task }) {
           },
         );
 
+        await fetchTasks()
+
         console.log('Task Updated');
       } else {
         // CREATE MODE
@@ -101,6 +105,8 @@ function TaskCardEdit({ onClose, categories = [], task }) {
             withCredentials: true,
           },
         );
+
+        await fetchTasks()
 
         console.log('Task Created');
       }

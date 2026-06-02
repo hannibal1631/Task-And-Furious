@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
-import axios from 'axios';
-import API_BASE_URL from '../config/api.js';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useTasks } from '../context/TaskContext.jsx';
 
 function FailedTask() {
   // yesterday date
@@ -15,61 +13,32 @@ function FailedTask() {
   const yesterday = getYesterday();
 
   const [selectedDate, setSelectedDate] = useState('');
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {tasks, loading} = useTasks()
 
-  const { user } = useAuth();
+  // new fetching logic for failed tasks
+  const now = new Date();
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!user?._id) return;
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
 
-      setLoading(true);
+  const filteredTasks = tasks.filter((task) => {
+    if (!task.date) return false;
 
-      try {
-        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
+    const taskDate = new Date(task.date);
 
-        const allTasks = res.data?.data || [];
+    const isFailed = task.status !== 'completed' && taskDate < now;
 
-        const now = new Date();
+    if (!isFailed) return false;
 
-        const failedTasks = allTasks.filter((task) => {
-          // must have a date
-          if (!task.date) return false;
+    if (selectedDate) {
+      return task.date.split('T')[0] === selectedDate;
+    }
 
-          const taskDate = new Date(task.date);
-
-          // failed means:
-          // not completed AND deadline already passed
-          const isFailed = task.status !== 'completed' && taskDate < now;
-
-          if (!isFailed) return false;
-
-          // if user selected a specific date
-          if (selectedDate) {
-            return task.date.split('T')[0] === selectedDate;
-          }
-
-          // default -> show current month's failed tasks
-          const currentMonth = now.getMonth();
-          const currentYear = now.getFullYear();
-
-          return (
-            taskDate.getMonth() === currentMonth &&
-            taskDate.getFullYear() === currentYear
-          );
-        });
-
-        setTasks(failedTasks);
-      } catch (err) {
-        console.error('Failed to fetch failed tasks', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, [selectedDate, user?._id]);
+    return (
+      taskDate.getMonth() === currentMonth &&
+      taskDate.getFullYear() === currentYear
+    );
+  });
 
   return (
     <div className='flex flex-col gap-6'>
@@ -107,8 +76,8 @@ function FailedTask() {
             <p className='col-span-full text-center text-orange-100 font-medium'>
               Loading...
             </p>
-          ) : tasks.length > 0 ? (
-            tasks.map((task) => <TaskCardMin key={task._id} task={task} />)
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => <TaskCardMin key={task._id} task={task} />)
           ) : (
             <p className='col-span-full text-center text-orange-100 font-medium'>
               No failed tasks found
