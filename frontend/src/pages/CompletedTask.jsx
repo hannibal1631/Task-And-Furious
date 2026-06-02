@@ -1,68 +1,37 @@
 import { useState, useEffect } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
-import axios from 'axios';
-import API_BASE_URL from '../config/api.js';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useTasks } from '../context/TaskContext.jsx';
 
 function CompletedTask() {
   const today = new Date().toISOString().split('T')[0];
 
   const [selectedDate, setSelectedDate] = useState('');
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {tasks, loading} = useTasks()
 
-  const { user } = useAuth();
+  // new filtered tasks
+  const now = new Date();
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!user?._id) return;
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
 
-      setLoading(true);
+  const filteredTasks = tasks.filter((task) => {
+    if (task.status !== 'completed') return false;
 
-      try {
-        const res = await axios.get(`${API_BASE_URL}/tasks/user/${user._id}`);
+    if (!task.date) return false;
 
-        const allTasks = res.data?.data || [];
+    const taskDate = new Date(task.date);
 
-        const now = new Date();
+    if (taskDate > now) return false;
 
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
+    if (selectedDate) {
+      return task.date.split('T')[0] === selectedDate;
+    }
 
-        const completedTasks = allTasks.filter((task) => {
-          // must be completed
-          if (task.status !== 'completed') return false;
-
-          // must have date
-          if (!task.date) return false;
-
-          const taskDate = new Date(task.date);
-
-          // must already be completed in real time
-          if (taskDate > now) return false;
-
-          // exact date filtering
-          if (selectedDate) {
-            return task.date.split('T')[0] === selectedDate;
-          }
-
-          // default current month filtering
-          return (
-            taskDate.getMonth() === currentMonth &&
-            taskDate.getFullYear() === currentYear
-          );
-        });
-
-        setTasks(completedTasks);
-      } catch (err) {
-        console.error('Failed to fetch completed tasks', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, [selectedDate, user?._id]);
+    return (
+      taskDate.getMonth() === currentMonth &&
+      taskDate.getFullYear() === currentYear
+    );
+  });
 
   return (
     <div className='flex flex-col gap-6'>
@@ -97,8 +66,8 @@ function CompletedTask() {
             <p className='col-span-full text-center text-orange-100 font-medium'>
               Loading...
             </p>
-          ) : tasks.length > 0 ? (
-            tasks.map((task) => <TaskCardMin key={task._id} task={task} />)
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => <TaskCardMin key={task._id} task={task} />)
           ) : (
             <p className='col-span-full text-center text-orange-100 font-medium'>
               {selectedDate
