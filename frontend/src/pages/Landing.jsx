@@ -151,8 +151,12 @@ function Landing({ setIsAuthenticated }) {
       </section>
 
       {/* FOOTER */}
-      <footer className='mt-20 py-6 text-center text-gray-500 text-sm'>
-        © {new Date().getFullYear()} Task & Furious. All rights reserved.
+      <footer className='border-t border-neutral-500 mt-12 py-8 text-center text-neutral-300'>
+        <p>© {new Date().getFullYear()} Task & Furious</p>
+        <p className='mt-2 text-sm'>
+          Built for developers, students, procrastinators, and people who swear
+          they'll remember it later.
+        </p>
       </footer>
 
       {/* AUTH MODAL */}
