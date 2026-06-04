@@ -62,7 +62,7 @@ function Landing({ setIsAuthenticated }) {
   ];
 
   return (
-    <main className='bg-[#0b1120] text-white min-h-screen overflow-x-hidden'>
+    <main className='bg-neutral-800 text-white min-h-screen overflow-x-hidden'>
       {/* NAVBAR */}
       <nav className='flex justify-between items-center px-6 md:px-16 py-6'>
         <h1 className='text-2xl md:text-3xl font-bold tracking-wide text-cyan-400'>
@@ -117,18 +117,32 @@ function Landing({ setIsAuthenticated }) {
 
         {/* HERO IMAGE */}
         <div className='mt-14 w-full max-w-6xl'>
-          <img
-            src='https://via.placeholder.com/1200x600'
-            alt='dashboard preview'
-            className='w-full rounded-2xl border-4 border-neutral-500'
-          />
+          <div className='bg-neutral-800 rounded-2xl overflow-hidden shadow-2xl'>
+            <div className='flex items-center gap-2 px-4 py-3 bg-neutral-500'>
+              <div className='w-3 h-3 rounded-full bg-red-400'></div>
+              <div className='w-3 h-3 rounded-full bg-yellow-400'></div>
+              <div className='w-3 h-3 rounded-full bg-green-400'></div>
+            </div>
+
+            <img
+              src='https://via.placeholder.com/1400x800'
+              alt='dashboard preview'
+              className='w-full'
+            />
+          </div>
         </div>
       </section>
 
       {/* FEATURES */}
       <section className='px-6 lg:px-16 py-12 flex flex-col gap-24'>
         {features.map((feature, index) => (
-          <Feature key={index} {...feature} />
+          <Feature
+            key={index}
+            title={feature.title}
+            desc={feature.desc}
+            img={feature.img}
+            reverse={index % 2 !== 0}
+          />
         ))}
       </section>
 
@@ -173,32 +187,85 @@ function Landing({ setIsAuthenticated }) {
 export default Landing;
 
 /* FEATURE COMPONENT */
-function Feature({ title, desc, route, img, navigate, reverse }) {
+// function Feature({ title, desc, route, img, navigate, reverse }) {
+//   return (
+//     <div
+//       className={`flex flex-col lg:flex-row ${reverse ? 'lg:flex-row-reverse' : ''} items-center gap-10`}
+//     >
+//       <img
+//         src={img}
+//         alt={title}
+//         className='w-full md:w-1/2 rounded-xl border border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.25)]'
+//       />
+
+//       <div className='md:w-1/2'>
+//         <h3 className='text-2xl md:text-3xl font-bold mb-3 text-cyan-400'>
+//           {title}
+//         </h3>
+
+//         <p className='text-gray-400 mb-4'>{desc}</p>
+
+//         <button
+//           onClick={() => navigate(route)}
+//           className='px-5 py-2 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition'
+//         >
+//           View Feature
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+function Feature({ title, desc, img, reverse }) {
   return (
     <div
-      className={`flex flex-col md:flex-row ${
-        reverse ? 'md:flex-row-reverse' : ''
-      } items-center gap-6`}
+      className={`
+        flex flex-col
+        lg:flex-row
+        ${reverse ? 'lg:flex-row-reverse' : ''}
+        items-center
+        gap-10
+      `}
     >
-      <img
-        src={img}
-        alt={title}
-        className='w-full md:w-1/2 rounded-xl border border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.25)]'
-      />
+      {/* IMAGE */}
+      <div className='w-full lg:w-1/2'>
+        <div className='bg-neutral-800 rounded-2xl overflow-hidden shadow-xl'>
+          {/* Fake Browser Header */}
+          <div className='flex items-center gap-2 px-4 py-3 bg-neutral-500'>
+            <div className='w-3 h-3 rounded-full bg-red-400'></div>
+            <div className='w-3 h-3 rounded-full bg-yellow-400'></div>
+            <div className='w-3 h-3 rounded-full bg-green-400'></div>
+          </div>
 
-      <div className='md:w-1/2'>
-        <h3 className='text-2xl md:text-3xl font-bold mb-3 text-cyan-400'>
-          {title}
-        </h3>
+          <img src={img} alt={title} className='w-full object-cover' />
+        </div>
+      </div>
 
-        <p className='text-gray-400 mb-4'>{desc}</p>
+      {/* CONTENT */}
+      <div className='w-full lg:w-1/2'>
+        <div className='bg-neutral-800 p-8 rounded-2xl'>
+          <h3 className='text-3xl lg:text-4xl font-bold text-orange-100 mb-4'>
+            {title}
+          </h3>
 
-        <button
-          onClick={() => navigate(route)}
-          className='px-5 py-2 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition'
-        >
-          View Feature
-        </button>
+          <p className='text-neutral-300 text-lg leading-relaxed'>{desc}</p>
+
+          <button
+            className='
+              mt-6
+              px-6
+              py-3
+              rounded-xl
+              bg-orange-100
+              text-stone-700
+              font-semibold
+              cursor-pointer
+              hover:bg-neutral-500
+              transition-all
+            '
+          >
+            Learn More
+          </button>
+        </div>
       </div>
     </div>
   );
