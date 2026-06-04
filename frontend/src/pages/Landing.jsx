@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import AuthModal from '../components/AuthModal.jsx';
 
 function Landing({ setIsAuthenticated }) {
@@ -18,24 +18,73 @@ function Landing({ setIsAuthenticated }) {
     setIsAuthOpen(true);
   };
 
+  const features = [
+    {
+      title: 'Mission Control Dashboard',
+      desc: 'Your command center for active tasks, upcoming deadlines, completed missions and spectacular failures.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Sort The Chaos',
+      desc: "Group tasks into categories before your backlog starts looking like Dom's garage.",
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Quarter Mile At A Time',
+      desc: 'Focus only on what matters right now. Active tasks stay front and center.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'See The Next Corner',
+      desc: 'Upcoming tasks help you spot deadlines before they drift around the corner.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Assemble Your Crew',
+      desc: 'Switch between personal mode and team workspaces. Family... but with task assignments.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Tune The Ride',
+      desc: 'Choose from Chalkboard, Fallout Green, Comicbook, and more themes.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Victory Lap',
+      desc: 'Review completed tasks and watch your productivity stats pile up.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Learn From The Crash',
+      desc: 'Failed tasks show what slipped through the cracks so you can improve.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+  ];
+
   return (
-    <main className='bg-[#0b1120] text-white min-h-screen overflow-x-hidden'>
+    <main className='bg-neutral-800 text-orange-100 min-h-screen overflow-x-hidden'>
       {/* NAVBAR */}
-      <nav className='flex justify-between items-center px-6 md:px-12 py-5'>
-        <h1 className='text-2xl md:text-3xl font-bold tracking-wide text-cyan-400'>
-          Task & Furious
-        </h1>
+      <nav className='flex justify-between items-center px-6 md:px-16 py-6'>
+        <NavLink to='/dashboard' className='shrink-0'>
+          <img
+            src='./hero-logo.png'
+            alt='task-and-furious'
+            className='w-28 md:w-40'
+          />
+        </NavLink>
 
         <div className='flex gap-4'>
           <button
             onClick={openLogin}
-            className='px-4 py-2 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition'
+            className='cursor-pointer font-semibold px-5 py-2 border border-neutral-500 rounded-full
+            bg-neutral-700 hover:bg-neutral-600 hover:scale-105 transition ease-in-out'
           >
             Login
           </button>
           <button
             onClick={openSignup}
-            className='px-4 py-2 bg-cyan-400 text-black rounded-full hover:bg-cyan-300 transition'
+            className='cursor-pointer font-semibold px-5 py-2 bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out'
           >
             Sign Up
           </button>
@@ -43,115 +92,89 @@ function Landing({ setIsAuthenticated }) {
       </nav>
 
       {/* HERO */}
-      <section className='flex flex-col items-center text-center px-6 mt-12 md:mt-20'>
-        <h2 className='text-4xl md:text-6xl font-bold leading-tight max-w-4xl'>
-          Manage Tasks Like a <span className='text-cyan-400'>Machine</span>
+      <section className='px-6 lg:px-16 py-16 flex flex-col items-center text-center'>
+        <h2 className='text-5xl lg:text-7xl font-bold max-w-5xl leading-tight'>
+          Manage Tasks Like You're Planning The Next Big Heist
         </h2>
 
-        <p className='mt-6 text-gray-400 max-w-2xl text-lg'>
-          Organize, track, and dominate your workflow with a fast, minimal and
-          powerful task management system.
+        <p className='mt-6 text-lg lg:text-xl max-w-3xl text-neutral-300'>
+          Build projects. Organize life. Coordinate teams. Stay ahead of
+          deadlines before they start chasing you.
         </p>
 
-        <div className='flex gap-4 mt-8'>
+        <div className='flex flex-wrap justify-center gap-4 mt-10'>
           <button
             onClick={openSignup}
-            className='px-6 py-3 bg-cyan-400 text-black rounded-full text-lg hover:bg-cyan-300 transition'
+            className='cursor-pointer font-semibold px-5 py-2 bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out'
           >
-            Get Started
+            Start Your Engine
           </button>
-
           <button
             onClick={openLogin}
-            className='px-6 py-3 border border-cyan-400 rounded-full text-lg hover:bg-cyan-400 hover:text-black transition'
+            className='cursor-pointer font-semibold px-5 py-2 border border-neutral-500 rounded-full
+            bg-neutral-700 hover:bg-neutral-600 hover:scale-105 transition ease-in-out'
           >
             Login
           </button>
         </div>
 
         {/* HERO IMAGE */}
-        <div className='mt-12 w-full max-w-5xl'>
-          <img
-            src='https://via.placeholder.com/1200x600'
-            alt='dashboard preview'
-            className='rounded-xl border border-cyan-400 shadow-[0_0_40px_rgba(34,211,238,0.3)]'
-          />
+        <div className='mt-14 w-full max-w-6xl'>
+          <div className='bg-neutral-800 rounded-2xl overflow-hidden shadow-2xl'>
+            <div className='flex items-center gap-2 px-4 py-3 bg-neutral-500'>
+              <div className='w-3 h-3 rounded-full bg-red-400'></div>
+              <div className='w-3 h-3 rounded-full bg-yellow-400'></div>
+              <div className='w-3 h-3 rounded-full bg-green-400'></div>
+            </div>
+
+            <img
+              src='https://via.placeholder.com/1400x800'
+              alt='dashboard preview'
+              className='w-full'
+            />
+          </div>
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className='mt-20 px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center'>
-        <Feature
-          title='Dashboard Overview'
-          desc='Get a quick snapshot of all your tasks and progress in one place.'
-          route='/dashboard'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-        />
-
-        <Feature
-          title='Organize by Categories'
-          desc='Group your tasks smartly and keep everything structured.'
-          route='/dashboard/categories'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-          reverse
-        />
-
-        <Feature
-          title='Track Active Tasks'
-          desc='Focus on what matters right now with active task tracking.'
-          route='/dashboard/active'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-        />
-
-        <Feature
-          title='Plan Ahead'
-          desc='Stay ahead with upcoming tasks and deadlines.'
-          route='/dashboard/upcoming'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-          reverse
-        />
-
-        <Feature
-          title='Review Completed Work'
-          desc='Track your productivity and completed milestones.'
-          route='/dashboard/completed'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-        />
-
-        <Feature
-          title='Analyze Failures'
-          desc='Learn from missed tasks and improve your workflow.'
-          route='/dashboard/failed-task'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-          reverse
-        />
+      <section className='px-6 lg:px-16 py-12 flex flex-col gap-24'>
+        {features.map((feature, index) => (
+          <Feature
+            key={index}
+            title={feature.title}
+            desc={feature.desc}
+            img={feature.img}
+            reverse={index % 2 !== 0}
+          />
+        ))}
       </section>
 
       {/* CTA */}
-      <section className='mt-24 text-center px-6'>
-        <h2 className='text-3xl md:text-5xl font-bold'>
-          Ready to Take Control?
+      <section className='px-6 lg:px-16 py-24 text-center'>
+        <h2 className='text-4xl lg:text-6xl font-bold'>
+          Ready To Stop Managing Tasks Like It's 2005?
         </h2>
-
-        <p className='text-gray-400 mt-4'>Start organizing your tasks today.</p>
-
+        <p className='mt-6 text-neutral-300 text-lg max-w-3xl mx-auto'>
+          Whether you're running solo or leading a crew, Task & Furious keeps
+          everything moving at full throttle.
+        </p>
         <button
           onClick={openSignup}
-          className='mt-8 px-8 py-3 bg-cyan-400 text-black rounded-full text-lg hover:bg-cyan-300 transition'
+          className='cursor-pointer mt-10 px-10 py-4 font-semibold bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out'
         >
           Create Account
         </button>
       </section>
 
       {/* FOOTER */}
-      <footer className='mt-20 py-6 text-center text-gray-500 text-sm'>
-        © {new Date().getFullYear()} Task & Furious. All rights reserved.
+      <footer className='border-t border-neutral-500 mt-12 py-8 text-center text-neutral-300'>
+        <p>© {new Date().getFullYear()} Task & Furious</p>
+        <p className='mt-2 text-sm'>
+          Built for developers, students, procrastinators, and people who swear
+          they'll remember it later.
+        </p>
       </footer>
 
       {/* AUTH MODAL */}
@@ -168,32 +191,49 @@ function Landing({ setIsAuthenticated }) {
 export default Landing;
 
 /* FEATURE COMPONENT */
-function Feature({ title, desc, route, img, navigate, reverse }) {
+function Feature({ title, desc, img, reverse }) {
   return (
     <div
-      className={`flex flex-col md:flex-row ${
-        reverse ? 'md:flex-row-reverse' : ''
-      } items-center gap-6`}
+      className={`
+        flex flex-col
+        lg:flex-row
+        ${reverse ? 'lg:flex-row-reverse' : ''}
+        items-center
+        gap-10
+      `}
     >
-      <img
-        src={img}
-        alt={title}
-        className='w-full md:w-1/2 rounded-xl border border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.25)]'
-      />
+      {/* IMAGE */}
+      <div className='w-full lg:w-1/2'>
+        <div className='bg-neutral-800 rounded-2xl overflow-hidden shadow-xl'>
+          {/* Fake Browser Header */}
+          <div className='flex items-center gap-2 px-4 py-3 bg-neutral-500'>
+            <div className='w-3 h-3 rounded-full bg-red-400'></div>
+            <div className='w-3 h-3 rounded-full bg-yellow-400'></div>
+            <div className='w-3 h-3 rounded-full bg-green-400'></div>
+          </div>
 
-      <div className='md:w-1/2'>
-        <h3 className='text-2xl md:text-3xl font-bold mb-3 text-cyan-400'>
-          {title}
-        </h3>
+          <img src={img} alt={title} className='w-full object-cover' />
+        </div>
+      </div>
 
-        <p className='text-gray-400 mb-4'>{desc}</p>
+      {/* CONTENT */}
+      <div className='w-full lg:w-1/2'>
+        <div className='bg-neutral-800 p-8 rounded-2xl'>
+          <h3 className='text-3xl lg:text-4xl font-bold text-orange-100 mb-4'>
+            {title}
+          </h3>
 
-        <button
-          onClick={() => navigate(route)}
-          className='px-5 py-2 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition'
-        >
-          View Feature
-        </button>
+          <p className='text-neutral-300 text-lg leading-relaxed'>{desc}</p>
+
+          <button
+            className='
+              mt-6 px-6 py-3 rounded-xl font-semibold bg-orange-100 text-stone-700 cursor-pointer
+              hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out
+            '
+          >
+            Learn More
+          </button>
+        </div>
       </div>
     </div>
   );
