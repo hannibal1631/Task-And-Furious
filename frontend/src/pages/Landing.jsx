@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import AuthModal from '../components/AuthModal.jsx';
 
 function Landing({ setIsAuthenticated }) {
@@ -62,25 +62,29 @@ function Landing({ setIsAuthenticated }) {
   ];
 
   return (
-    <main className='bg-neutral-800 text-white min-h-screen overflow-x-hidden'>
+    <main className='bg-neutral-800 text-orange-100 min-h-screen overflow-x-hidden'>
       {/* NAVBAR */}
       <nav className='flex justify-between items-center px-6 md:px-16 py-6'>
-        <h1 className='text-2xl md:text-3xl font-bold tracking-wide text-cyan-400'>
-          Task & Furious
-        </h1>
+        <NavLink to='/dashboard' className='shrink-0'>
+          <img
+            src='./hero-logo.png'
+            alt='task-and-furious'
+            className='w-28 md:w-40'
+          />
+        </NavLink>
 
         <div className='flex gap-4'>
           <button
             onClick={openLogin}
-            className='cursor-pointer px-5 py-2 border border-orange-100 rounded-full hover:bg-orange-100
-             hover:text-stone-700 transition'
+            className='cursor-pointer font-semibold px-5 py-2 border border-neutral-500 rounded-full
+            bg-neutral-700 hover:bg-neutral-600 hover:scale-105 transition ease-in-out'
           >
             Login
           </button>
           <button
             onClick={openSignup}
-            className='cursor-pointer px-5 py-2 bg-orange-100 text-stone-700
-              rounded-full hover:bg-neutral-500 transition"'
+            className='cursor-pointer font-semibold px-5 py-2 bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out'
           >
             Sign Up
           </button>
@@ -101,15 +105,15 @@ function Landing({ setIsAuthenticated }) {
         <div className='flex flex-wrap justify-center gap-4 mt-10'>
           <button
             onClick={openSignup}
-            className='cursor-pointer px-8 py-3 bg-orange-100 text-stone-700
-            rounded-full font-semibold hover:bg-neutral-500 transition'
+            className='cursor-pointer font-semibold px-5 py-2 bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out'
           >
             Start Your Engine
           </button>
           <button
             onClick={openLogin}
-            className='cursor-pointer px-8 py-3 border border-orange-100 
-            rounded-full hover:bg-orange-100 hover:text-stone-700 transition'
+            className='cursor-pointer font-semibold px-5 py-2 border border-neutral-500 rounded-full
+            bg-neutral-700 hover:bg-neutral-600 hover:scale-105 transition ease-in-out'
           >
             Login
           </button>
@@ -157,8 +161,8 @@ function Landing({ setIsAuthenticated }) {
         </p>
         <button
           onClick={openSignup}
-          className='cursor-pointer mt-10 px-10 py-4 bg-orange-100 text-stone-700
-          rounded-full text-lg font-semibold hover:bg-neutral-500 transition'
+          className='cursor-pointer mt-10 px-10 py-4 font-semibold bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out'
         >
           Create Account
         </button>
@@ -187,34 +191,6 @@ function Landing({ setIsAuthenticated }) {
 export default Landing;
 
 /* FEATURE COMPONENT */
-// function Feature({ title, desc, route, img, navigate, reverse }) {
-//   return (
-//     <div
-//       className={`flex flex-col lg:flex-row ${reverse ? 'lg:flex-row-reverse' : ''} items-center gap-10`}
-//     >
-//       <img
-//         src={img}
-//         alt={title}
-//         className='w-full md:w-1/2 rounded-xl border border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.25)]'
-//       />
-
-//       <div className='md:w-1/2'>
-//         <h3 className='text-2xl md:text-3xl font-bold mb-3 text-cyan-400'>
-//           {title}
-//         </h3>
-
-//         <p className='text-gray-400 mb-4'>{desc}</p>
-
-//         <button
-//           onClick={() => navigate(route)}
-//           className='px-5 py-2 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition'
-//         >
-//           View Feature
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
 function Feature({ title, desc, img, reverse }) {
   return (
     <div
@@ -251,16 +227,8 @@ function Feature({ title, desc, img, reverse }) {
 
           <button
             className='
-              mt-6
-              px-6
-              py-3
-              rounded-xl
-              bg-orange-100
-              text-stone-700
-              font-semibold
-              cursor-pointer
-              hover:bg-neutral-500
-              transition-all
+              mt-6 px-6 py-3 rounded-xl font-semibold bg-orange-100 text-stone-700 cursor-pointer
+              hover:bg-neutral-500 hover:text-orange-100 hover:scale-105 transition ease-in-out
             '
           >
             Learn More
