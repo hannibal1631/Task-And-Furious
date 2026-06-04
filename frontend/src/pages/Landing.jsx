@@ -116,80 +116,35 @@ function Landing({ setIsAuthenticated }) {
         </div>
 
         {/* HERO IMAGE */}
-        <div className='mt-12 w-full max-w-5xl'>
+        <div className='mt-14 w-full max-w-6xl'>
           <img
             src='https://via.placeholder.com/1200x600'
             alt='dashboard preview'
-            className='rounded-xl border border-cyan-400 shadow-[0_0_40px_rgba(34,211,238,0.3)]'
+            className='w-full rounded-2xl border-4 border-neutral-500'
           />
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className='mt-20 px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center'>
-        <Feature
-          title='Dashboard Overview'
-          desc='Get a quick snapshot of all your tasks and progress in one place.'
-          route='/dashboard'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-        />
-
-        <Feature
-          title='Organize by Categories'
-          desc='Group your tasks smartly and keep everything structured.'
-          route='/dashboard/categories'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-          reverse
-        />
-
-        <Feature
-          title='Track Active Tasks'
-          desc='Focus on what matters right now with active task tracking.'
-          route='/dashboard/active'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-        />
-
-        <Feature
-          title='Plan Ahead'
-          desc='Stay ahead with upcoming tasks and deadlines.'
-          route='/dashboard/upcoming'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-          reverse
-        />
-
-        <Feature
-          title='Review Completed Work'
-          desc='Track your productivity and completed milestones.'
-          route='/dashboard/completed'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-        />
-
-        <Feature
-          title='Analyze Failures'
-          desc='Learn from missed tasks and improve your workflow.'
-          route='/dashboard/failed-task'
-          img='https://via.placeholder.com/600x400'
-          navigate={navigate}
-          reverse
-        />
+      <section className='px-6 lg:px-16 py-12 flex flex-col gap-24'>
+        {features.map((feature, index) => (
+          <Feature key={index} {...feature} />
+        ))}
       </section>
 
       {/* CTA */}
-      <section className='mt-24 text-center px-6'>
-        <h2 className='text-3xl md:text-5xl font-bold'>
-          Ready to Take Control?
+      <section className='px-6 lg:px-16 py-24 text-center'>
+        <h2 className='text-4xl lg:text-6xl font-bold'>
+          Ready To Stop Managing Tasks Like It's 2005?
         </h2>
-
-        <p className='text-gray-400 mt-4'>Start organizing your tasks today.</p>
-
+        <p className='mt-6 text-neutral-300 text-lg max-w-3xl mx-auto'>
+          Whether you're running solo or leading a crew, Task & Furious keeps
+          everything moving at full throttle.
+        </p>
         <button
           onClick={openSignup}
-          className='mt-8 px-8 py-3 bg-cyan-400 text-black rounded-full text-lg hover:bg-cyan-300 transition'
+          className='cursor-pointer mt-10 px-10 py-4 bg-orange-100 text-stone-700
+          rounded-full text-lg font-semibold hover:bg-neutral-500 transition'
         >
           Create Account
         </button>
