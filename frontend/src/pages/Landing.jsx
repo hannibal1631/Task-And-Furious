@@ -18,10 +18,53 @@ function Landing({ setIsAuthenticated }) {
     setIsAuthOpen(true);
   };
 
+  const features = [
+    {
+      title: 'Mission Control Dashboard',
+      desc: 'Your command center for active tasks, upcoming deadlines, completed missions and spectacular failures.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Sort The Chaos',
+      desc: "Group tasks into categories before your backlog starts looking like Dom's garage.",
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Quarter Mile At A Time',
+      desc: 'Focus only on what matters right now. Active tasks stay front and center.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'See The Next Corner',
+      desc: 'Upcoming tasks help you spot deadlines before they drift around the corner.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Assemble Your Crew',
+      desc: 'Switch between personal mode and team workspaces. Family... but with task assignments.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Tune The Ride',
+      desc: 'Choose from Chalkboard, Fallout Green, Comicbook, and more themes.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Victory Lap',
+      desc: 'Review completed tasks and watch your productivity stats pile up.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+    {
+      title: 'Learn From The Crash',
+      desc: 'Failed tasks show what slipped through the cracks so you can improve.',
+      img: 'https://via.placeholder.com/1200x700',
+    },
+  ];
+
   return (
     <main className='bg-[#0b1120] text-white min-h-screen overflow-x-hidden'>
       {/* NAVBAR */}
-      <nav className='flex justify-between items-center px-6 md:px-12 py-5'>
+      <nav className='flex justify-between items-center px-6 md:px-16 py-6'>
         <h1 className='text-2xl md:text-3xl font-bold tracking-wide text-cyan-400'>
           Task & Furious
         </h1>
@@ -29,13 +72,15 @@ function Landing({ setIsAuthenticated }) {
         <div className='flex gap-4'>
           <button
             onClick={openLogin}
-            className='px-4 py-2 border border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition'
+            className='cursor-pointer px-5 py-2 border border-orange-100 rounded-full hover:bg-orange-100
+             hover:text-stone-700 transition'
           >
             Login
           </button>
           <button
             onClick={openSignup}
-            className='px-4 py-2 bg-cyan-400 text-black rounded-full hover:bg-cyan-300 transition'
+            className='cursor-pointer px-5 py-2 bg-orange-100 text-stone-700
+              rounded-full hover:bg-neutral-500 transition"'
           >
             Sign Up
           </button>
@@ -43,27 +88,28 @@ function Landing({ setIsAuthenticated }) {
       </nav>
 
       {/* HERO */}
-      <section className='flex flex-col items-center text-center px-6 mt-12 md:mt-20'>
-        <h2 className='text-4xl md:text-6xl font-bold leading-tight max-w-4xl'>
-          Manage Tasks Like a <span className='text-cyan-400'>Machine</span>
+      <section className='px-6 lg:px-16 py-16 flex flex-col items-center text-center'>
+        <h2 className='text-5xl lg:text-7xl font-bold max-w-5xl leading-tight'>
+          Manage Tasks Like You're Planning The Next Big Heist
         </h2>
 
-        <p className='mt-6 text-gray-400 max-w-2xl text-lg'>
-          Organize, track, and dominate your workflow with a fast, minimal and
-          powerful task management system.
+        <p className='mt-6 text-lg lg:text-xl max-w-3xl text-neutral-300'>
+          Build projects. Organize life. Coordinate teams. Stay ahead of
+          deadlines before they start chasing you.
         </p>
 
-        <div className='flex gap-4 mt-8'>
+        <div className='flex flex-wrap justify-center gap-4 mt-10'>
           <button
             onClick={openSignup}
-            className='px-6 py-3 bg-cyan-400 text-black rounded-full text-lg hover:bg-cyan-300 transition'
+            className='cursor-pointer px-8 py-3 bg-orange-100 text-stone-700
+            rounded-full font-semibold hover:bg-neutral-500 transition'
           >
-            Get Started
+            Start Your Engine
           </button>
-
           <button
             onClick={openLogin}
-            className='px-6 py-3 border border-cyan-400 rounded-full text-lg hover:bg-cyan-400 hover:text-black transition'
+            className='cursor-pointer px-8 py-3 border border-orange-100 
+            rounded-full hover:bg-orange-100 hover:text-stone-700 transition'
           >
             Login
           </button>
