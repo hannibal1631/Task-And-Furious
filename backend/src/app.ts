@@ -34,12 +34,20 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Happy Coding!");
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "UP",
+    timeStamp: new Date().toISOString()
+  })
+})
+
 // routes
 import userRouter from "./routes/user.routes";
 import categoryRouter from "./routes/category.routes";
 import taskRouter from "./routes/task.routes";
 import workspaceRouter from "./routes/workspace.routes";
 import inviteRouter from "./routes/invite.routes";
+import { timeStamp } from "console";
 
 // routes declaration
 app.use("/api/v1/users", userRouter);
