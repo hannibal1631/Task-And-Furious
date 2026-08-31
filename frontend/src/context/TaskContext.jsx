@@ -122,7 +122,16 @@ export function TaskProvider({ children }) {
 
     if (!taskDateTime) return false;
 
-    return taskDateTime >= new Date();
+    const now = new Date();
+
+    const todayISO = now.toLocaleDateString('en-CA');
+    const taskISO = taskDateTime.toLocaleDateString('en-CA');
+
+    // must be today
+    if (taskISO !== todayISO) return false;
+
+    // must not have passed
+    return taskDateTime >= now;
   });
 
   // upcoming tasks
