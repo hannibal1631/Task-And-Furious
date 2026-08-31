@@ -1,40 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
-import axios from 'axios';
-import API_BASE_URL from '../config/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useOutletContext } from 'react-router-dom';
 import { useTasks } from '../context/TaskContext.jsx';
 
 function ActiveTask() {
-  const { user } = useAuth();
   const { setView, setSelectedTask } = useOutletContext();
-  const {tasks, loading} = useTasks()
+  const {activeTasks, loading} = useTasks()
 
   const [selectedPriority, setSelectedPriority] = useState(null);
-
-  // active task filtering logic
-  const now = new Date();
-
-  const todayISO = now.toLocaleDateString('en-CA');
-
-  // active task filter to filter out failed tasks
-  const activeTasks = tasks.filter((task) => {
-    if (!task.date) return false;
-
-    // must still be pending
-    if (task.status !== 'pending') return false;
-
-    const taskDateTime = new Date(task.date);
-
-    const taskDate = taskDateTime.toLocaleDateString('en-CA');
-
-    // only today's tasks
-    if (taskDate !== todayISO) return false;
-
-    // if task time already passed -> failed
-    return taskDateTime >= now;
-  });
 
   // priority filter task
   const filteredTasks = selectedPriority
