@@ -43,6 +43,14 @@ function TaskCardMax({ task, onEdit, onClose }) {
     }
   };
 
+  // to check if task is past it's dueDate or dueTime
+  const now = new Date();
+  const taskDate = task.date ? new Date(task.date) : null;
+
+  const isFailed = task.status !== 'completed' && taskDate && taskDate < now;
+
+  const displayStatus = isFailed ? 'failed' : task.status;
+
   return (
     <div
       className='bg-neutral-600 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl
@@ -72,14 +80,14 @@ function TaskCardMax({ task, onEdit, onClose }) {
         <span
           className={`text-xs sm:text-sm lg:text-base px-2 py-1 rounded-md capitalize
           ${
-            task.status === 'completed'
+            displayStatus === 'completed'
               ? 'bg-green-500 text-slate-700'
-              : task.status === 'failed'
+              : displayStatus === 'failed'
                 ? 'bg-red-500 text-orange-100'
                 : 'bg-yellow-500 text-slate-700'
           }`}
         >
-          {task.status}
+          {displayStatus}
         </span>
         <span className='bg-neutral-500 text-orange-100 px-2 py-1 rounded-md'>
           Due Date: {task.date ? new Date(task.date).toLocaleDateString() : 'N/A'}
