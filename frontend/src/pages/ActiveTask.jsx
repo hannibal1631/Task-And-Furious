@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
 import { useOutletContext } from 'react-router-dom';
 import { useTasks } from '../context/TaskContext.jsx';
 
