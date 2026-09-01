@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -12,24 +12,17 @@ function Categories() {
   const { setView, categories, setCategories, setSelectedTask } = useOutletContext();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const {user } = useAuth()
-  const { tasks: allTasks, loading } = useTasks();
-  const [tasks, setTasks] = useState([]);
+  const { tasks: allTasks, loading, getTaskDateTime } = useTasks();
 
-  // showing tasks when category changes
-  useEffect(() => {
-    if (!selectedCategory) {
-      setTasks(allTasks);
-      return;
-    }
 
-    const filtered = allTasks.filter(
-      (task) =>
-        task.categoryId === selectedCategory.value ||
-        task.categoryId?._id === selectedCategory.value,
-    );
+  const filteredTasks = selectedCategory
+    ? allTasks.filter(
+        (task) =>
+          task.categoryId === selectedCategory.value ||
+          task.categoryId?._id === selectedCategory.value,
+      )
+    : [];
 
-    setTasks(filtered);
-  }, [selectedCategory, allTasks]);
 
   // handleCreate to add more categories
   const handleCreate = async (inputValue) => {
@@ -115,12 +108,12 @@ function Categories() {
             <div className='col-span-3 text-center text-orange-100'>
               Loading tasks...
             </div>
-          ) : tasks.length === 0 ? (
+          ) : filteredTasks.length === 0 ? (
             <div className='col-span-3 text-center text-orange-100 text-lg'>
               No tasks in this category
             </div>
           ) : (
-            tasks.map((task) => (
+            filteredTasks.map((task) => (
               <TaskCardMin
                 key={task._id}
                 task={task}
