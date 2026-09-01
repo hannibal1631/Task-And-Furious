@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
 import { useTasks } from '../context/TaskContext.jsx';
+import { useOutletContext } from 'react-router-dom';
 
 function CompletedTask() {
+  const { setView, setSelectedTask } = useOutletContext();
   const today = new Date().toISOString().split('T')[0];
 
   const [selectedDate, setSelectedDate] = useState('');
-  const {tasks, loading} = useTasks()
+  const { tasks, loading } = useTasks();
 
   // new filtered tasks
   const now = new Date();
@@ -67,7 +69,16 @@ function CompletedTask() {
               Loading...
             </p>
           ) : filteredTasks.length > 0 ? (
-            filteredTasks.map((task) => <TaskCardMin key={task._id} task={task} />)
+            filteredTasks.map((task) => (
+              <TaskCardMin
+                key={task._id}
+                task={task}
+                onOpen={() => {
+                  setSelectedTask(task);
+                  setView('max');
+                }}
+              />
+            ))
           ) : (
             <p className='col-span-full text-center text-orange-100 font-medium'>
               {selectedDate

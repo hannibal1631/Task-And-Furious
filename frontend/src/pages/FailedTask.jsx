@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
 import { useTasks } from '../context/TaskContext.jsx';
+import { useOutletContext } from 'react-router-dom';
 
 function FailedTask() {
+  const { setView, setSelectedTask } = useOutletContext();
   // yesterday date
   const getYesterday = () => {
     const date = new Date();
@@ -13,7 +15,7 @@ function FailedTask() {
   const yesterday = getYesterday();
 
   const [selectedDate, setSelectedDate] = useState('');
-  const {tasks, loading} = useTasks()
+  const { tasks, loading } = useTasks();
 
   // new fetching logic for failed tasks
   const now = new Date();
@@ -77,7 +79,14 @@ function FailedTask() {
               Loading...
             </p>
           ) : filteredTasks.length > 0 ? (
-            filteredTasks.map((task) => <TaskCardMin key={task._id} task={task} />)
+            filteredTasks.map((task) => (
+              <TaskCardMin
+                key={task._id}
+                task={task}
+                setSelectedTask={setSelectedTask}
+                onOpen={() => setView('max')}
+              />
+            ))
           ) : (
             <p className='col-span-full text-center text-orange-100 font-medium'>
               No failed tasks found
