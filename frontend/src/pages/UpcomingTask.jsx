@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TaskCardMin from '../components/TaskCardMin.jsx';
 import { useTasks } from '../context/TaskContext.jsx';
+import { useOutletContext } from 'react-router-dom';
 
 function UpcomingTask() {
+  const { setView, setSelectedTask } = useOutletContext();
   const [upcomingDate, setUpcomingDate] = useState('');
   const { tasks, loading } = useTasks();
   // const [filteredTasks, setFilteredTasks] = useState([])
@@ -125,7 +127,14 @@ function UpcomingTask() {
               <p>Loading...</p>
             ) : filteredTasks.length > 0 ? (
               filteredTasks.map((task) => (
-                <TaskCardMin key={task._id} task={task} />
+                <TaskCardMin
+                  key={task._id}
+                  task={task}
+                  onOpen={() => {
+                    setSelectedTask(task);
+                    setView('max');
+                  }}
+                />
               ))
             ) : (
               <p>No tasks found.</p>
@@ -146,7 +155,14 @@ function UpcomingTask() {
 
               <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
                 {groupedTasks.tomorrow.map((task) => (
-                  <TaskCardMin key={task._id} task={task} />
+                  <TaskCardMin
+                    key={task._id}
+                    task={task}
+                    onOpen={() => {
+                      setSelectedTask(task);
+                      setView('max');
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -164,7 +180,14 @@ function UpcomingTask() {
 
               <div className='grid grid-cols-3 gap-y-8 gap-x-6'>
                 {groupedTasks.thisWeek.map((task) => (
-                  <TaskCardMin key={task._id} task={task} />
+                  <TaskCardMin
+                    key={task._id}
+                    task={task}
+                    onOpen={() => {
+                      setSelectedTask(task);
+                      setView('max');
+                    }}
+                  />
                 ))}
               </div>
             </div>
