@@ -88,22 +88,42 @@ export function TaskProvider({ children }) {
     fetchTasks();
   }, [user]);
 
-  // get the actual date + time of a task
+  // get the actual local date + time of a task
+  // const getTaskDateTime = (task) => {
+  //   if (!task?.date) return null;
+
+  //   const date = new Date(task.date);
+
+  //   if (Number.isNaN(date.getTime())) return null;
+
+  //   if (task.time) {
+  //     const [hours, minutes] = task.time.split(':').map(Number);
+
+  //     date.setHours(hours, minutes, 0, 0);
+  //   } else {
+  //     date.setHours(23, 59, 59, 999);
+  //   }
+
+  //   return date;
+  // };
+
+  // check whether a task has failed
   const getTaskDateTime = (task) => {
     if (!task?.date) return null;
 
     const taskDateTime = new Date(task.date);
 
-    if (task.time) {
-      const [hours, minutes] = task.time.split(':');
+    if (Number.isNaN(taskDateTime.getTime())) return null;
 
-      taskDateTime.setHours(Number(hours), Number(minutes), 0, 0);
+    if (task.time) {
+      const [hours, minutes] = task.time.split(':').map(Number);
+
+      taskDateTime.setHours(hours, minutes, 0, 0);
     }
 
     return taskDateTime;
   };
 
-  // check whether a task has failed
   const isTaskFailed = (task) => {
     const taskDateTime = getTaskDateTime(task);
 
