@@ -36,23 +36,33 @@ function TaskCardMin({ task = {}, onOpen, setSelectedTask }) {
         {(() => {
           const now = new Date();
 
-          const taskDate = task.date ? new Date(task.date) : null;
+          let taskDateTime = null;
+
+          if (task.date) {
+            const datePart = task.date.split('T')[0];
+
+            if (task.time) {
+              taskDateTime = new Date(`${datePart}T${task.time}`);
+            } else {
+              taskDateTime = new Date(task.date);
+            }
+          }
 
           const isFailed =
-            task.status !== 'completed' && taskDate && taskDate < now;
+            task.status !== 'completed' && taskDateTime && taskDateTime < now;
 
           const displayStatus = isFailed ? 'failed' : task.status;
 
           return (
             <span
-              className={`text-xs sm:text-sm lg:text-base font-semibold p-1 rounded-md capitalize
-      ${
-        displayStatus === 'completed'
-          ? 'bg-green-500 text-slate-700'
-          : displayStatus === 'failed'
-            ? 'bg-red-500 text-orange-100'
-            : 'bg-yellow-500 text-slate-700'
-      }`}
+              className={`text-xs sm:text-sm lg:text-base font-semibold p-1 rounded-md whitespace-nowrap capitalize
+        ${
+          displayStatus === 'completed'
+            ? 'bg-green-500 text-slate-700'
+            : displayStatus === 'failed'
+              ? 'bg-red-500 text-orange-100'
+              : 'bg-yellow-500 text-slate-700'
+        }`}
             >
               {displayStatus}
             </span>

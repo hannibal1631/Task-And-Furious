@@ -45,9 +45,21 @@ function TaskCardMax({ task, onEdit, onClose }) {
 
   // to check if task is past it's dueDate or dueTime
   const now = new Date();
-  const taskDate = task.date ? new Date(task.date) : null;
 
-  const isFailed = task.status !== 'completed' && taskDate && taskDate < now;
+  let taskDateTime = null;
+
+  if (task.date) {
+    const datePart = task.date.split('T')[0];
+
+    if (task.time) {
+      taskDateTime = new Date(`${datePart}T${task.time}`);
+    } else {
+      taskDateTime = new Date(task.date);
+    }
+  }
+
+  const isFailed =
+    task.status !== 'completed' && taskDateTime && taskDateTime < now;
 
   const displayStatus = isFailed ? 'failed' : task.status;
 
