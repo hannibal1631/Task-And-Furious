@@ -1,36 +1,48 @@
-import { useState, useEffect } from 'react';
 import TaskCardMin from './TaskCardMin.jsx';
 import { useOutletContext } from 'react-router-dom';
-import axios from 'axios';
-import API_BASE_URL from '../config/api.js';
-import { useAuth } from '../context/AuthContext.jsx';
 import { useTasks } from '../context/TaskContext.jsx';
 
 function Dashboard() {
   const { setView, setSelectedTask } = useOutletContext();
-  const { user } = useAuth();
-  const {tasks, loading} = useTasks()
+  const { tasks, loading, getTaskDateTime } = useTasks();
 
-  // ongoing task filter
+  // current time
   const now = new Date();
 
+  const todayISO = now.toLocaleDateString('en-CA');
+
+  // ongoing tasks
+  // Only pending tasks scheduled for today and not yet passed
   const ongoingTasks = tasks.filter((task) => {
-    // must be pending
     if (task.status !== 'pending') return false;
 
-    // must have a date
-    if (!task.date) return false;
+    const taskDateTime = getTaskDateTime(task);
 
-    const taskDate = new Date(task.date);
+    if (!taskDateTime) return false;
 
-    // if current time already passed -> it's failed
-    return taskDate >= now;
+    const taskISO = taskDateTime.toLocaleDateString('en-CA');
+
+    // must be today
+    if (taskISO !== todayISO) return false;
+
+    // must not have passed
+    return taskDateTime >= now;
   });
 
-  // upcoming task filter
-  const upcomingTasks = tasks.filter(
-    (task) => task.date && new Date(task.date) > new Date(),
-  );
+  // upcoming tasks
+  // Pending tasks scheduled from tomorrow onward
+  const upcomingTasks = tasks.filter((task) => {
+    if (task.status !== 'pending') return false;
+
+    const taskDateTime = getTaskDateTime(task);
+
+    if (!taskDateTime) return false;
+
+    const taskISO = taskDateTime.toLocaleDateString('en-CA');
+
+    // anything after today
+    return taskISO > todayISO;
+  });
 
   return (
     <div className='flex flex-col gap-6'>
